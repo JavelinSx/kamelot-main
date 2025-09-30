@@ -1,0 +1,119 @@
+/* Kamelot - Боевые искусства */
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+:root {
+  --font-heading: "Cinzel", serif;
+  --font-subheading: "Oswald", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+@layer base {
+  /* Основные стили */
+  html {
+    font-family: "Exo 2", Courier, monospace;
+    @apply bg-white text-gray-900;
+  }
+
+  /* Заголовки */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Oswald", "Inter", sans-serif;
+    @apply font-semibold text-gray-900;
+  }
+
+  h1:not(.custom-size) {
+    @apply text-4xl lg:text-5xl;
+  }
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+}
+
+@layer components {
+  /* Кнопки в стиле Kamelot */
+  .btn-kamelot {
+    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 bg-red-600 text-white hover:bg-red-700
+           active:bg-red-800 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 bg-gray-900 text-white hover:bg-gray-800
+           active:bg-gray-950 shadow-lg hover:shadow-xl;
+  }
+
+  .btn-outline {
+    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 border-2 border-red-600 text-red-600
+           hover:bg-red-600 hover:text-white;
+  }
+
+  /* Карточки */
+  .card-kamelot {
+    @apply bg-white border border-gray-200 rounded-xl shadow-lg
+           hover:shadow-xl transition-shadow duration-300;
+  }
+
+  /* Навигация */
+  .nav-kamelot {
+    @apply bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50;
+  }
+
+  /* Боевые искусства - специфичные компоненты */
+  .martial-arts-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+           bg-red-100 text-red-700 border border-red-200;
+  }
+
+  .belt-rank {
+    @apply inline-block w-4 h-4 rounded-sm mr-2;
+  }
+
+  /* Градиенты для фонов */
+  .bg-kamelot-gradient {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  }
+
+  .bg-kamelot-dark-gradient {
+    background: linear-gradient(135deg, #171717 0%, #0a0a0a 100%);
+  }
+}
+
+@layer utilities {
+  /* Утилиты для текста */
+  .text-kamelot-primary {
+    @apply text-red-600;
+  }
+
+  .text-kamelot-secondary {
+    @apply text-gray-900;
+  }
+
+  /* Анимации для боевых искусств */
+  .punch-animation {
+    @apply transform transition-transform duration-150 hover:scale-105 active:scale-95;
+  }
+
+  .fight-card {
+    @apply bg-white border border-gray-200 rounded-xl shadow-lg
+           hover:shadow-xl transition-shadow duration-300 p-6 hover:border-red-300 cursor-pointer
+           transform transition-all duration-300 hover:-translate-y-1;
+  }
+}
+
+/* Smooth scroll - ПОСЛЕ всех слоёв */
+html,
+body {
+  scroll-behavior: smooth !important;
+}

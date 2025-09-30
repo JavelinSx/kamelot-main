@@ -18,6 +18,9 @@ logs
 .fleet
 .idea
 
+# Generated JS files from Vue components
+*.vue.js
+
 # Local env files
 .env
 .env.*
