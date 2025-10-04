@@ -14,19 +14,19 @@ export default defineNuxtConfig({
   ssr: false, // Отключаем SSR
   nitro: {
     prerender: {
-      routes: ['/'] // Добавьте все нужные маршруты
-    }
+      routes: ["/"], // Добавьте все нужные маршруты
+    },
   },
 
   // Настройка автоимпортов
   imports: {
     autoImport: true,
-    dirs: ['composables', 'shared/composables']
+    dirs: ["composables", "shared/composables"],
   },
 
   // TypeScript конфигурация
   typescript: {
-    typeCheck: true
+    typeCheck: true,
   },
   vite: {
     define: {
@@ -38,12 +38,11 @@ export default defineNuxtConfig({
 
   // Кастомная тема Kamelot для боевых искусств
   ui: {
-    prefix: "U"
+    prefix: "U",
   },
 
   // Page transitions
   app: {
-    pageTransition: { name: 'page', mode: 'out-in' }
-  }
-
+    pageTransition: { name: "page", mode: "out-in" },
+  },
 });

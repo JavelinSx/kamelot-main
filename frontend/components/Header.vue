@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-const logo = '/images/logo.jpg';
+const logo = '/images/logo.png';
 const isMenuOpen = ref(false)
 const isBookingOpen = ref(false)
 
