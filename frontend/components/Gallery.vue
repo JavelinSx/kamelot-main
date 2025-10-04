@@ -2,13 +2,24 @@
   <div class="bg-gradient-to-b from-black to-white">
     <!-- Заголовок галереи -->
     <div v-if="title || description" class="text-center pt-8 pb-8 text-white">
-      <h2 v-if="title" class="text-5xl font-bold text-gray-300 mb-12">{{ title }}</h2>
-      <p v-if="description" class="text-xl text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
+      <h2 v-if="title"
+        data-aos="fade-down"
+        data-aos-duration="600"
+        class="text-5xl font-bold text-gray-300 mb-12">{{ title }}</h2>
+      <p v-if="description"
+        data-aos="fade-up"
+        data-aos-duration="600"
+        data-aos-delay="100"
+        class="text-xl text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
     </div>
 
     <!-- Галерея -->
     <div ref="galleryContainer" class="masonry-container" :style="{ columnCount: columnCount, columnGap: gap + 'px' }">
-      <div v-for="(image, index) in images" :key="index" class="masonry-item group cursor-pointer break-inside-avoid"
+      <div v-for="(image, index) in images" :key="index"
+        data-aos="fade-up"
+        :data-aos-delay="(index % 10) * 50"
+        data-aos-duration="500"
+        class="masonry-item group cursor-pointer break-inside-avoid"
         :style="{ marginBottom: gap + 'px' }" @click="handleImageClick(image, index)">
         <!-- Контейнер изображения -->
         <div class="relative overflow-hidden bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl">

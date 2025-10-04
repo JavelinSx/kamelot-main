@@ -1,27 +1,34 @@
 <template>
-  <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800 overflow-hidden">
     <UContainer class="py-4 relative">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
-          <span class="text-xl font-bold text-white">KAMELOT</span>
+          <div data-aos="fade-right" data-aos-duration="400" data-aos-easing="ease-out-back">
+            <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
+          </div>
+          <span data-aos="fade-down" data-aos-duration="400" data-aos-delay="100" data-aos-easing="ease-out-back"
+            class="text-xl font-bold text-white">KAMELOT</span>
         </div>
 
         <nav class="hidden lg:flex items-center gap-8">
-          <ULink to="/" class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200"
+            class="text-white hover:text-red-500 transition-colors">
             Главная
           </ULink>
-          <a href="/#trainers" class="text-white hover:text-red-500 transition-colors"
-            @click.prevent="scrollToTrainers">
+          <a href="/#trainers" data-aos="fade-left" data-aos-duration="300" data-aos-delay="300"
+            class="text-white hover:text-red-500 transition-colors" @click.prevent="scrollToTrainers">
             Тренеры
           </a>
-          <ULink to="/schedule" class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/schedule" data-aos="fade-left" data-aos-duration="300" data-aos-delay="400"
+            class="text-white hover:text-red-500 transition-colors">
             Расписание
           </ULink>
-          <ULink to="/kids" class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/kids" data-aos="fade-left" data-aos-duration="300" data-aos-delay="500"
+            class="text-white hover:text-red-500 transition-colors">
             Детям
           </ULink>
-          <ULink to="/blog" class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/blog" data-aos="fade-left" data-aos-duration="300" data-aos-delay="600"
+            class="text-white hover:text-red-500 transition-colors">
             Блог
           </ULink>
         </nav>
@@ -37,7 +44,9 @@
               header: 'px-4 pt-4 pb-2 min-h-36',
               close: 'absolute top-2 end-2'
             }">
-            <UButton color="error" class="text-white" size="md">
+            <UButton color="error"
+              class="text-white shadow-amber-50 shadow-md cursor-pointer hover:scale-95 transition-all duration-300"
+              size="lg" data-aos="ease-in-back" data-aos-duration="300">
               Записаться
             </UButton>
 

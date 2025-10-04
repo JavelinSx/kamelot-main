@@ -1,5 +1,5 @@
 <template>
-  <section class="relative h-screen flex items-center justify-center overflow-hidden">
+  <section class="relative h-screen flex items-center justify-center overflow-hidden mt-20">
     <video v-if="videoSrc" autoplay muted loop playsinline
       class="absolute inset-0 w-full h-full object-cover  scale-110 ">
       <source :src="videoSrc" type="video/mp4" />
@@ -27,8 +27,10 @@
     <div class="absolute inset-0 flex items-center justify-center z-20">
       <div class="text-center text-white max-w-4xl mx-auto px-4">
         <h1 class="font-bold mb-6 leading-tight">
-          <span class="text-red-500 text-6xl lg:text-7xl">KAMELOT</span><br>
-          <span class="text-white text-6xl lg:text-7xl">FIGHT CLUB</span>
+          <span data-aos="fade-down" data-aos-duration="300" data-aos-easing="ease-out-back"
+            class="inline-block text-red-500 text-6xl lg:text-7xl">KAMELOT</span><br>
+          <span data-aos="fade-up" data-aos-duration="300" data-aos-delay="200" data-aos-easing="ease-out-back"
+            class="inline-block text-white text-6xl lg:text-7xl">FIGHT CLUB</span>
         </h1>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col scroll-smooth">
     <Header />
-    <main class="flex-1 pt-20">
+    <main class="flex-1">
       <slot />
     </main>
     <Footer />
@@ -9,13 +9,8 @@
     <!-- Фиксированная кнопка "Наверх" -->
     <Transition name="fade">
       <div v-if="showScrollTop" class="fixed bottom-8 right-8 z-50">
-        <UButton
-          @click="scrollToTop"
-          color="error"
-          size="lg"
-          icon="i-heroicons-arrow-up"
-          class="shadow-2xl rounded-full w-14 h-14 p-0 justify-center items-center"
-        />
+        <UButton @click="scrollToTop" color="error" size="lg" icon="i-heroicons-arrow-up"
+          class="shadow-2xl rounded-full w-14 h-14 p-0 justify-center items-center" />
       </div>
     </Transition>
   </div>

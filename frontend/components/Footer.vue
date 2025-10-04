@@ -74,17 +74,17 @@
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Муай Тай
+                Грэпплинг
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Джиу-джитсу
+                Панкратион
               </a>
             </li>
             <li>
               <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                Каратэ
+                БЖЖ
               </a>
             </li>
           </ul>

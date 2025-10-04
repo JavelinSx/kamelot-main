@@ -21,6 +21,7 @@ export default defineNuxtConfig({
   // Настройка автоимпортов
   imports: {
     autoImport: true,
+    dirs: ['composables', 'shared/composables']
   },
 
   // TypeScript конфигурация
