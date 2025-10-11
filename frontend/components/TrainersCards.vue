@@ -1,17 +1,17 @@
 <template>
-  <section id="trainers" class="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 ">
+  <section id="trainers" class="py-10 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 ">
     <!-- Кастомный контейнер с детальными настройками -->
     <UContainer :ui="{
       base: 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
     }">
       <!-- Заголовок секции -->
-      <div class="text-center mb-16">
+      <div class="text-center mb-8">
         <h2 data-aos="fade-down" data-aos-duration="600"
-          class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+          class="lg:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
           Наши тренеры
         </h2>
         <p data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
-          class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          class="lg:text-xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
           Опытные профессионалы с многолетним стажем и международными достижениями
         </p>
       </div>
@@ -68,7 +68,7 @@
             </template>
 
             <!-- Основное содержимое карточки -->
-            <div class="p-6 space-y-4">
+            <div class="space-y-4">
               <!-- Имя и специализация -->
               <div class="space-y-2">
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -92,7 +92,7 @@
               </div>
 
               <!-- Статистика тренера -->
-              <div class="grid grid-cols-2 gap-4 py-4">
+              <!-- <div class="grid grid-cols-2 gap-4 py-4">
                 <div class="text-center">
                   <div class="flex items-center justify-center gap-2 text-yellow-500 mb-1">
                     <UIcon name="i-heroicons-star-solid" class="w-5 h-5" />
@@ -108,7 +108,7 @@
                   </div>
                   <p class="text-xs text-gray-500 dark:text-gray-400">Лет опыта</p>
                 </div>
-              </div>
+              </div> -->
 
               <!-- Дополнительная информация -->
               <div class="space-y-3 text-sm">
@@ -150,14 +150,14 @@
               <!-- Кнопки действий -->
               <div class="pt-4 space-y-3 ">
                 <UButton color="success" variant="solid" size="lg" block
-                  class="justify-center rounded-xl font-bold pt-3 pb-3 hover:bg-amber-50 hover:text-blue-600 transition-all duration-300"
+                  class="hover:cursor-pointer justify-center rounded-xl font-bold pt-3 pb-3 hover:bg-amber-50 hover:text-blue-600 transition-all duration-300"
                   @click="contactTrainer(trainer)">
                   <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
                   Связаться с тренером
                 </UButton>
 
                 <UButton color="neutral" variant="outline" size="lg" block
-                  class="justify-center rounded-xl font-semibold pt-3 pb-3 hover:bg-amber-50 hover:text-slate-600 transition-all duration-300"
+                  class="hover:cursor-pointer justify-center rounded-xl font-semibold pt-3 pb-3 hover:bg-amber-50 hover:text-slate-600 transition-all duration-300"
                   @click="viewTrainerProfile(trainer)">
                   <UIcon name="i-heroicons-user-circle" class="w-5 h-5 mr-2" />
                   Посмотреть профиль

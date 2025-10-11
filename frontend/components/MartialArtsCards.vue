@@ -1,12 +1,12 @@
 <template>
-  <section class="py-20 bg-white overflow-hidden">
+  <section class="py-10 bg-white overflow-hidden">
     <UContainer>
-      <div class="flex flex-col items-center mb-16 text-center">
-        <h2 data-aos="fade-down" data-aos-duration="800" class="inline-block text-4xl font-bold text-gray-900 mb-4 ">
+      <div class="flex flex-col items-center mb-8 text-center">
+        <h2 data-aos="fade-down" data-aos-duration="800" class="inline-block lg:text-4xl font-bold text-gray-900 mb-4 ">
           Направления единоборств
         </h2>
         <p data-aos="fade-up" data-aos-duration="800" data-aos-delay="100"
-          class="inline-block text-xl text-gray-700 max-w-2xl mx-auto ">
+          class="inline-block lg:text-xl text-gray-700 max-w-2xl mx-auto ">
           Выберите подходящее направление для развития своих навыков и достижения целей
         </p>
       </div>
@@ -20,7 +20,7 @@
             <template #header>
               <div class="relative h-48 rounded-t-lg">
                 <img :src="art.image" :alt="art.name"
-                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-110" />
+                  class="w-full rounded-md h-full object-cover transition-transform duration-300 hover:scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div class="absolute bottom-4 left-4 ">
                   <h3 class="text-2xl font-bold text-white">{{ art.name }}</h3>
@@ -28,7 +28,7 @@
               </div>
             </template>
 
-            <div class="p-6 text-gray-100 flex flex-col flex-1">
+            <div class="text-gray-100 flex flex-col flex-1">
               <p class=" mb-4 leading-relaxed">
                 {{ art.description }}
               </p>

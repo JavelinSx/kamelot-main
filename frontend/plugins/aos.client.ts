@@ -6,6 +6,6 @@ export default defineNuxtPlugin(() => {
     duration: 300,
     easing: "ease-in-back",
     once: true,
-    offset: 50,
+    offset: 0,
   });
 });

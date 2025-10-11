@@ -10,25 +10,20 @@
             class="text-xl font-bold text-white">KAMELOT</span>
         </div>
 
-        <nav class="hidden lg:flex items-center gap-8">
-          <ULink to="/" data-aos="fade-left" data-aos-duration="300" data-aos-delay="200"
-            class="text-white hover:text-red-500 transition-colors">
+        <nav class="hidden lg:flex items-center gap-8 ">
+          <ULink to="/" class="nav-link">
             Главная
           </ULink>
-          <a href="/#trainers" data-aos="fade-left" data-aos-duration="300" data-aos-delay="300"
-            class="text-white hover:text-red-500 transition-colors" @click.prevent="scrollToTrainers">
+          <a href="/#trainers" class="nav-link" @click.prevent="scrollToTrainers">
             Тренеры
           </a>
-          <ULink to="/schedule" data-aos="fade-left" data-aos-duration="300" data-aos-delay="400"
-            class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/schedule" class="nav-link">
             Расписание
           </ULink>
-          <ULink to="/kids" data-aos="fade-left" data-aos-duration="300" data-aos-delay="500"
-            class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/kids" class="nav-link">
             Детям
           </ULink>
-          <ULink to="/blog" data-aos="fade-left" data-aos-duration="300" data-aos-delay="600"
-            class="text-white hover:text-red-500 transition-colors">
+          <ULink to="/blog" class="nav-link">
             Блог
           </ULink>
         </nav>
@@ -157,3 +152,14 @@ function scrollToTrainers() {
   }
 }
 </script>
+
+<style scoped>
+.nav-link {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ef4444;
+}
+</style>

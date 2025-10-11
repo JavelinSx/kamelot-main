@@ -1,26 +1,18 @@
 <template>
-  <section class="py-20 bg-gray-900 text-white">
+  <section class="py-10 bg-gray-900 text-white">
     <UContainer>
-      <div class="text-center mb-16">
-        <h2
-          data-aos="fade-down"
-          data-aos-duration="600"
-          class="text-4xl font-bold mb-4">
+      <div class="text-center mb-8">
+        <h2 data-aos="fade-down" data-aos-duration="600" class="text-4xl text-white font-bold mb-4">
           Наши чемпионы
         </h2>
-        <p
-          data-aos="fade-up"
-          data-aos-duration="600"
-          data-aos-delay="100"
+        <p data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
           class="text-xl text-gray-300 max-w-2xl mx-auto">
           Бойцы, прошедшие подготовку в нашем клубе и добившиеся выдающихся результатов
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="(fighter, index) in fighters" :key="fighter.id"
-          data-aos="zoom-in"
-          :data-aos-delay="index * 100"
+        <div v-for="(fighter, index) in fighters" :key="fighter.id" data-aos="zoom-in" :data-aos-delay="index * 100"
           data-aos-duration="600"
           class="group bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
           <div class="relative overflow-hidden">
