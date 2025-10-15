@@ -9,8 +9,7 @@
           </div>
 
           <p class="text-gray-400 mb-6 leading-relaxed">
-            Профессиональный клуб боевых искусств. Тренируйся с лучшими,
-            становись чемпионом.
+            {{ contacts?.academy.description || 'Профессиональный клуб боевых искусств. Тренируйся с лучшими, становись чемпионом.' }}
           </p>
 
           <div class="flex gap-4">
@@ -98,7 +97,7 @@
               <div>
                 <p class="text-white font-medium">Адрес</p>
                 <p class="text-gray-400 text-sm">
-                  г. Москва, ул. Спортивная, 15
+                  {{ contacts?.academy.address || 'г. Москва, ул. Спортивная, 15' }}
                 </p>
               </div>
             </div>
@@ -107,8 +106,8 @@
               <UIcon name="i-heroicons-phone" class="text-red-500 mt-1 flex-shrink-0" />
               <div>
                 <p class="text-white font-medium">Телефон</p>
-                <a href="tel:+79001234567" class="text-gray-400 text-sm hover:text-white transition-colors">
-                  +7 (900) 123-45-67
+                <a :href="`tel:${contacts?.academy.phone || '+79001234567'}`" class="text-gray-400 text-sm hover:text-white transition-colors">
+                  {{ contacts?.academy.phone || '+7 (900) 123-45-67' }}
                 </a>
               </div>
             </div>
@@ -117,8 +116,8 @@
               <UIcon name="i-heroicons-envelope" class="text-red-500 mt-1 flex-shrink-0" />
               <div>
                 <p class="text-white font-medium">Email</p>
-                <a href="mailto:info@kamelot-club.ru" class="text-gray-400 text-sm hover:text-white transition-colors">
-                  info@kamelot-club.ru
+                <a :href="`mailto:${contacts?.academy.email || 'info@kamelot-club.ru'}`" class="text-gray-400 text-sm hover:text-white transition-colors">
+                  {{ contacts?.academy.email || 'info@kamelot-club.ru' }}
                 </a>
               </div>
             </div>
@@ -127,8 +126,8 @@
               <UIcon name="i-heroicons-clock" class="text-red-500 mt-1 flex-shrink-0" />
               <div>
                 <p class="text-white font-medium">Режим работы</p>
-                <p class="text-gray-400 text-sm">Пн-Пт: 7:00-23:00</p>
-                <p class="text-gray-400 text-sm">Сб-Вс: 9:00-21:00</p>
+                <p class="text-gray-400 text-sm">{{ contacts?.academy.workingHours.weekdays || 'Пн-Пт: 7:00-23:00' }}</p>
+                <p class="text-gray-400 text-sm">{{ contacts?.academy.workingHours.weekend || 'Сб-Вс: 9:00-21:00' }}</p>
               </div>
             </div>
           </div>
@@ -156,17 +155,27 @@
 </template>
 
 <script setup lang="ts">
-const logo = '/images/logo.jpg';
-const openSocialLink = (platform: string) => {
-  const links = {
-    vk: 'https://vk.com/kamelot_club',
-    telegram: 'https://t.me/kamelot_club',
-    instagram: 'https://instagram.com/kamelot_club',
-    youtube: 'https://youtube.com/@kamelot_club'
-  }
+const logo = '/images/logo.jpg'
 
-  if (links[platform as keyof typeof links]) {
-    window.open(links[platform as keyof typeof links], '_blank')
+// Загружаем контакты из JSON
+const { contacts, fetchContacts } = useContacts()
+
+onMounted(async () => {
+  try {
+    await fetchContacts()
+  } catch (error) {
+    console.error('Failed to load contacts:', error)
+  }
+})
+
+const openSocialLink = (platform: string) => {
+  if (!contacts.value) return
+
+  const links = contacts.value.academy.socialLinks
+  const url = links[platform as keyof typeof links]
+
+  if (url) {
+    window.open(url, '_blank')
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
-  <section id="trainers" class="py-10 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 ">
+  <section id="trainers"
+    class="py-10 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
     <!-- Кастомный контейнер с детальными настройками -->
     <UContainer :ui="{
       base: 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
@@ -18,11 +19,11 @@
 
       <!-- Сетка карточек тренеров -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        <div v-for="(trainer, index) in trainers" :key="trainer.id" data-aos="fade-up" :data-aos-delay="index * 150"
-          data-aos-duration="600">
+        <div v-for="(trainer, index) in trainers" :key="trainer.id"
+          :data-aos="trainer.id % 2 ? 'fade-right' : 'fade-left'" data-aos-duration="600">
           <UCard :ui="{
             root: 'overflow-hidden bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 rounded-2xl shadow-lg hover:shadow-2xl',
-            body: 'p-0 h-full',
+            body: 'p-4 h-full',
             header: 'p-0 sm:px-0 relative'
           }" class="group transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2">
             <!-- Заголовок карточки с изображением -->
@@ -172,11 +173,19 @@
 </template>
 
 <script setup lang="ts">
-import { FAKE_TRAINERS } from '~/shared/utils/fake-trainers'
-import type { Trainer, WorkoutType } from '~/types'
+import type { WorkoutType } from '~/types'
 
-const trainers = ref<Trainer[]>(FAKE_TRAINERS)
+// Используем composable для загрузки тренеров
+const { trainers, loading, fetchTrainers } = useTrainers()
 const expandedBio = ref<Record<number, boolean>>({})
+
+onMounted(async () => {
+  try {
+    await fetchTrainers()
+  } catch (error) {
+    console.error('Failed to load trainers:', error)
+  }
+})
 
 const toggleBio = (trainerId: number) => {
   expandedBio.value[trainerId] = !expandedBio.value[trainerId]
@@ -200,19 +209,19 @@ const getSpecializationName = (type: WorkoutType): string => {
   return specializationNames[type] || type
 }
 
-const getMainSpecialization = (specializations: WorkoutType[]): string => {
+const getMainSpecialization = (specializations: readonly WorkoutType[]): string => {
   if (specializations.length === 0) return 'Тренер'
   const firstSpecialization = specializations[0]
   if (!firstSpecialization) return 'Тренер'
   return `Тренер по ${getSpecializationName(firstSpecialization)}`
 }
 
-const contactTrainer = (trainer: Trainer) => {
+const contactTrainer = (trainer: any) => {
   console.log('Связаться с тренером:', trainer.firstName, trainer.lastName)
   // Здесь можно добавить логику открытия модального окна или перехода на страницу контактов
 }
 
-const viewTrainerProfile = (trainer: Trainer) => {
+const viewTrainerProfile = (trainer: any) => {
   navigateTo(`/trainers/${trainer.id}`)
 }
 </script>

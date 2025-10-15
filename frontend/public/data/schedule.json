@@ -1,0 +1,382 @@
+{
+  "zones": [
+    {
+      "id": 1,
+      "name": "ЗОНА БОРЬБЫ",
+      "description": "Грэпплинг, ММА, Борьба, БЖЖ, Панкратион",
+      "schedule": {
+        "monday": [
+          {
+            "id": 101,
+            "time": "18:00-19:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "дети 10-14",
+            "trainer": "Коваль Павел",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 102,
+            "time": "19:30-21:00",
+            "discipline": "ММА",
+            "ageGroup": "новички",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "adult"
+          },
+          {
+            "id": 103,
+            "time": "21:00-22:30",
+            "discipline": "ММА",
+            "ageGroup": "любители",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "adult"
+          }
+        ],
+        "tuesday": [
+          {
+            "id": 201,
+            "time": "12:00-13:30",
+            "discipline": "БЖЖ",
+            "ageGroup": "16+",
+            "trainer": "Нурмагомедов Мурад",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 202,
+            "time": "18:00-19:00",
+            "discipline": "СПОРТИВНАЯ БОРЬБА",
+            "ageGroup": "дети 4-7",
+            "trainer": "Озеров Артем",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 203,
+            "time": "19:00-21:00",
+            "discipline": "ПАНКРАТИОН",
+            "ageGroup": "подростки 12-19",
+            "trainer": "Озеров Артем",
+            "level": "Средний",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 204,
+            "time": "21:00-22:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "14+",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          }
+        ],
+        "wednesday": [
+          {
+            "id": 301,
+            "time": "18:00-19:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "дети 10-14",
+            "trainer": "Коваль Павел",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 302,
+            "time": "19:30-21:00",
+            "discipline": "ММА",
+            "ageGroup": "новички",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "adult"
+          },
+          {
+            "id": 303,
+            "time": "21:00-22:30",
+            "discipline": "ММА",
+            "ageGroup": "любители",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "adult"
+          }
+        ],
+        "thursday": [
+          {
+            "id": 401,
+            "time": "12:00-13:30",
+            "discipline": "БЖЖ",
+            "ageGroup": "16+",
+            "trainer": "Нурмагомедов Мурад",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 402,
+            "time": "18:00-19:00",
+            "discipline": "СПОРТИВНАЯ БОРЬБА",
+            "ageGroup": "дети 4-7",
+            "trainer": "Озеров Артем",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 403,
+            "time": "19:00-21:00",
+            "discipline": "ПАНКРАТИОН",
+            "ageGroup": "подростки 12-19",
+            "trainer": "Озеров Артем",
+            "level": "Средний",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 404,
+            "time": "21:00-22:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "14+",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          }
+        ],
+        "friday": [
+          {
+            "id": 501,
+            "time": "18:00-19:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "дети 10-14",
+            "trainer": "Коваль Павел",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 502,
+            "time": "19:30-21:00",
+            "discipline": "ММА",
+            "ageGroup": "новички",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "adult"
+          },
+          {
+            "id": 503,
+            "time": "21:00-22:30",
+            "discipline": "ММА",
+            "ageGroup": "любители",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "adult"
+          }
+        ],
+        "saturday": [
+          {
+            "id": 601,
+            "time": "12:00-13:30",
+            "discipline": "БЖЖ",
+            "ageGroup": "16+",
+            "trainer": "Нурмагомедов Мурад",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 602,
+            "time": "18:00-19:00",
+            "discipline": "СПОРТИВНАЯ БОРЬБА",
+            "ageGroup": "дети 4-7",
+            "trainer": "Озеров Артем",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 603,
+            "time": "19:00-20:00",
+            "discipline": "ПАНКРАТИОН",
+            "ageGroup": "подростки 12-19",
+            "trainer": "Озеров Артем",
+            "level": "Средний",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 604,
+            "time": "21:00-22:30",
+            "discipline": "ГРЭППЛИНГ",
+            "ageGroup": "14+",
+            "trainer": "Коваль Павел",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          }
+        ],
+        "sunday": []
+      }
+    },
+    {
+      "id": 2,
+      "name": "УДАРНАЯ ЗОНА",
+      "description": "Бокс, Кикбоксинг, ОФП, СФП",
+      "schedule": {
+        "monday": [
+          {
+            "id": 701,
+            "time": "07:00-08:30",
+            "discipline": "БОКС",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 702,
+            "time": "18:00-19:30",
+            "discipline": "БОКС",
+            "ageGroup": "дети 7+",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 703,
+            "time": "19:30-20:30",
+            "discipline": "СФП и ОФП БОКС",
+            "ageGroup": "",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "adult"
+          }
+        ],
+        "tuesday": [
+          {
+            "id": 801,
+            "time": "18:00-19:30",
+            "discipline": "КИКБОКСИНГ",
+            "ageGroup": "дети 7+",
+            "trainer": "Исмаилов Роял",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 802,
+            "time": "19:30-21:00",
+            "discipline": "БОКС",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 803,
+            "time": "21:00-22:30",
+            "discipline": "КИКБОКСИНГ",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          }
+        ],
+        "wednesday": [
+          {
+            "id": 901,
+            "time": "07:00-08:30",
+            "discipline": "БОКС",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 902,
+            "time": "18:00-19:30",
+            "discipline": "БОКС",
+            "ageGroup": "дети 7+",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          }
+        ],
+        "thursday": [
+          {
+            "id": 1001,
+            "time": "18:00-19:30",
+            "discipline": "КИКБОКСИНГ",
+            "ageGroup": "дети 7+",
+            "trainer": "Исмаилов Роял",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 1002,
+            "time": "19:30-21:00",
+            "discipline": "БОКС",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 1003,
+            "time": "21:00-22:30",
+            "discipline": "КИКБОКСИНГ",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Продвинутые",
+            "ageCategory": "teen"
+          }
+        ],
+        "friday": [
+          {
+            "id": 1101,
+            "time": "07:00-08:30",
+            "discipline": "БОКС",
+            "ageGroup": "14+",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "teen"
+          },
+          {
+            "id": 1102,
+            "time": "18:00-19:30",
+            "discipline": "БОКС",
+            "ageGroup": "дети 7+",
+            "trainer": "Крылов Валерий",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 1103,
+            "time": "19:30-20:30",
+            "discipline": "СФП и ОФП БОКС",
+            "ageGroup": "",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "adult"
+          }
+        ],
+        "saturday": [
+          {
+            "id": 1201,
+            "time": "18:00-19:30",
+            "discipline": "КИКБОКСИНГ",
+            "ageGroup": "дети 7+",
+            "trainer": "Исмаилов Роял",
+            "level": "Начинающие",
+            "ageCategory": "kid"
+          },
+          {
+            "id": 1202,
+            "time": "19:30-21:00",
+            "discipline": "БОКС/КИКБОКСИНГ",
+            "ageGroup": "",
+            "trainer": "Исмаилов Роял",
+            "level": "Все уровни",
+            "ageCategory": "adult"
+          }
+        ],
+        "sunday": []
+      }
+    }
+  ],
+  "metadata": {
+    "lastUpdated": "2024-01-15",
+    "version": "1.0",
+    "notes": "Расписание может изменяться. Уточняйте актуальность по телефону."
+  }
+}

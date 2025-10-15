@@ -1,0 +1,136 @@
+{
+  "fighters": [
+    {
+      "id": 1,
+      "name": "Иван Петров",
+      "nickname": "Железный Кулак",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter1.jpg",
+      "discipline": "Бокс",
+      "weightClass": "Средний вес",
+      "age": 28,
+      "experience": "8 лет",
+      "record": {
+        "wins": 24,
+        "losses": 3,
+        "draws": 1,
+        "knockouts": 18
+      },
+      "achievements": [
+        "Чемпион России по боксу (2022-2023)",
+        "Обладатель кубка Европы",
+        "Лучший боксер года по версии WBC"
+      ],
+      "isCurrentChampion": true
+    },
+    {
+      "id": 2,
+      "name": "Елена Козлова",
+      "nickname": "Молния",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter2.jpg",
+      "discipline": "ММА",
+      "weightClass": "Наилегчайший вес",
+      "age": 25,
+      "experience": "6 лет",
+      "record": {
+        "wins": 18,
+        "losses": 2,
+        "draws": 0,
+        "knockouts": 8
+      },
+      "achievements": [
+        "Чемпионка Европы по ММА",
+        "Обладательница пояса Fight Nights",
+        "Лучшая женщина-боец года"
+      ],
+      "isCurrentChampion": true
+    },
+    {
+      "id": 3,
+      "name": "Андрей Волков",
+      "nickname": "Медведь",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter3.jpg",
+      "discipline": "Кикбоксинг",
+      "weightClass": "Тяжелый вес",
+      "age": 32,
+      "experience": "12 лет",
+      "record": {
+        "wins": 31,
+        "losses": 5,
+        "draws": 2,
+        "knockouts": 23
+      },
+      "achievements": [
+        "Чемпион мира по К-1",
+        "Двукратный чемпион России",
+        "Участник турнира Glory"
+      ],
+      "isCurrentChampion": false
+    },
+    {
+      "id": 4,
+      "name": "Дмитрий Смирнов",
+      "nickname": "Вихрь",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter4.jpg",
+      "discipline": "Муай Тай",
+      "weightClass": "Полусредний вес",
+      "age": 26,
+      "experience": "7 лет",
+      "record": {
+        "wins": 22,
+        "losses": 4,
+        "draws": 1,
+        "knockouts": 15
+      },
+      "achievements": [
+        "Чемпион WBC Muay Thai",
+        "Победитель турнира в Таиланде",
+        "Обладатель красного пояса"
+      ],
+      "isCurrentChampion": false
+    },
+    {
+      "id": 5,
+      "name": "Мария Федорова",
+      "nickname": "Огонь",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter5.jpg",
+      "discipline": "Каратэ",
+      "weightClass": "Легкий вес",
+      "age": 23,
+      "experience": "10 лет",
+      "record": {
+        "wins": 28,
+        "losses": 1,
+        "draws": 0,
+        "knockouts": 12
+      },
+      "achievements": [
+        "Чемпионка мира по каратэ Киокушин",
+        "Трехкратная чемпионка России",
+        "Черный пояс 3-й дан"
+      ],
+      "isCurrentChampion": true
+    },
+    {
+      "id": 6,
+      "name": "Роман Николаев",
+      "nickname": "Титан",
+      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter6.jpg",
+      "discipline": "Бразильское джиу-джитсу",
+      "weightClass": "Супертяжелый вес",
+      "age": 29,
+      "experience": "9 лет",
+      "record": {
+        "wins": 16,
+        "losses": 3,
+        "draws": 1,
+        "knockouts": 4
+      },
+      "achievements": [
+        "Черный пояс BJJ",
+        "Чемпион мира IBJJF",
+        "Обладатель кубка Mundials"
+      ],
+      "isCurrentChampion": false
+    }
+  ]
+}

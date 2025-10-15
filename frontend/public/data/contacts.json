@@ -1,0 +1,19 @@
+{
+  "academy": {
+    "name": "KAMELOT Fight Club",
+    "address": "г. Москва, ул. Спортивная, 15",
+    "phone": "+7 (900) 123-45-67",
+    "email": "info@kamelot-club.ru",
+    "workingHours": {
+      "weekdays": "Пн-Пт: 7:00-23:00",
+      "weekend": "Сб-Вс: 9:00-21:00"
+    },
+    "description": "Профессиональный клуб боевых искусств. Тренируйся с лучшими, становись чемпионом.",
+    "socialLinks": {
+      "vk": "https://vk.com/kamelot_club",
+      "telegram": "https://t.me/kamelot_club",
+      "instagram": "https://instagram.com/kamelot_club",
+      "youtube": "https://youtube.com/@kamelot_club"
+    }
+  }
+}

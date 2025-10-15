@@ -13,10 +13,12 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         <div v-for="(art, index) in (martialArts || [])" :key="art?.id || 'default'" data-aos="fade-up"
-          :data-aos-delay="index * 100" data-aos-duration="600" class="flex">
+          data-aos-duration="600" class="flex">
           <UCard
             class="hover:-translate-y-2 transition-all duration-300 transform shadow-lg hover:shadow-md bg-slate-800 rounded-lg ring-0 flex flex-col w-full"
-            :class="getShadowClass(art.id)">
+            :class="getShadowClass(art.id)" :ui="{
+              body: 'h-full'
+            }">
             <template #header>
               <div class="relative h-48 rounded-t-lg">
                 <img :src="art.image" :alt="art.name"
@@ -28,35 +30,37 @@
               </div>
             </template>
 
-            <div class="text-gray-100 flex flex-col flex-1">
+            <div class="text-gray-100 flex flex-col flex-1 justify-between h-full">
               <p class=" mb-4 leading-relaxed">
                 {{ art.description }}
               </p>
-
-              <div class="flex flex-wrap gap-2 mb-4">
-                <UBadge v-for="benefit in (art?.benefits || [])" :key="benefit || 'benefit'" variant="soft"
-                  color="error" size="sm">
-                  {{ benefit }}
-                </UBadge>
-              </div>
-
-              <div class="flex justify-between items-center text-sm mb-4">
-                <div class="flex items-center gap-1">
-                  <UIcon name="i-heroicons-clock" />
-                  <span>{{ art.duration }}</span>
+              <div>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  <UBadge v-for="benefit in (art?.benefits || [])" :key="benefit || 'benefit'" variant="soft"
+                    color="error" size="sm">
+                    {{ benefit }}
+                  </UBadge>
                 </div>
-                <div class="flex items-center gap-1">
-                  <UIcon name="i-heroicons-user-group" />
-                  <span>{{ art.difficulty }}</span>
+
+                <div class="flex justify-between items-center text-sm mb-4">
+                  <div class="flex items-center gap-1">
+                    <UIcon name="i-heroicons-clock" />
+                    <span>{{ art.duration }}</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <UIcon name="i-heroicons-user-group" />
+                    <span>{{ art.difficulty }}</span>
+                  </div>
+                </div>
+
+                <div class="text-center mt-auto">
+                  <UButton color="error" variant="outline" class="w-full hover:cursor-pointer"
+                    @click="selectMartialArt(art)">
+                    Записаться
+                  </UButton>
                 </div>
               </div>
 
-              <div class="text-center mt-auto">
-                <UButton color="error" variant="outline" class="w-full hover:cursor-pointer"
-                  @click="selectMartialArt(art)">
-                  Записаться
-                </UButton>
-              </div>
             </div>
           </UCard>
         </div>

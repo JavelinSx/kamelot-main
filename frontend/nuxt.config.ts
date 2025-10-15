@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     telegramBotToken: process.env.NUXT_TELEGRAM_BOT_TOKEN,
     telegramChatId: process.env.NUXT_TELEGRAM_CHAT_ID,
+    public: {
+      storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || '',
+    },
   },
 
   // Настройка для статической генерации

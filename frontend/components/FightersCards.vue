@@ -63,7 +63,7 @@
               </div>
             </div>
 
-            <div class="mb-4">
+            <!-- <div class="mb-4">
               <div class="flex justify-between text-sm mb-2">
                 <span class="text-gray-400">Побед нокаутом</span>
                 <span class="text-red-400 font-semibold">{{ fighter.record.knockouts }}</span>
@@ -77,7 +77,7 @@
               <div class="text-center text-xs text-gray-400 mt-1">
                 {{ getWinPercentage(fighter.record) }}% побед
               </div>
-            </div>
+            </div> -->
 
             <div class="mb-6">
               <h4 class="text-sm font-semibold text-gray-300 mb-2">Достижения:</h4>
@@ -90,7 +90,7 @@
               </ul>
             </div>
 
-            <div class="space-y-3">
+            <!-- <div class="space-y-3">
               <UButton color="error" variant="solid" class="w-full" @click="viewFighterStats(fighter)">
                 Статистика
               </UButton>
@@ -98,7 +98,7 @@
               <UButton variant="outline" color="neutral" class="w-full" @click="viewFighterProfile(fighter)">
                 Профиль
               </UButton>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -107,131 +107,16 @@
 </template>
 
 <script setup lang="ts">
-interface FighterRecord {
-  wins: number
-  losses: number
-  draws: number
-  knockouts: number
-}
+// Используем composable для загрузки бойцов
+const { fighters, loading, fetchFighters, getWinPercentage } = useFighters()
 
-interface Fighter {
-  id: number
-  name: string
-  nickname: string
-  photo: string
-  discipline: string
-  weightClass: string
-  age: number
-  experience: string
-  record: FighterRecord
-  achievements: string[]
-  isCurrentChampion: boolean
-}
-
-const fighters = ref<Fighter[]>([
-  {
-    id: 1,
-    name: 'Иван Петров',
-    nickname: 'Железный Кулак',
-    photo: '/images/fighter1.jpg',
-    discipline: 'Бокс',
-    weightClass: 'Средний вес',
-    age: 28,
-    experience: '8 лет',
-    record: { wins: 24, losses: 3, draws: 1, knockouts: 18 },
-    achievements: [
-      'Чемпион России по боксу (2022-2023)',
-      'Обладатель кубка Европы',
-      'Лучший боксер года по версии WBC'
-    ],
-    isCurrentChampion: true
-  },
-  {
-    id: 2,
-    name: 'Елена Козлова',
-    nickname: 'Молния',
-    photo: '/images/fighter2.jpg',
-    discipline: 'ММА',
-    weightClass: 'Наилегчайший вес',
-    age: 25,
-    experience: '6 лет',
-    record: { wins: 18, losses: 2, draws: 0, knockouts: 8 },
-    achievements: [
-      'Чемпионка Европы по ММА',
-      'Обладательница пояса Fight Nights',
-      'Лучшая женщина-боец года'
-    ],
-    isCurrentChampion: true
-  },
-  {
-    id: 3,
-    name: 'Андрей Волков',
-    nickname: 'Медведь',
-    photo: '/images/fighter3.jpg',
-    discipline: 'Кикбоксинг',
-    weightClass: 'Тяжелый вес',
-    age: 32,
-    experience: '12 лет',
-    record: { wins: 31, losses: 5, draws: 2, knockouts: 23 },
-    achievements: [
-      'Чемпион мира по К-1',
-      'Двукратный чемпион России',
-      'Участник турнира Glory'
-    ],
-    isCurrentChampion: false
-  },
-  {
-    id: 4,
-    name: 'Дмитрий Смирнов',
-    nickname: 'Вихрь',
-    photo: '/images/fighter4.jpg',
-    discipline: 'Муай Тай',
-    weightClass: 'Полусредний вес',
-    age: 26,
-    experience: '7 лет',
-    record: { wins: 22, losses: 4, draws: 1, knockouts: 15 },
-    achievements: [
-      'Чемпион WBC Muay Thai',
-      'Победитель турнира в Таиланде',
-      'Обладатель красного пояса'
-    ],
-    isCurrentChampion: false
-  },
-  {
-    id: 5,
-    name: 'Мария Федорова',
-    nickname: 'Огонь',
-    photo: '/images/fighter5.jpg',
-    discipline: 'Каратэ',
-    weightClass: 'Легкий вес',
-    age: 23,
-    experience: '10 лет',
-    record: { wins: 28, losses: 1, draws: 0, knockouts: 12 },
-    achievements: [
-      'Чемпионка мира по каратэ Киокушин',
-      'Трехкратная чемпионка России',
-      'Черный пояс 3-й дан'
-    ],
-    isCurrentChampion: true
-  },
-  {
-    id: 6,
-    name: 'Роман Николаев',
-    nickname: 'Титан',
-    photo: '/images/fighter6.jpg',
-    discipline: 'Бразильское джиу-джитсу',
-    weightClass: 'Супертяжелый вес',
-    age: 29,
-    experience: '9 лет',
-    record: { wins: 16, losses: 3, draws: 1, knockouts: 4 },
-    achievements: [
-      'Черный пояс BJJ',
-      'Чемпион мира IBJJF',
-      'Обладатель кубка Mundials'
-    ],
-    isCurrentChampion: false
+onMounted(async () => {
+  try {
+    await fetchFighters()
+  } catch (error) {
+    console.error('Failed to load fighters:', error)
   }
-])
+})
 
 const getBadgeColor = (wins: number, losses: number) => {
   const percentage = (wins / (wins + losses)) * 100
@@ -240,16 +125,11 @@ const getBadgeColor = (wins: number, losses: number) => {
   return 'error'
 }
 
-const getWinPercentage = (record: FighterRecord) => {
-  const total = record.wins + record.losses + record.draws
-  return Math.round((record.wins / total) * 100)
-}
-
-const viewFighterStats = (fighter: Fighter) => {
+const viewFighterStats = (fighter: any) => {
   console.log('Статистика бойца:', fighter.name)
 }
 
-const viewFighterProfile = (fighter: Fighter) => {
+const viewFighterProfile = (fighter: any) => {
   console.log('Профиль бойца:', fighter.name)
 }
 
