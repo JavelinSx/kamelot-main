@@ -2,29 +2,29 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
-  modules: ["@nuxt/ui"],
+  modules: ["@nuxt/ui", "@vueuse/motion/nuxt"],
 
   // Runtime configuration
   runtimeConfig: {
     telegramBotToken: process.env.NUXT_TELEGRAM_BOT_TOKEN,
     telegramChatId: process.env.NUXT_TELEGRAM_CHAT_ID,
     public: {
-      storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || '',
+      storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || "",
     },
   },
 
   // Настройка для статической генерации
-  ssr: false, // Отключаем SSR
+  ssr: true, // Включаем SSR для генерации статического контента с данными
   nitro: {
     prerender: {
-      routes: ["/"], // Добавьте все нужные маршруты
+      routes: ["/", "/trainers", "/schedule", "/blog", "/kids"], // Маршруты для пререндеринга
     },
   },
 
   // Настройка автоимпортов
   imports: {
     autoImport: true,
-    dirs: ["composables", "shared/composables"],
+    dirs: ["composables"],
   },
 
   // TypeScript конфигурация
@@ -42,6 +42,13 @@ export default defineNuxtConfig({
   // Кастомная тема Kamelot для боевых искусств
   ui: {
     prefix: "U",
+  },
+
+  // Настройка цветовой темы
+  colorMode: {
+    preference: "dark", // Темная тема по умолчанию
+    fallback: "dark", // Резервная тема - темная
+    classSuffix: "", // Используем класс 'dark' вместо 'dark-mode'
   },
 
   // Page transitions

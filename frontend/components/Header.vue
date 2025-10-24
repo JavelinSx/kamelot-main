@@ -3,11 +3,16 @@
     <UContainer class="py-4 relative">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <div data-aos="fade-right" data-aos-duration="400" data-aos-easing="ease-out-back">
-            <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
-          </div>
-          <span data-aos="fade-down" data-aos-duration="400" data-aos-delay="100" data-aos-easing="ease-out-back"
-            class="text-xl font-bold text-white">KAMELOT</span>
+          <ClientOnly>
+            <div v-motion-fade-visible-once :delay="0">
+              <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
+            </div>
+            <span v-motion-fade-visible-once :delay="100" class="text-xl font-bold text-white">KAMELOT</span>
+            <template #fallback>
+              <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
+              <span class="text-xl font-bold text-white">KAMELOT</span>
+            </template>
+          </ClientOnly>
         </div>
 
         <nav class="hidden lg:flex items-center gap-8 ">
@@ -29,6 +34,13 @@
         </nav>
 
         <div class="flex items-center gap-4 ">
+          <!-- Переключатель темы -->
+          <ClientOnly>
+            <UButton :icon="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+              color="neutral" variant="ghost" aria-label="Переключить тему" @click="toggleColorMode"
+              class="hidden lg:flex items-center justify-center text-white hover:text-red-500 transition-colors" />
+          </ClientOnly>
+
           <UModal v-model:open="isBookingOpen" title="Запись на тренировку"
             description="Заполните форму для записи на тренировку. Мы свяжемся с вами в ближайшее время." :ui="{
               overlay: 'fixed inset-0 bg-elevated/75',
@@ -40,9 +52,12 @@
               close: 'absolute top-2 end-2'
             }">
             <UButton color="error"
-              class="text-white shadow-amber-50 shadow-md cursor-pointer hover:scale-95 transition-all duration-300"
-              size="lg" data-aos="ease-in-back" data-aos-duration="300">
-              Записаться
+              class="relative text-white font-bold bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 shadow-lg shadow-red-500/50 hover:shadow-xl hover:shadow-red-500/70 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 border-0"
+              size="lg">
+              <span class="relative z-10 flex items-center gap-2">
+                <UIcon name="i-heroicons-calendar-days" class="w-5 h-5" />
+                Записаться
+              </span>
             </UButton>
 
             <template #body>
@@ -73,6 +88,16 @@
           <ULink to="/blog" class="text-white hover:text-red-500 transition-colors">
             Блог
           </ULink>
+
+          <!-- Переключатель темы для мобильного меню -->
+          <ClientOnly>
+            <button @click="toggleColorMode"
+              class="flex items-center gap-2 text-white hover:text-red-500 transition-colors">
+              <UIcon :name="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+                class="w-5 h-5" />
+              <span>{{ colorMode.value === 'dark' ? 'Темная тема' : 'Светлая тема' }}</span>
+            </button>
+          </ClientOnly>
         </nav>
       </div>
     </UContainer>
@@ -83,6 +108,13 @@
 const logo = '/images/logo.png';
 const isMenuOpen = ref(false)
 const isBookingOpen = ref(false)
+
+// Переключатель темы
+const colorMode = useColorMode()
+
+function toggleColorMode() {
+  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+}
 
 function handleBookingSuccess() {
   isBookingOpen.value = false

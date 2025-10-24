@@ -1,12 +1,13 @@
 <template>
-  <section class="py-10 bg-white overflow-hidden">
+  <section class="py-10 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
     <UContainer>
       <div class="flex flex-col items-center mb-8 text-center">
-        <h2 data-aos="fade-down" data-aos-duration="800" class="inline-block lg:text-4xl font-bold text-gray-900 mb-4 ">
+        <h2 data-aos="fade-down" data-aos-duration="800"
+          class="inline-block lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 ">
           Направления единоборств
         </h2>
         <p data-aos="fade-up" data-aos-duration="800" data-aos-delay="100"
-          class="inline-block lg:text-xl text-gray-700 max-w-2xl mx-auto ">
+          class="inline-block lg:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto ">
           Выберите подходящее направление для развития своих навыков и достижения целей
         </p>
       </div>
@@ -15,14 +16,14 @@
         <div v-for="(art, index) in (martialArts || [])" :key="art?.id || 'default'" data-aos="fade-up"
           data-aos-duration="600" class="flex">
           <UCard
-            class="hover:-translate-y-2 transition-all duration-300 transform shadow-lg hover:shadow-md bg-slate-800 rounded-lg ring-0 flex flex-col w-full"
+            class="hover:-translate-y-2 transition-all duration-300 transform shadow-lg hover:shadow-md bg-white dark:bg-slate-800 rounded-lg ring-1 ring-gray-200 dark:ring-gray-700 flex flex-col w-full"
             :class="getShadowClass(art.id)" :ui="{
               body: 'h-full'
             }">
             <template #header>
-              <div class="relative h-48 rounded-t-lg">
+              <div class="relative h-48 rounded-md overflow-hidden">
                 <img :src="art.image" :alt="art.name"
-                  class="w-full rounded-md h-full object-cover transition-transform duration-300 hover:scale-110" />
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-110" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                 <div class="absolute bottom-4 left-4 ">
                   <h3 class="text-2xl font-bold text-white">{{ art.name }}</h3>
@@ -30,8 +31,8 @@
               </div>
             </template>
 
-            <div class="text-gray-100 flex flex-col flex-1 justify-between h-full">
-              <p class=" mb-4 leading-relaxed">
+            <div class="text-gray-800 dark:text-gray-100 flex flex-col flex-1 justify-between h-full">
+              <p class="mb-4 leading-relaxed">
                 {{ art.description }}
               </p>
               <div>
@@ -42,13 +43,13 @@
                   </UBadge>
                 </div>
 
-                <div class="flex justify-between items-center text-sm mb-4">
+                <div class="flex justify-between items-center text-sm mb-4 text-gray-700 dark:text-gray-300">
                   <div class="flex items-center gap-1">
-                    <UIcon name="i-heroicons-clock" />
+                    <UIcon name="i-heroicons-clock" class="text-red-500" />
                     <span>{{ art.duration }}</span>
                   </div>
                   <div class="flex items-center gap-1">
-                    <UIcon name="i-heroicons-user-group" />
+                    <UIcon name="i-heroicons-user-group" class="text-red-500" />
                     <span>{{ art.difficulty }}</span>
                   </div>
                 </div>

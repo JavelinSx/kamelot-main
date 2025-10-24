@@ -22,7 +22,7 @@
             "ageGroup": "новички",
             "trainer": "Крылов Валерий",
             "level": "Начинающие",
-            "ageCategory": "adult"
+            "ageCategory": "teen"
           },
           {
             "id": 103,
@@ -89,7 +89,7 @@
             "ageGroup": "новички",
             "trainer": "Крылов Валерий",
             "level": "Начинающие",
-            "ageCategory": "adult"
+            "ageCategory": "teen"
           },
           {
             "id": 303,
@@ -156,7 +156,7 @@
             "ageGroup": "новички",
             "trainer": "Крылов Валерий",
             "level": "Начинающие",
-            "ageCategory": "adult"
+            "ageCategory": "teen"
           },
           {
             "id": 503,

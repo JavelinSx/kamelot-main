@@ -18,25 +18,8 @@
         </div>
       </div>
 
-      <!-- Загрузка -->
-      <div v-if="loading" class="flex justify-center items-center py-20">
-        <div class="text-center">
-          <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p class="text-gray-600 dark:text-gray-300">Загрузка расписания...</p>
-        </div>
-      </div>
-
-      <!-- Ошибка -->
-      <div v-else-if="error" class="text-center py-20">
-        <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-6 max-w-md mx-auto">
-          <UIcon name="i-heroicons-exclamation-triangle" class="w-12 h-12 text-red-600 mx-auto mb-4" />
-          <p class="text-red-600 dark:text-red-400 font-semibold mb-2">Ошибка загрузки расписания</p>
-          <p class="text-sm text-gray-600 dark:text-gray-400">{{ error.message }}</p>
-        </div>
-      </div>
-
       <!-- Расписание -->
-      <div v-else-if="scheduleData" class="space-y-8">
+      <div v-if="scheduleData" class="space-y-8">
         <!-- Табы зон -->
         <div class="mb-8" data-aos="fade-up" data-aos-duration="600">
           <div class="flex gap-4 justify-center">
@@ -89,7 +72,7 @@
                 class="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
 
                 <!-- Заголовок карточки -->
-                <div class="bg-gradient-to-r from-red-600 to-orange-600 p-4">
+                <div :class="['bg-gradient-to-r p-4', getColorScheme(session.ageCategory).gradient]">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
                       <UIcon name="i-heroicons-clock" class="w-6 h-6 text-white" />
@@ -106,11 +89,7 @@
                 <div class="p-6 space-y-4 relative overflow-hidden">
                   <!-- Фоновая картинка -->
                   <div class="absolute right-0 top-0 bottom-0 w-32 pointer-events-none" :style="{
-                    filter: session.ageCategory === 'kid'
-                      ? 'drop-shadow(2px 0 4px rgba(34, 197, 94, 0.6))'
-                      : session.ageCategory === 'teen'
-                        ? 'drop-shadow(2px 0 4px rgba(249, 115, 22, 0.6))'
-                        : 'drop-shadow(2px 0 4px rgba(239, 68, 68, 0.6))'
+                    filter: getColorScheme(session.ageCategory).shadow
                   }">
                     <img v-if="session.ageCategory === 'kid'" :src="kid" class="h-full w-full object-cover"
                       alt="Детская группа" />
@@ -126,9 +105,7 @@
                     </h3>
                     <p v-if="session.ageGroup" :class="[
                       'text-sm font-semibold',
-                      session.ageCategory === 'kid' ? 'text-green-500' :
-                        session.ageCategory === 'teen' ? 'text-orange-500' :
-                          'text-red-500'
+                      getColorScheme(session.ageCategory).textClass
                     ]">
                       {{ session.ageGroup }}
                     </p>
@@ -136,7 +113,8 @@
 
                   <!-- Тренер -->
                   <div class="flex items-center gap-3 relative z-10">
-                    <UIcon name="i-heroicons-user-circle" class="w-5 h-5 text-red-600" />
+                    <UIcon name="i-heroicons-user-circle"
+                      :class="['w-5 h-5', getColorScheme(session.ageCategory).iconClass]" />
                     <div>
                       <p class="text-xs text-gray-500 dark:text-gray-400">Тренер</p>
                       <p class="font-semibold text-gray-900 dark:text-white">{{ session.trainer }}</p>
@@ -145,7 +123,8 @@
 
                   <!-- Уровень -->
                   <div class="flex items-center gap-3 relative z-10">
-                    <UIcon name="i-heroicons-academic-cap" class="w-5 h-5 text-red-600" />
+                    <UIcon name="i-heroicons-academic-cap"
+                      :class="['w-5 h-5', getColorScheme(session.ageCategory).iconClass]" />
                     <div>
                       <p class="text-xs text-gray-500 dark:text-gray-400">Уровень</p>
                       <p class="font-semibold text-gray-900 dark:text-white">{{ session.level }}</p>
@@ -153,10 +132,14 @@
                   </div>
 
                   <!-- Кнопка записи -->
-                  <UButton color="error" variant="solid" block class="mt-4 relative z-10" @click="bookSession(session)">
-                    <UIcon name="i-heroicons-calendar-plus" class="w-5 h-5 mr-2" />
+                  <button :class="[
+                    'w-full mt-4 relative z-10 px-4 py-2.5 rounded-lg font-semibold text-white transition-all duration-300',
+                    'flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105',
+                    getColorScheme(session.ageCategory).buttonClass
+                  ]" @click="bookSession(session)">
+                    <UIcon name="i-heroicons-calendar-days" class="w-5 h-5" />
                     Записаться
-                  </UButton>
+                  </button>
                 </div>
               </div>
             </div>
@@ -197,19 +180,12 @@
 import adult from '~/public/images/fight-category/adult.png'
 import kid from '~/public/images/fight-category/kid.png'
 import teen from '~/public/images/fight-category/teen.png'
-const { scheduleData, loading, error, fetchSchedule } = useSchedule()
+
+// Используем composable - данные теперь доступны сразу, без асинхронной загрузки
+const { scheduleData } = useSchedule()
 
 const selectedZoneIndex = ref(0)
 const selectedDayIndex = ref(getCurrentDayIndex())
-
-// Загружаем расписание
-onMounted(async () => {
-  try {
-    await fetchSchedule()
-  } catch (err) {
-    console.error('Failed to load schedule:', err)
-  }
-})
 
 // Дни недели
 const daysOfWeek = [
@@ -267,6 +243,45 @@ function isCurrentSession(day: string, timeRange: string): boolean {
 
   // Упрощенная проверка (можно улучшить)
   return currentHours === hours && currentMinutes >= minutes && currentMinutes < minutes + 90
+}
+
+// Цветовые схемы для категорий возраста
+type AgeCategory = 'kid' | 'teen' | 'adult'
+
+interface ColorScheme {
+  gradient: string        // Градиент для хедера
+  shadow: string          // Тень от картинки (drop-shadow)
+  buttonClass: string     // Класс для кнопки
+  textClass: string       // Класс для текста возрастной группы
+  iconClass: string       // Класс для иконок
+}
+
+function getColorScheme(ageCategory: AgeCategory): ColorScheme {
+  const schemes: Record<AgeCategory, ColorScheme> = {
+    kid: {
+      gradient: 'from-green-500 to-emerald-600',
+      shadow: 'drop-shadow(2px 0 8px rgba(34, 197, 94, 0.7))',
+      buttonClass: 'bg-green-600 hover:bg-green-700',
+      textClass: 'text-green-600 dark:text-green-400',
+      iconClass: 'text-green-600'
+    },
+    teen: {
+      gradient: 'from-blue-500 to-blue-700',
+      shadow: 'drop-shadow(2px 0 8px rgba(59, 130, 246, 0.7))',
+      buttonClass: 'bg-blue-600 hover:bg-blue-700',
+      textClass: 'text-blue-600 dark:text-blue-400',
+      iconClass: 'text-blue-600'
+    },
+    adult: {
+      gradient: 'from-red-600 to-orange-600',
+      shadow: 'drop-shadow(2px 0 8px rgba(239, 68, 68, 0.7))',
+      buttonClass: 'bg-red-600 hover:bg-red-700',
+      textClass: 'text-red-600 dark:text-red-400',
+      iconClass: 'text-red-600'
+    }
+  }
+
+  return schemes[ageCategory]
 }
 
 // Форматирование даты

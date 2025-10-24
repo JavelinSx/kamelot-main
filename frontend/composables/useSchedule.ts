@@ -1,3 +1,5 @@
+import scheduleDataJson from '~/public/data/schedule.json'
+
 export type AgeCategory = 'kid' | 'teen' | 'adult';
 
 export interface ScheduleSession {
@@ -37,34 +39,8 @@ export interface ScheduleData {
 }
 
 export const useSchedule = () => {
-  const scheduleData = useState<ScheduleData | null>("schedule", () => null);
-  const loading = useState<boolean>("schedule-loading", () => false);
-  const error = useState<Error | null>("schedule-error", () => null);
-
-  const fetchSchedule = async () => {
-    if (scheduleData.value) return scheduleData.value;
-
-    loading.value = true;
-    error.value = null;
-
-    try {
-      const config = useRuntimeConfig();
-      const baseUrl = config.public.storageUrl || "";
-      const url = baseUrl
-        ? `${baseUrl}/data/schedule.json`
-        : "/data/schedule.json";
-
-      const response = await $fetch<ScheduleData>(url);
-      scheduleData.value = response;
-      return response;
-    } catch (err) {
-      error.value = err as Error;
-      console.error("Error fetching schedule:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
+  // Импортируем данные напрямую из JSON - они будут встроены в билд
+  const scheduleData = ref<ScheduleData>(scheduleDataJson as ScheduleData);
 
   const getZoneByName = (zoneName: string) => {
     return scheduleData.value?.zones.find((zone) =>
@@ -110,9 +86,6 @@ export const useSchedule = () => {
 
   return {
     scheduleData: readonly(scheduleData),
-    loading: readonly(loading),
-    error: readonly(error),
-    fetchSchedule,
     getZoneByName,
     getScheduleByDay,
     getCurrentDaySchedule,

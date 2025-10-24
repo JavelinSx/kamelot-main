@@ -1,16 +1,16 @@
 <template>
-  <div class="bg-gradient-to-b from-black to-white">
+  <div class="bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 transition-colors duration-300">
     <!-- Заголовок галереи -->
-    <div v-if="title || description" class="text-center pt-8 pb-8 text-white">
+    <div v-if="title || description" class="text-center pt-8 pb-8">
       <h2 v-if="title"
         data-aos="fade-down"
         data-aos-duration="600"
-        class="text-5xl font-bold text-gray-300 mb-12">{{ title }}</h2>
+        class="text-5xl font-bold text-gray-900 dark:text-gray-300 mb-12">{{ title }}</h2>
       <p v-if="description"
         data-aos="fade-up"
         data-aos-duration="600"
         data-aos-delay="100"
-        class="text-xl text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
+        class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
     </div>
 
     <!-- Галерея -->
@@ -22,7 +22,7 @@
         class="masonry-item group cursor-pointer break-inside-avoid"
         :style="{ marginBottom: gap + 'px' }" @click="handleImageClick(image, index)">
         <!-- Контейнер изображения -->
-        <div class="relative overflow-hidden bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+        <div class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-lg">
           <!-- Изображение -->
           <img :src="image" :alt="`Gallery image ${index + 1}`"
             class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
@@ -40,9 +40,9 @@
     </div>
 
     <!-- Кнопка "Показать еще" -->
-    <div v-if="canLoadMore" class="text-center mt-8">
+    <div v-if="canLoadMore" class="text-center mt-8 pb-8">
       <button @click="$emit('loadMore')" :disabled="loadingMore"
-        class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg transition-colors disabled:opacity-50">
+        class="px-6 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-bold rounded-lg transition-colors disabled:opacity-50 shadow-lg">
         <span v-if="!loadingMore">Показать еще</span>
         <span v-else class="flex items-center space-x-2">
           <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

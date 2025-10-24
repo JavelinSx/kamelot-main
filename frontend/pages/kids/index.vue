@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white min-h-screen">
+  <div class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
     <!-- Hero секция -->
-    <section class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 text-white overflow-hidden">
+    <section class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 dark:from-orange-600 dark:to-green-700 text-white overflow-hidden">
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-bounce"></div>
         <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce"
@@ -17,7 +17,7 @@
             Развиваем силу, дисциплину и уверенность в себе с ранних лет
           </p>
           <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold hover:bg-gray-100 shadow-xl" @click="openBooking">
+            class="bg-white !text-red-600 font-bold hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl" @click="openBooking">
             <UIcon name="i-heroicons-rocket-launch" class="w-6 h-6 mr-2" />
             Записаться на пробное занятие
           </UButton>
@@ -26,60 +26,60 @@
     </section>
 
     <!-- Почему боевые искусства для детей -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white dark:bg-gray-800">
       <UContainer class="px-6">
         <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Почему это важно для вашего ребёнка?
           </h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Боевые искусства — это не только физическая подготовка, но и развитие личности
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="benefit in benefits" :key="benefit.title"
-            class="bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl shadow-md p-8 hover:shadow-xl transition-all hover:-translate-y-1">
+            class="bg-gradient-to-br from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl shadow-md p-8 hover:shadow-xl transition-all hover:-translate-y-1">
             <div
               class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
               <UIcon :name="benefit.icon" class="w-8 h-8 text-white" />
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ benefit.title }}</h3>
-            <p class="text-gray-700 leading-relaxed">{{ benefit.description }}</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ benefit.title }}</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ benefit.description }}</p>
           </div>
         </div>
       </UContainer>
     </section>
 
     <!-- Возрастные группы -->
-    <section class="py-20 bg-gradient-to-b from-orange-50 to-yellow-50">
+    <section class="py-20 bg-gradient-to-b from-orange-50 to-yellow-50 dark:from-gray-900 dark:to-gray-800">
       <UContainer class="px-6">
         <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Возрастные группы
           </h2>
-          <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Программы адаптированы под каждый возраст
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div v-for="group in ageGroups" :key="group.age"
-            class="bg-white rounded-2xl shadow-xl overflow-hidden hover:scale-105 transition-transform">
+            class="bg-white dark:bg-gray-700 rounded-2xl shadow-xl overflow-hidden hover:scale-105 transition-transform">
             <div :class="`p-8 text-white shadow-inner ${group.color}`">
               <h3 class="text-3xl font-bold mb-2 drop-shadow-md">{{ group.age }}</h3>
               <p class="text-lg drop-shadow-sm">{{ group.name }}</p>
             </div>
-            <div class="p-8 bg-white">
+            <div class="p-8 bg-white dark:bg-gray-700">
               <ul class="space-y-3">
                 <li v-for="item in group.features" :key="item" class="flex items-start gap-3">
-                  <UIcon name="i-heroicons-check-circle" class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" />
-                  <span class="text-gray-700">{{ item }}</span>
+                  <UIcon name="i-heroicons-check-circle" class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                  <span class="text-gray-700 dark:text-gray-300">{{ item }}</span>
                 </li>
               </ul>
-              <div class="mt-6 pt-6 border-t border-gray-200">
-                <p class="text-sm text-gray-500 mb-2">Расписание</p>
-                <p class="font-semibold text-gray-900">{{ group.schedule }}</p>
+              <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Расписание</p>
+                <p class="font-semibold text-gray-900 dark:text-white">{{ group.schedule }}</p>
               </div>
             </div>
           </div>
@@ -88,24 +88,24 @@
     </section>
 
     <!-- Что включено в занятия -->
-    <section class="py-20 bg-white">
+    <section class="py-20 bg-white dark:bg-gray-800">
       <UContainer class="px-6">
         <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Что включено в занятия
           </h2>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div v-for="activity in activities" :key="activity.title"
-            class="flex items-start gap-4 p-6 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl shadow-md hover:shadow-xl transition-all hover:-translate-y-1">
+            class="flex items-start gap-4 p-6 bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-gray-700 dark:to-gray-600 rounded-xl shadow-md hover:shadow-xl transition-all hover:-translate-y-1">
             <div
               class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
               <UIcon :name="activity.icon" class="w-6 h-6 text-white" />
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 mb-2">{{ activity.title }}</h3>
-              <p class="text-gray-700">{{ activity.description }}</p>
+              <p class="text-gray-700 dark:text-gray-300">{{ activity.description }}</p>
             </div>
           </div>
         </div>
@@ -113,24 +113,24 @@
     </section>
 
     <!-- Безопасность -->
-    <section class="py-20 bg-gradient-to-br from-green-50 to-emerald-50">
+    <section class="py-20 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800">
       <UContainer class="px-6">
-        <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12">
+        <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-2xl p-8 md:p-12">
           <div class="text-center mb-12">
-            <div class="inline-block p-4 bg-green-100 rounded-full mb-6">
-              <UIcon name="i-heroicons-shield-check" class="w-16 h-16 text-green-600" />
+            <div class="inline-block p-4 bg-green-100 dark:bg-green-900 rounded-full mb-6">
+              <UIcon name="i-heroicons-shield-check" class="w-16 h-16 text-green-600 dark:text-green-400" />
             </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Безопасность превыше всего
             </h2>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div v-for="safety in safetyFeatures" :key="safety.title" class="flex items-start gap-4">
-              <UIcon name="i-heroicons-check-badge" class="w-8 h-8 text-green-600 flex-shrink-0" />
+              <UIcon name="i-heroicons-check-badge" class="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0" />
               <div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ safety.title }}</h3>
-                <p class="text-gray-700">{{ safety.description }}</p>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ safety.title }}</h3>
+                <p class="text-gray-700 dark:text-gray-300">{{ safety.description }}</p>
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@
     </section>
 
     <!-- CTA секция -->
-    <section class="py-24 md:py-32 bg-gradient-to-r from-red-600 to-orange-600 text-white">
+    <section class="py-24 md:py-32 bg-gradient-to-r from-red-600 to-orange-600 dark:from-red-700 dark:to-orange-700 text-white">
       <UContainer class="px-6">
         <div class="text-center">
           <h2 class="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
@@ -149,7 +149,7 @@
             Запишитесь на бесплатное пробное занятие прямо сейчас!
           </p>
           <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold text-lg hover:bg-gray-100 shadow-xl" @click="openBooking">
+            class="bg-white !text-red-600 font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl" @click="openBooking">
             <UIcon name="i-heroicons-phone" class="w-6 h-6 mr-2" />
             Записаться на пробное занятие
           </UButton>

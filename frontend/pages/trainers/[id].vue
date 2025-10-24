@@ -118,7 +118,6 @@
 </template>
 
 <script setup lang="ts">
-import { FAKE_TRAINERS } from '~/shared/utils/fake-trainers'
 import type { Trainer, WorkoutType } from '~/types'
 
 // Получаем ID тренера из роута
@@ -126,7 +125,8 @@ const route = useRoute()
 const trainerId = computed(() => Number(route.params.id))
 
 // Загружаем данные тренера
-const trainer = computed(() => FAKE_TRAINERS.find(t => t.id === trainerId.value))
+const { trainers } = useTrainers()
+const trainer = computed(() => trainers.value.find((t: Trainer) => t.id === trainerId.value))
 
 // Если тренер не найден, редирект на главную
 if (!trainer.value && process.client) {
@@ -151,7 +151,7 @@ const getSpecializationName = (type: WorkoutType): string => {
   return specializationNames[type] || type
 }
 
-const getMainSpecialization = (specializations: WorkoutType[]): string => {
+const getMainSpecialization = (specializations: readonly WorkoutType[]): string => {
   if (specializations.length === 0) return 'Тренер'
   const firstSpecialization = specializations[0]
   if (!firstSpecialization) return 'Тренер'
