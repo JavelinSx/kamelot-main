@@ -167,8 +167,7 @@ const { formatFightDate, getStatusColor, getStatusText, isUpcoming, getTimeUntil
 // Форматированная дата
 const formattedDate = computed(() => formatFightDate(props.fight.date, 'full'))
 
-// Статус бой
-а
+// Статус боя
 const statusText = computed(() => getStatusText(props.fight.status))
 const statusClass = computed(() => {
   const color = getStatusColor(props.fight.status)

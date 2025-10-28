@@ -87,7 +87,7 @@ const loading = ref(true)
 const activeFilter = ref<'all' | 'upcoming' | 'completed'>('all')
 
 // Фильтры
-const filters = [
+const filters: Array<{ label: string; value: 'all' | 'upcoming' | 'completed' }> = [
   { label: 'Все бои', value: 'all' },
   { label: 'Предстоящие', value: 'upcoming' },
   { label: 'Завершенные', value: 'completed' },

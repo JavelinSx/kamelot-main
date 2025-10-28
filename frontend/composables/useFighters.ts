@@ -7,7 +7,7 @@ export interface FighterRecord {
   knockouts: number
 }
 
-export interface Fighter {
+export interface ClubFighter {
   id: number
   name: string
   nickname: string
@@ -22,12 +22,12 @@ export interface Fighter {
 }
 
 export interface FightersData {
-  fighters: Fighter[]
+  fighters: ClubFighter[]
 }
 
 export const useFighters = () => {
   // Импортируем данные напрямую из JSON - они будут встроены в билд
-  const fighters = ref<Fighter[]>(fightersData.fighters as Fighter[])
+  const fighters = ref<ClubFighter[]>(fightersData.fighters as ClubFighter[])
 
   const getChampions = () => {
     return fighters.value.filter(fighter => fighter.isCurrentChampion)
