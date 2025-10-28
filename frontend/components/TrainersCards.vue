@@ -16,14 +16,6 @@
             class="lg:text-2xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Опытные профессионалы с многолетним стажем и международными достижениями
           </p>
-          <template #fallback>
-            <h2 class="lg:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Наши тренеры
-            </h2>
-            <p class="lg:text-2xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Опытные профессионалы с многолетним стажем и международными достижениями
-            </p>
-          </template>
         </ClientOnly>
       </div>
 
@@ -102,25 +94,6 @@
                     {{ expandedBio[trainer.id] ? 'Скрыть' : 'Читать далее' }}
                   </button>
                 </div>
-
-                <!-- Статистика тренера -->
-                <!-- <div class="grid grid-cols-2 gap-4 py-4">
-                <div class="text-center">
-                  <div class="flex items-center justify-center gap-2 text-yellow-500 mb-1">
-                    <UIcon name="i-heroicons-star-solid" class="w-5 h-5" />
-                    <span class="font-bold text-lg text-gray-900 dark:text-white">{{ trainer.rating }}</span>
-                  </div>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Рейтинг</p>
-                </div>
-
-                <div class="text-center">
-                  <div class="flex items-center justify-center gap-2 text-blue-500 mb-1">
-                    <UIcon name="i-heroicons-trophy-solid" class="w-5 h-5" />
-                    <span class="font-bold text-lg text-gray-900 dark:text-white">{{ trainer.experience }}</span>
-                  </div>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">Лет опыта</p>
-                </div>
-              </div> -->
 
                 <!-- Дополнительная информация -->
                 <div class="space-y-3 text-sm">

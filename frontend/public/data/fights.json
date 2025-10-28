@@ -1,0 +1,40 @@
+{
+  "fights": [
+    {
+      "id": "fight-001",
+      "title": "Чемпионский бой",
+      "description": "Долгожданный поединок за титул чемпиона в категории до 77 кг. Два непобежденных бойца встретятся на ринге, чтобы определить сильнейшего.",
+      "date": "2025-11-15T19:00:00",
+      "location": {
+        "venue": "СК Kamelot Fight Club",
+        "address": "г. Москва, ул. Примерная, д. 1",
+        "city": "Москва"
+      },
+      "fighters": [
+        {
+          "name": "Иван Иванов",
+          "photo": "/images/fighters/fighter-1.jpg",
+          "record": "15-0-0",
+          "weight": "77 кг",
+          "team": "Kamelot Fight Club"
+        },
+        {
+          "name": "Петр Петров",
+          "photo": "/images/fighters/fighter-2.jpg",
+          "record": "12-1-0",
+          "weight": "77 кг",
+          "team": "Fighter's Academy"
+        }
+      ],
+      "poster": "/images/fights/fight-001-poster.jpg",
+      "vkPost": "https://vk.com/wall-123456789_123",
+      "status": "upcoming",
+      "category": "Профессионалы",
+      "weightClass": "77 кг",
+      "rounds": 5,
+      "ticketLink": "https://example.com/tickets/fight-001",
+      "featured": true,
+      "createdAt": "2025-10-28T12:00:00Z"
+    }
+  ]
+}

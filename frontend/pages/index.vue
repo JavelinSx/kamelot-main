@@ -4,7 +4,12 @@
     <MartialArtsCards />
     <TrainersCards />
     <FightersCards />
-    <Gallery :images="imageGallery" />
+    <Gallery
+      :images="photos"
+      :can-load-more="hasMore"
+      :loading-more="loading"
+      @load-more="handleLoadMore"
+    />
   </div>
 </template>
 
@@ -20,12 +25,17 @@ useSeoMeta({
   ogImage: '/og-image.jpg'
 })
 
-// Загружаем изображения галереи только на клиенте
-const imageGallery = ref<string[]>([])
+// Инициализируем галерею с пагинацией
+const { useGalleryPagination } = useGallery()
+const { photos, hasMore, loading, initialize, loadMore } = useGalleryPagination()
 
+// Обработчик кнопки "Показать еще"
+const handleLoadMore = () => {
+  loadMore()
+}
+
+// Загружаем первую порцию фотографий при монтировании
 onMounted(() => {
-  const { loadGalleryImages } = useGallery()
-  const images = loadGalleryImages()
-  imageGallery.value = Array.isArray(images) ? images.filter(img => typeof img === 'string') : []
+  initialize()
 })
 </script>

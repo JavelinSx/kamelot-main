@@ -1,0 +1,52 @@
+name: Deploy to Yandex Object Storage
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Позволяет запускать вручную
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run generate
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS CLI for Yandex Cloud
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.YC_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.YC_SECRET_KEY }}
+          aws configure set region ru-central1
+
+      - name: Deploy to Yandex Object Storage
+        run: |
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync .output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --acl public-read
+
+      - name: Deployment complete
+        run: |
+          echo "✅ Deployment completed successfully!"
+          echo "🌐 Site URL: https://${{ secrets.YC_BUCKET_NAME }}.storage.yandexcloud.net"

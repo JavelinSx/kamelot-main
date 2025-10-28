@@ -8,6 +8,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     telegramBotToken: process.env.NUXT_TELEGRAM_BOT_TOKEN,
     telegramChatId: process.env.NUXT_TELEGRAM_CHAT_ID,
+    // VK API Configuration
+    vkAccessToken: process.env.NUXT_VK_ACCESS_TOKEN,
+    vkGroupId: process.env.NUXT_VK_GROUP_ID,
+    vkAlbumId: process.env.NUXT_VK_ALBUM_ID,
     public: {
       storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || "",
     },

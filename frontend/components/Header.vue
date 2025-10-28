@@ -22,6 +22,9 @@
           <a href="/#trainers" class="nav-link" @click.prevent="scrollToTrainers">
             Тренеры
           </a>
+          <ULink to="/fights" class="nav-link">
+            Бои
+          </ULink>
           <ULink to="/schedule" class="nav-link">
             Расписание
           </ULink>
@@ -65,41 +68,87 @@
             </template>
           </UModal>
 
-          <UButton variant="ghost" icon="i-heroicons-bars-3" class="lg:hidden text-white"
-            @click="isMenuOpen = !isMenuOpen" />
+          <!-- Анимированная кнопка бургера -->
+          <button
+            class="lg:hidden p-2 text-white hover:text-red-500 transition-colors focus:outline-none"
+            @click="isMenuOpen = !isMenuOpen"
+            aria-label="Меню">
+            <div class="burger-icon">
+              <span class="burger-line" :class="{ 'burger-line-open-top': isMenuOpen }"></span>
+              <span class="burger-line" :class="{ 'burger-line-open-middle': isMenuOpen }"></span>
+              <span class="burger-line" :class="{ 'burger-line-open-bottom': isMenuOpen }"></span>
+            </div>
+          </button>
         </div>
       </div>
 
-      <div v-show="isMenuOpen" class="lg:hidden mt-4 pb-4 border-t border-gray-700 pt-4">
-        <nav class="flex flex-col gap-4">
-          <ULink to="/" class="text-white hover:text-red-500 transition-colors">
-            Главная
-          </ULink>
-          <a href="/#trainers" class="text-white hover:text-red-500 transition-colors "
-            @click.prevent="scrollToTrainers">
-            Тренеры
-          </a>
-          <ULink to="/schedule" class="text-white hover:text-red-500 transition-colors">
-            Расписание
-          </ULink>
-          <ULink to="/kids" class="text-white hover:text-red-500 transition-colors">
-            Детям
-          </ULink>
-          <ULink to="/blog" class="text-white hover:text-red-500 transition-colors">
-            Блог
-          </ULink>
+      <!-- Мобильное меню с анимацией -->
+      <Transition
+        enter-active-class="transition-all duration-300 ease-out"
+        leave-active-class="transition-all duration-200 ease-in"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-4">
+        <div v-if="isMenuOpen" class="lg:hidden mt-4 pb-4 border-t border-gray-700 pt-4 overflow-hidden">
+          <nav class="flex flex-col gap-4">
+            <ULink
+              to="/"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '0ms' }"
+              @click="closeMenu">
+              Главная
+            </ULink>
+            <a
+              href="/#trainers"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '50ms' }"
+              @click.prevent="scrollToTrainers">
+              Тренеры
+            </a>
+            <ULink
+              to="/fights"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '100ms' }"
+              @click="closeMenu">
+              Бои
+            </ULink>
+            <ULink
+              to="/schedule"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '150ms' }"
+              @click="closeMenu">
+              Расписание
+            </ULink>
+            <ULink
+              to="/kids"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '200ms' }"
+              @click="closeMenu">
+              Детям
+            </ULink>
+            <ULink
+              to="/blog"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '250ms' }"
+              @click="closeMenu">
+              Блог
+            </ULink>
 
-          <!-- Переключатель темы для мобильного меню -->
-          <ClientOnly>
-            <button @click="toggleColorMode"
-              class="flex items-center gap-2 text-white hover:text-red-500 transition-colors">
-              <UIcon :name="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
-                class="w-5 h-5" />
-              <span>{{ colorMode.value === 'dark' ? 'Темная тема' : 'Светлая тема' }}</span>
-            </button>
-          </ClientOnly>
-        </nav>
-      </div>
+            <!-- Переключатель темы для мобильного меню -->
+            <ClientOnly>
+              <button
+                @click="toggleColorMode"
+                class="menu-item flex items-center gap-2 text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+                :style="{ animationDelay: '300ms' }">
+                <UIcon :name="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+                  class="w-5 h-5" />
+                <span>{{ colorMode.value === 'dark' ? 'Темная тема' : 'Светлая тема' }}</span>
+              </button>
+            </ClientOnly>
+          </nav>
+        </div>
+      </Transition>
     </UContainer>
   </header>
 </template>
@@ -118,6 +167,10 @@ function toggleColorMode() {
 
 function handleBookingSuccess() {
   isBookingOpen.value = false
+}
+
+function closeMenu() {
+  isMenuOpen.value = false
 }
 
 // Слушаем событие открытия модалки бронирования
@@ -193,5 +246,62 @@ function scrollToTrainers() {
 
 .nav-link:hover {
   color: #ef4444;
+}
+
+/* Анимация бургер-иконки */
+.burger-icon {
+  width: 24px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.burger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-origin: center;
+}
+
+/* Верхняя линия - поворот в верхнюю часть X */
+.burger-line-open-top {
+  transform: translateY(9px) rotate(45deg);
+}
+
+/* Средняя линия - исчезает */
+.burger-line-open-middle {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+/* Нижняя линия - поворот в нижнюю часть X */
+.burger-line-open-bottom {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Анимация появления пунктов меню */
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.menu-item {
+  animation: slideInFromLeft 0.4s ease-out forwards;
+  opacity: 0;
+}
+
+/* Эффект при hover - дополнительное свечение */
+.menu-item:hover {
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
 }
 </style>
