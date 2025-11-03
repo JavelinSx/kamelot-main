@@ -135,7 +135,10 @@ export const useFights = () => {
     const cleanData: Record<string, string> = {}
     Object.keys(fightData).forEach(key => {
       const cleanKey = key.trim().toLowerCase().replace(/\s+/g, '_')
-      cleanData[cleanKey] = fightData[key]
+      const value = fightData[key]
+      if (value !== undefined) {
+        cleanData[cleanKey] = value
+      }
     })
 
     // Проверяем обязательные поля
