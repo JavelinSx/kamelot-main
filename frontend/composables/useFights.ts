@@ -66,14 +66,15 @@ export interface FightsData {
 }
 
 export const useFights = () => {
+  // Получаем config один раз при инициализации composable
+  const config = useRuntimeConfig()
+  const googleSheetsId = config.public.googleSheetsId
+
   /**
    * Загрузка всех боёв напрямую из Google Sheets
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
-      const config = useRuntimeConfig()
-      const googleSheetsId = config.public.googleSheetsId
-
       if (!googleSheetsId) {
         console.warn('Google Sheets ID not configured')
         return []
