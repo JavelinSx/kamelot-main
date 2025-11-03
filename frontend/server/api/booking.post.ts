@@ -75,6 +75,10 @@ function formatTelegramMessage(data: any) {
     message += `\n\n💬 <b>Дополнительно:</b> ${data.additionalInfo}`
   }
 
+  // Добавляем информацию о согласии с условиями
+  const agreementStatus = data.agreeToTerms ? '✅ Да' : '❌ Нет'
+  message += `\n\n📋 <b>Согласие с условиями:</b> ${agreementStatus}`
+
   message += `\n\n<i>Дата заявки: ${new Date().toLocaleString('ru-RU')}</i>`
 
   return message

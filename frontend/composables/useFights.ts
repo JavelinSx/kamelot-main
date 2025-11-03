@@ -67,25 +67,85 @@ export interface FightsData {
 
 export const useFights = () => {
   /**
-   * Загрузка всех боёв из JSON
+   * Загрузка всех боёв из API (Excel или локальные данные)
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
-      const config = useRuntimeConfig()
-      const storageUrl = config.public.storageUrl
+      // Используем новый API endpoint /api/fights
+      // который загружает данные из Excel на Яндекс.Диске
+      const response = await $fetch<any>('/api/fights')
 
-      // Если storageUrl указан, загружаем из Object Storage
-      // Иначе загружаем из локального public/data/
-      const url = storageUrl
-        ? `${storageUrl}/data/fights.json`
-        : '/data/fights.json'
-
-      const data = await $fetch<FightsData>(url)
-      return data.fights || []
+      // Преобразуем данные из нового формата в старый для совместимости
+      return response.fights?.map((fight: any) => convertToFight(fight)) || []
     } catch (error) {
       console.error('Error loading fights:', error)
       return []
     }
+  }
+
+  /**
+   * Преобразование данных из нового формата FightAnnouncement в старый формат Fight
+   */
+  const convertToFight = (announcement: any): Fight => {
+    return {
+      id: String(announcement.id),
+      title: announcement.event_name || '',
+      description: announcement.description || '',
+      date: announcement.date ? `${announcement.date}${announcement.time ? `T${announcement.time}` : 'T00:00'}:00` : new Date().toISOString(),
+      location: {
+        venue: announcement.location || '',
+        address: '',
+        city: announcement.location || '',
+      },
+      fighters: [
+        {
+          name: announcement.fighter1_name || '',
+          photo: '',
+          record: announcement.fighter1_record || '',
+          weight: announcement.weight_class || '',
+          team: announcement.fighter1_club || '',
+        },
+        {
+          name: announcement.fighter2_name || '',
+          photo: '',
+          record: announcement.fighter2_record || '',
+          weight: announcement.weight_class || '',
+          team: announcement.fighter2_club || '',
+        },
+      ],
+      poster: announcement.poster_url || '',
+      vkPost: '',
+      status: announcement.status || 'upcoming',
+      category: announcement.fight_type || 'MMA',
+      weightClass: announcement.weight_class,
+      rounds: announcement.rounds,
+      ticketLink: announcement.tickets_url,
+      streamLink: announcement.stream_url,
+      featured: announcement.title_fight === 'yes',
+      results: announcement.result ? parseResults(announcement.result) : undefined,
+      createdAt: new Date().toISOString(),
+    }
+  }
+
+  /**
+   * Парсинг результата боя из строки
+   */
+  const parseResults = (resultString: string): FightResults | undefined => {
+    try {
+      // Пример: "Победа Иванова (TKO, R2)"
+      const match = resultString.match(/Победа\s+(.+?)\s+\((.+?),\s+R(\d+)\)/)
+      if (match && match[1] && match[2] && match[3]) {
+        return {
+          winner: match[1],
+          method: match[2],
+          round: parseInt(match[3]),
+          time: '00:00',
+        }
+      }
+    } catch (e) {
+      console.error('Error parsing result:', e)
+    }
+    return undefined
   }
 
   /**

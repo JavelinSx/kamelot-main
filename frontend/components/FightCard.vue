@@ -1,13 +1,10 @@
 <template>
   <div
     class="fight-card group relative overflow-hidden bg-gradient-to-br from-gray-900 to-black dark:from-gray-950 dark:to-black border border-gray-800 hover:border-red-600 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-2"
-    data-aos="fade-up"
-    :data-aos-delay="aosDelay">
+    data-aos="fade-up" :data-aos-delay="aosDelay">
     <!-- Постер боя -->
     <div class="relative h-80 overflow-hidden">
-      <img
-        :src="fight.poster"
-        :alt="fight.title"
+      <img :src="fight.poster" :alt="fight.title"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         @error="onImageError" />
 
@@ -16,18 +13,18 @@
 
       <!-- Статус бадж -->
       <div class="absolute top-4 right-4">
-        <span
-          :class="[
-            'px-4 py-2 rounded-full text-sm font-bold backdrop-blur-md',
-            statusClass
-          ]">
+        <span :class="[
+          'px-4 py-2 rounded-full text-sm font-bold backdrop-blur-md',
+          statusClass
+        ]">
           {{ statusText }}
         </span>
       </div>
 
       <!-- Категория -->
       <div v-if="fight.category" class="absolute top-4 left-4">
-        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-gray-700">
+        <span
+          class="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-gray-700">
           {{ fight.category }}
         </span>
       </div>
@@ -52,25 +49,25 @@
     <div class="p-6">
       <!-- Бойцы -->
       <div class="flex items-center justify-between mb-4">
-        <div
-          v-for="(fighter, index) in fight.fighters.slice(0, 2)"
-          :key="index"
-          class="flex flex-col items-center text-center flex-1">
-          <div class="w-20 h-20 rounded-full overflow-hidden border-4 border-red-600 mb-2">
-            <img
-              :src="fighter.photo"
-              :alt="fighter.name"
-              class="w-full h-full object-cover"
-              @error="onFighterImageError" />
-          </div>
-          <p class="font-bold text-white text-sm">{{ fighter.name }}</p>
-          <p class="text-gray-400 text-xs">{{ fighter.record }}</p>
-          <p class="text-gray-500 text-xs">{{ fighter.team }}</p>
+        <!-- Первый боец -->
+        <div v-if="fight.fighters[0]" class="flex flex-col items-center text-center flex-1">
+
+          <p class="font-bold text-white text-sm">{{ fight.fighters[0].name }}</p>
+          <p class="text-gray-400 text-xs">{{ fight.fighters[0].record }}</p>
+          <p class="text-gray-500 text-xs">{{ fight.fighters[0].team }}</p>
         </div>
 
         <!-- VS разделитель -->
-        <div class="px-4 py-2 bg-red-600 text-white font-bold text-xl rounded-lg mx-4">
+        <div class="px-4 py-2 bg-red-600 text-white font-bold text-xl rounded-lg mx-4 flex-shrink-0">
           VS
+        </div>
+
+        <!-- Второй боец -->
+        <div v-if="fight.fighters[1]" class="flex flex-col items-center text-center flex-1">
+
+          <p class="font-bold text-white text-sm">{{ fight.fighters[1].name }}</p>
+          <p class="text-gray-400 text-xs">{{ fight.fighters[1].record }}</p>
+          <p class="text-gray-500 text-xs">{{ fight.fighters[1].team }}</p>
         </div>
       </div>
 
@@ -101,8 +98,7 @@
       </div>
 
       <!-- Результаты (для завершенных боёв) -->
-      <div
-        v-if="fight.status === 'completed' && fight.results"
+      <div v-if="fight.status === 'completed' && fight.results"
         class="bg-green-600/10 border border-green-600/30 rounded-lg p-4 mb-4">
         <p class="text-green-400 font-bold mb-1">Победитель: {{ fight.results.winner }}</p>
         <p class="text-gray-400 text-sm">
@@ -112,35 +108,19 @@
 
       <!-- Кнопки действий -->
       <div class="flex gap-2">
-        <UButton
-          v-if="fight.ticketLink"
-          :to="fight.ticketLink"
-          target="_blank"
-          color="error"
-          class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold"
-          size="md">
+        <UButton v-if="fight.ticketLink" :to="fight.ticketLink" target="_blank" color="error"
+          class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold" size="md">
           <UIcon name="i-heroicons-ticket" class="w-4 h-4 mr-2" />
           Купить билет
         </UButton>
 
-        <UButton
-          v-if="fight.vkPost"
-          :to="fight.vkPost"
-          target="_blank"
-          variant="outline"
-          color="neutral"
-          class="flex-1 border-gray-700 hover:border-red-600 text-white"
-          size="md">
+        <UButton v-if="fight.vkPost" :to="fight.vkPost" target="_blank" variant="outline" color="neutral"
+          class="flex-1 border-gray-700 hover:border-red-600 text-white" size="md">
           <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 mr-2" />
           Подробнее
         </UButton>
 
-        <UButton
-          v-if="fight.streamLink"
-          :to="fight.streamLink"
-          target="_blank"
-          color="primary"
-          class="flex-1"
+        <UButton v-if="fight.streamLink" :to="fight.streamLink" target="_blank" color="primary" class="flex-1"
           size="md">
           <UIcon name="i-heroicons-video-camera" class="w-4 h-4 mr-2" />
           Смотреть онлайн
@@ -151,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Fight } from '~/composables/useFights'
+import type { Fight } from '~/composables/useFights';
 
 interface Props {
   fight: Fight
@@ -205,9 +185,12 @@ const onFighterImageError = (event: Event) => {
 
 /* Анимация для пульсации */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }

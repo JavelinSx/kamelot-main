@@ -103,11 +103,6 @@
                   </div>
 
                   <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">Отзывы:</span>
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ trainer.reviewsCount }}</span>
-                  </div>
-
-                  <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">Тренировок:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">{{ trainer.stats.sessionsCompleted
                     }}</span>
@@ -223,10 +218,6 @@ const specializationNames: Record<WorkoutType, string> = {
   kickboxing: 'Кикбоксинг',
   boxing: 'Бокс',
   bjj: 'BJJ',
-  muay_thai: 'Муай Тай',
-  karate: 'Каратэ',
-  judo: 'Дзюдо',
-  sambo: 'Самбо'
 }
 
 const getSpecializationName = (type: WorkoutType): string => {

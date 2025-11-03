@@ -14,6 +14,9 @@ export default defineNuxtConfig({
     vkAlbumId: process.env.NUXT_VK_ALBUM_ID,
     public: {
       storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || "",
+      googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID || "",
+      // Устаревшая переменная для Excel (оставлена для обратной совместимости)
+      fightsExcelUrl: process.env.NUXT_PUBLIC_FIGHTS_EXCEL_URL || "",
     },
   },
 
@@ -21,7 +24,7 @@ export default defineNuxtConfig({
   ssr: true, // Включаем SSR для генерации статического контента с данными
   nitro: {
     prerender: {
-      routes: ["/", "/trainers", "/schedule", "/blog", "/kids"], // Маршруты для пререндеринга
+      routes: ["/", "/trainers", "/schedule", "/blog", "/kids", "/privacy-policy", "/terms-of-service"], // Маршруты для пререндеринга
     },
   },
 

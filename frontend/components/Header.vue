@@ -3,16 +3,16 @@
     <UContainer class="py-4 relative">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <ClientOnly>
-            <div v-motion-fade-visible-once :delay="0">
-              <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
-            </div>
-            <span v-motion-fade-visible-once :delay="100" class="text-xl font-bold text-white">KAMELOT</span>
-            <template #fallback>
-              <img :src="logo" alt="Kamelot" class="h-10 w-auto" />
-              <span class="text-xl font-bold text-white">KAMELOT</span>
-            </template>
-          </ClientOnly>
+
+          <div v-motion-fade-visible-once :delay="0">
+            <ULink to="/" class="nav-link hover:cursor-pointer flex flex-row justify-center items-center gap-2"><img
+                :src="logo" alt="Kamelot" class="h-10 w-auto " />
+              <span v-motion-fade-visible-once :delay="100" class="text-xl font-bold center text-white">KAMELOT</span>
+            </ULink>
+
+          </div>
+
+
         </div>
 
         <nav class="hidden lg:flex items-center gap-8 ">
@@ -31,9 +31,9 @@
           <ULink to="/kids" class="nav-link">
             Детям
           </ULink>
-          <ULink to="/blog" class="nav-link">
+          <!-- <ULink to="/blog" class="nav-link">
             Блог
-          </ULink>
+          </ULink> -->
         </nav>
 
         <div class="flex items-center gap-4 ">
@@ -69,10 +69,8 @@
           </UModal>
 
           <!-- Анимированная кнопка бургера -->
-          <button
-            class="lg:hidden p-2 text-white hover:text-red-500 transition-colors focus:outline-none"
-            @click="isMenuOpen = !isMenuOpen"
-            aria-label="Меню">
+          <button class="lg:hidden p-2 text-white hover:text-red-500 transition-colors focus:outline-none"
+            @click="isMenuOpen = !isMenuOpen" aria-label="Меню">
             <div class="burger-icon">
               <span class="burger-line" :class="{ 'burger-line-open-top': isMenuOpen }"></span>
               <span class="burger-line" :class="{ 'burger-line-open-middle': isMenuOpen }"></span>
@@ -83,62 +81,48 @@
       </div>
 
       <!-- Мобильное меню с анимацией -->
-      <Transition
-        enter-active-class="transition-all duration-300 ease-out"
-        leave-active-class="transition-all duration-200 ease-in"
-        enter-from-class="opacity-0 -translate-y-4"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-from-class="opacity-100 translate-y-0"
+      <Transition enter-active-class="transition-all duration-300 ease-out"
+        leave-active-class="transition-all duration-200 ease-in" enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0" leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 -translate-y-4">
         <div v-if="isMenuOpen" class="lg:hidden mt-4 pb-4 border-t border-gray-700 pt-4 overflow-hidden">
           <nav class="flex flex-col gap-4">
-            <ULink
-              to="/"
+            <ULink to="/"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
-              :style="{ animationDelay: '0ms' }"
-              @click="closeMenu">
+              :style="{ animationDelay: '0ms' }" @click="closeMenu">
               Главная
             </ULink>
-            <a
-              href="/#trainers"
+            <a href="/#trainers"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
-              :style="{ animationDelay: '50ms' }"
-              @click.prevent="scrollToTrainers">
+              :style="{ animationDelay: '50ms' }" @click.prevent="scrollToTrainers">
               Тренеры
             </a>
-            <ULink
-              to="/fights"
+            <ULink to="/fights"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
-              :style="{ animationDelay: '100ms' }"
-              @click="closeMenu">
+              :style="{ animationDelay: '100ms' }" @click="closeMenu">
               Бои
             </ULink>
-            <ULink
-              to="/schedule"
+            <ULink to="/schedule"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
-              :style="{ animationDelay: '150ms' }"
-              @click="closeMenu">
+              :style="{ animationDelay: '150ms' }" @click="closeMenu">
               Расписание
             </ULink>
-            <ULink
-              to="/kids"
+            <ULink to="/kids"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
-              :style="{ animationDelay: '200ms' }"
-              @click="closeMenu">
+              :style="{ animationDelay: '200ms' }" @click="closeMenu">
               Детям
             </ULink>
-            <ULink
+            <!-- <ULink
               to="/blog"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
               :style="{ animationDelay: '250ms' }"
               @click="closeMenu">
               Блог
-            </ULink>
+            </ULink> -->
 
             <!-- Переключатель темы для мобильного меню -->
             <ClientOnly>
-              <button
-                @click="toggleColorMode"
+              <button @click="toggleColorMode"
                 class="menu-item flex items-center gap-2 text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
                 :style="{ animationDelay: '300ms' }">
                 <UIcon :name="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
@@ -289,6 +273,7 @@ function scrollToTrainers() {
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);

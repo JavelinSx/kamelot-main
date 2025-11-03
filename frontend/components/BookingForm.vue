@@ -1,8 +1,50 @@
 <template>
   <div class="p-4 lg:p-0">
     <form @submit.prevent="onSubmit" class="space-y-6">
+      <!-- Выбор типа пользователя -->
+      <div class="space-y-4 border-b border-gray-200 dark:border-gray-700 pb-6">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Выберите категорию</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div @click="state.userType = 'teenager'"
+               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+                        state.userType === 'teenager'
+                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
+                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+            <div class="text-center">
+              <div class="text-2xl mb-2">👦</div>
+              <div class="font-medium text-gray-900 dark:text-gray-100">Подросток</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">5-17 лет</div>
+            </div>
+          </div>
+
+          <div @click="state.userType = 'parent'"
+               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+                        state.userType === 'parent'
+                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
+                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+            <div class="text-center">
+              <div class="text-2xl mb-2">👨‍👧</div>
+              <div class="font-medium text-gray-900 dark:text-gray-100">Родитель</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">Запись для ребёнка</div>
+            </div>
+          </div>
+
+          <div @click="state.userType = 'adult'"
+               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+                        state.userType === 'adult'
+                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
+                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+            <div class="text-center">
+              <div class="text-2xl mb-2">👨</div>
+              <div class="font-medium text-gray-900 dark:text-gray-100">Взрослый</div>
+              <div class="text-sm text-gray-600 dark:text-gray-400">18+ лет</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Основная информация -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div v-if="state.userType" class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
             Имя <span class="text-red-500">*</span>
@@ -55,23 +97,17 @@
       </div>
 
       <!-- Чекбоксы -->
-      <div class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+      <div v-if="state.userType" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Дополнительные опции</h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
           <UCheckbox v-model="state.isPrivate" color="error" size="lg" label="Персональные тренировки"
             description="Индивидуальные занятия с тренером" />
-
-
-          <UCheckbox v-model="state.isParent" color="error" size="lg" @change="handleParentChange"
-            label="Запись для ребёнка" description="Вы записываете ребёнка на тренировку" />
-
         </div>
       </div>
 
-      <!-- Поля для ребёнка -->
-      <div v-if="state.isParent" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+      <!-- Поля для ребёнка (только для родителей) -->
+      <div v-if="state.userType === 'parent'" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Данные ребёнка</h3>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -126,9 +162,55 @@
           :rows="4" size="lg" class="dark:bg-gray-800 w-full" />
       </div>
 
+      <!-- Согласие с условиями -->
+      <div v-if="state.userType" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
+        <div class="space-y-3">
+          <UCheckbox
+            v-model="state.agreeToTerms"
+            color="error"
+            size="lg"
+            :error="!!errors.agreeToTerms"
+          >
+            <template #label>
+              <span class="text-sm text-gray-700 dark:text-gray-300">
+                Я согласен с
+                <ULink to="/privacy-policy" target="_blank" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
+                  политикой конфиденциальности
+                </ULink>
+                и
+                <ULink to="/terms-of-service" target="_blank" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
+                  пользовательским соглашением
+                </ULink>
+                <span class="text-red-500">*</span>
+              </span>
+            </template>
+          </UCheckbox>
+          <span v-if="errors.agreeToTerms" class="text-red-500 text-sm block -mt-2">{{ errors.agreeToTerms }}</span>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <div class="flex items-start gap-3">
+            <UIcon name="i-heroicons-information-circle" class="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+            <div class="text-sm text-blue-800 dark:text-blue-300">
+              <p class="font-medium mb-1">Важная информация:</p>
+              <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-400">
+                <li>Перед началом занятий необходима медицинская справка</li>
+                <li>Клуб не несёт ответственности за травмы при несоблюдении техники безопасности</li>
+                <li>Вы подтверждаете отсутствие медицинских противопоказаний к занятиям</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Кнопка отправки -->
       <div class="flex justify-center pt-6">
-        <UButton type="submit" color="success" size="lg" :loading="isSubmitting" :disabled="isSubmitting"
+        <UButton
+          type="submit"
+          color="success"
+          size="lg"
+          :loading="isSubmitting"
+          :disabled="isSubmitting || !state.agreeToTerms"
           class="px-8 py-3 text-black">
           {{ isSubmitting ? 'Отправка...' : 'Записаться на тренировку' }}
         </UButton>
@@ -153,6 +235,9 @@ const baseSchema = {
   contact: z.string().min(3, 'Введите корректные контактные данные'),
   age: z.number().min(5, 'Минимальный возраст 5 лет').max(99, 'Максимальный возраст 99 лет'),
   trainingType: z.string().min(1, 'Выберите направление тренировок'),
+  agreeToTerms: z.boolean().refine(val => val === true, {
+    message: 'Необходимо согласиться с условиями'
+  }),
   isPrivate: z.boolean().optional(),
   isParent: z.boolean().optional(),
   additionalInfo: z.string().optional()
@@ -167,18 +252,33 @@ const childSchema = {
 const { selectedTrainingType, clearSelectedTrainingType } = useBooking()
 
 const state = reactive({
+  userType: '', // 'teenager', 'parent', 'adult'
   firstName: '',
   lastName: '',
   contactMethod: 'Телефон',
   contact: '',
   age: 0,
   trainingType: '',
+  agreeToTerms: false,
   isPrivate: false,
   isParent: false,
   childFirstName: '',
   childLastName: '',
   childAge: 0,
   additionalInfo: ''
+})
+
+// Следим за изменением типа пользователя
+watch(() => state.userType, (newType) => {
+  // Очищаем поля ребёнка если выбран не родитель
+  if (newType !== 'parent') {
+    state.childFirstName = ''
+    state.childLastName = ''
+    state.childAge = 0
+    errors.childFirstName = ''
+    errors.childLastName = ''
+    errors.childAge = ''
+  }
 })
 
 // Устанавливаем выбранное единоборство при монтировании
@@ -202,6 +302,7 @@ const errors = reactive({
   contact: '',
   age: '',
   trainingType: '',
+  agreeToTerms: '',
   childFirstName: '',
   childLastName: '',
   childAge: ''
@@ -230,6 +331,7 @@ function clearErrors() {
   errors.contact = ''
   errors.age = ''
   errors.trainingType = ''
+  errors.agreeToTerms = ''
   errors.childFirstName = ''
   errors.childLastName = ''
   errors.childAge = ''
@@ -239,9 +341,9 @@ function validateForm() {
   clearErrors()
   let isValid = true
 
-  // Создаем схему валидации в зависимости от isParent
+  // Создаем схему валидации в зависимости от типа пользователя
   const schemaFields = { ...baseSchema }
-  if (state.isParent) {
+  if (state.userType === 'parent') {
     Object.assign(schemaFields, childSchema)
   }
 
@@ -261,18 +363,6 @@ function validateForm() {
   }
 
   return isValid
-}
-
-function handleParentChange() {
-  if (!state.isParent) {
-    // Очищаем поля ребёнка если чекбокс выключен
-    state.childFirstName = ''
-    state.childLastName = ''
-    state.childAge = 0
-    errors.childFirstName = ''
-    errors.childLastName = ''
-    errors.childAge = ''
-  }
 }
 
 async function onSubmit() {
@@ -312,12 +402,14 @@ async function sendToTelegram(data: any) {
 }
 
 function resetForm() {
+  state.userType = ''
   state.firstName = ''
   state.lastName = ''
   state.contactMethod = 'phone'
   state.contact = ''
   state.age = 0
   state.trainingType = ''
+  state.agreeToTerms = false
   state.isPrivate = false
   state.isParent = false
   state.childFirstName = ''
