@@ -67,16 +67,30 @@ export interface FightsData {
 
 export const useFights = () => {
   /**
-   * Загрузка всех боёв из API (Excel или локальные данные)
+   * Загрузка всех боёв напрямую из Google Sheets
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
-      // Используем новый API endpoint /api/fights
-      // который загружает данные из Excel на Яндекс.Диске
-      const response = await $fetch<any>('/api/fights')
+      const config = useRuntimeConfig()
+      const googleSheetsId = config.public.googleSheetsId
 
-      // Преобразуем данные из нового формата в старый для совместимости
-      return response.fights?.map((fight: any) => convertToFight(fight)) || []
+      if (!googleSheetsId) {
+        console.warn('Google Sheets ID not configured')
+        return []
+      }
+
+      // Загружаем CSV напрямую из Google Sheets
+      const csvUrl = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/export?format=csv`
+      const response = await fetch(csvUrl)
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch CSV: ${response.statusText}`)
+      }
+
+      const csvText = await response.text()
+      const fights = parseCSVToFights(csvText)
+
+      return fights.map(fight => convertToFight(fight))
     } catch (error) {
       console.error('Error loading fights:', error)
       return []
@@ -84,45 +98,125 @@ export const useFights = () => {
   }
 
   /**
-   * Преобразование данных из нового формата FightAnnouncement в старый формат Fight
+   * Парсинг CSV в массив боёв (вертикальный формат)
    */
-  const convertToFight = (announcement: any): Fight => {
+  const parseCSVToFights = (csvText: string): any[] => {
+    const lines = csvText.split('\n').filter(line => line.trim())
+
+    if (lines.length < 2) {
+      return []
+    }
+
+    const fightData: Record<string, string> = {}
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (!line) continue
+
+      const values = parseCSVLine(line)
+
+      if (values.length >= 2 && values[0] && values[1]) {
+        let fieldName = values[0].trim()
+        const fieldValue = values[1].trim()
+
+        // Очищаем название поля от описаний в скобках
+        const splitField = fieldName.split('(')[0]
+        if (splitField) {
+          fieldName = splitField.trim()
+        }
+
+        if (fieldName && fieldValue && fieldValue !== '' && fieldValue !== '-') {
+          fightData[fieldName] = fieldValue
+        }
+      }
+    }
+
+    // Преобразуем в формат с нормализованными ключами
+    const cleanData: Record<string, string> = {}
+    Object.keys(fightData).forEach(key => {
+      const cleanKey = key.trim().toLowerCase().replace(/\s+/g, '_')
+      cleanData[cleanKey] = fightData[key]
+    })
+
+    // Проверяем обязательные поля
+    if (!cleanData.event_name || !cleanData.date) {
+      return []
+    }
+
+    return [cleanData]
+  }
+
+  /**
+   * Парсинг строки CSV с учетом кавычек
+   */
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = []
+    let current = ''
+    let inQuotes = false
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i]
+      const nextChar = i + 1 < line.length ? line[i + 1] : undefined
+
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          current += '"'
+          i++
+        } else {
+          inQuotes = !inQuotes
+        }
+      } else if (char === ',' && !inQuotes) {
+        result.push(current)
+        current = ''
+      } else {
+        current += char
+      }
+    }
+
+    result.push(current)
+    return result
+  }
+
+  /**
+   * Преобразование данных из формата Google Sheets в формат Fight
+   */
+  const convertToFight = (data: any): Fight => {
     return {
-      id: String(announcement.id),
-      title: announcement.event_name || '',
-      description: announcement.description || '',
-      date: announcement.date ? `${announcement.date}${announcement.time ? `T${announcement.time}` : 'T00:00'}:00` : new Date().toISOString(),
+      id: String(data.id || '1'),
+      title: data.event_name || '',
+      description: data.description || '',
+      date: data.date ? `${data.date}${data.time ? `T${data.time}` : 'T00:00'}:00` : new Date().toISOString(),
       location: {
-        venue: announcement.location || '',
+        venue: data.location || '',
         address: '',
-        city: announcement.location || '',
+        city: data.location || '',
       },
       fighters: [
         {
-          name: announcement.fighter1_name || '',
+          name: data.fighter1_name || '',
           photo: '',
-          record: announcement.fighter1_record || '',
-          weight: announcement.weight_class || '',
-          team: announcement.fighter1_club || '',
+          record: data.fighter1_record || '',
+          weight: data.weight_class || '',
+          team: data.fighter1_club || '',
         },
         {
-          name: announcement.fighter2_name || '',
+          name: data.fighter2_name || '',
           photo: '',
-          record: announcement.fighter2_record || '',
-          weight: announcement.weight_class || '',
-          team: announcement.fighter2_club || '',
+          record: data.fighter2_record || '',
+          weight: data.weight_class || '',
+          team: data.fighter2_club || '',
         },
       ],
-      poster: announcement.poster_url || '',
+      poster: data.poster_url || '',
       vkPost: '',
-      status: announcement.status || 'upcoming',
-      category: announcement.fight_type || 'MMA',
-      weightClass: announcement.weight_class,
-      rounds: announcement.rounds,
-      ticketLink: announcement.tickets_url,
-      streamLink: announcement.stream_url,
-      featured: announcement.title_fight === 'yes',
-      results: announcement.result ? parseResults(announcement.result) : undefined,
+      status: (data.status || 'upcoming') as FightStatus,
+      category: data.fight_type || 'MMA',
+      weightClass: data.weight_class,
+      rounds: data.rounds ? Number(data.rounds) : data.round ? Number(data.round) : undefined,
+      ticketLink: data.tickets_url,
+      streamLink: data.stream_url,
+      featured: data.title_fight === 'yes',
+      results: data.result ? parseResults(data.result) : undefined,
       createdAt: new Date().toISOString(),
     }
   }

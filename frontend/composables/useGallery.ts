@@ -62,7 +62,7 @@ export const useGallery = () => {
   };
 
   /**
-   * Загрузка фотографий из VK API с пагинацией
+   * Загрузка фотографий с пагинацией из локальных файлов
    * @param offset - смещение для пагинации
    * @param count - количество фото для загрузки (необязательно, по умолчанию зависит от устройства)
    */
@@ -73,16 +73,21 @@ export const useGallery = () => {
     try {
       const loadCount = count || getLoadCount();
 
-      const response = await $fetch<VKPhotosResponse>('/api/vk-photos', {
-        query: {
-          offset,
-          count: loadCount,
-        },
-      });
+      // Загружаем все локальные фото
+      const allPhotos = loadGalleryImages();
 
-      return response;
+      // Эмулируем пагинацию на локальных данных
+      const photos = allPhotos.slice(offset, offset + loadCount);
+      const hasMore = offset + loadCount < allPhotos.length;
+
+      return {
+        photos,
+        hasMore,
+        total: allPhotos.length,
+        source: 'local',
+      };
     } catch (error) {
-      console.error('Error loading photos from API:', error);
+      console.error('Error loading photos from local:', error);
 
       // Возвращаем пустой ответ в случае ошибки
       return {
