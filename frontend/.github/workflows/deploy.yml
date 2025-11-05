@@ -23,8 +23,23 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Verify secrets are set
+        run: |
+          echo "Verifying GitHub secrets..."
+          if [ -z "${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}" ]; then
+            echo "❌ ERROR: NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is NOT set!"
+            echo "Please add it in: Settings > Secrets and variables > Actions > Secrets"
+            exit 1
+          else
+            echo "✅ NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is set"
+            echo "Length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_ID} characters"
+          fi
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Install dotenv-cli
+        run: npm install -g dotenv-cli
 
       - name: Create .env file
         run: |
@@ -45,7 +60,9 @@ jobs:
           echo "Environment variables available during build:"
           echo "NUXT_PUBLIC_GOOGLE_SHEETS_ID = $NUXT_PUBLIC_GOOGLE_SHEETS_ID"
           echo "NUXT_PUBLIC_STORAGE_URL = $NUXT_PUBLIC_STORAGE_URL"
-          npm run generate
+          echo ""
+          echo "Running generate with dotenv..."
+          dotenv -e .env -- npm run generate
 
       - name: Verify build output
         run: |
