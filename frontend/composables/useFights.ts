@@ -69,92 +69,116 @@ export const useFights = () => {
   // Получаем config один раз при инициализации composable
   const config = useRuntimeConfig()
   const googleSheetsId = config.public.googleSheetsId
+  const googleSheetsApiKey = config.public.googleSheetsApiKey
 
   console.log('[useFights] Runtime config:', {
     googleSheetsId,
-    allPublicConfig: config.public
+    hasApiKey: !!googleSheetsApiKey,
   })
 
   /**
-   * Получение списка всех листов из Google Sheets
-   */
-  const getWorksheetList = async (sheetId: string): Promise<Array<{title: string, gid: string}>> => {
-    const feedUrl = `https://spreadsheets.google.com/feeds/worksheets/${sheetId}/public/basic?alt=json`
-    console.log('[useFights] Fetching worksheets from:', feedUrl)
-
-    try {
-      const response = await fetch(feedUrl)
-      if (!response.ok) {
-        console.warn('[useFights] Failed to fetch worksheet list, using first sheet only')
-        return [{ title: 'Sheet1', gid: '0' }]
-      }
-
-      const data = await response.json()
-      const entries = data.feed?.entry || []
-
-      const worksheets = entries.map((entry: any) => {
-        const title = entry.title?.$t || 'Untitled'
-        const link = entry.link?.find((l: any) => l.rel === 'http://schemas.google.com/spreadsheets/2006#cellsfeed')
-        const gid = link?.href?.match(/\/([^\/]+)$/)?.[1] || '0'
-        return { title, gid }
-      })
-
-      console.log('[useFights] Found', worksheets.length, 'worksheets')
-      return worksheets
-    } catch (error) {
-      console.error('[useFights] Error fetching worksheets:', error)
-      return [{ title: 'Sheet1', gid: '0' }]
-    }
-  }
-
-  /**
-   * Загрузка всех боёв из всех листов Google Sheets
-   * Каждый лист = один бой
+   * Загрузка всех боёв используя Google Sheets API v4
+   * Просто и красиво!
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
-      console.log('[useFights] loadFights called, googleSheetsId:', googleSheetsId)
+      console.log('[useFights] loadFights called')
 
-      if (!googleSheetsId) {
-        console.warn('[useFights] ❌ Google Sheets ID not configured')
+      if (!googleSheetsId || !googleSheetsApiKey) {
+        console.warn('[useFights] ❌ Google Sheets not configured')
         return []
       }
 
-      console.log('[useFights] ✅ Google Sheets ID is set:', googleSheetsId)
+      console.log('[useFights] ✅ Loading from Google Sheets API v4...')
 
-      // Получаем список всех листов
-      const worksheets = await getWorksheetList(googleSheetsId)
-      console.log('[useFights] Processing', worksheets.length, 'worksheets')
+      // Получаем информацию о таблице
+      const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${googleSheetsId}?key=${googleSheetsApiKey}`
+      const metadataResponse = await fetch(metadataUrl)
+
+      if (!metadataResponse.ok) {
+        console.error('[useFights] ❌ Failed to fetch metadata:', metadataResponse.statusText)
+        return []
+      }
+
+      const metadata = await metadataResponse.json()
+      const sheets = metadata.sheets || []
+
+      console.log('[useFights] Found', sheets.length, 'sheets')
 
       const allFights: Fight[] = []
 
-      // Загружаем каждый лист отдельно
-      for (let i = 0; i < worksheets.length; i++) {
-        const worksheet = worksheets[i]
-        console.log(`[useFights] Loading worksheet ${i + 1}/${worksheets.length}: "${worksheet.title}"`)
+      // Загружаем данные из каждого листа
+      for (const sheet of sheets) {
+        const sheetTitle = sheet.properties?.title || 'Untitled'
+        console.log(`[useFights] Loading sheet: "${sheetTitle}"`)
 
         try {
-          const csvUrl = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/export?format=csv&gid=${worksheet.gid}`
-          const response = await fetch(csvUrl)
+          const range = `${sheetTitle}!A:Z`
+          const valuesUrl = `https://sheets.googleapis.com/v4/spreadsheets/${googleSheetsId}/values/${encodeURIComponent(range)}?key=${googleSheetsApiKey}`
 
-          if (!response.ok) {
-            console.error(`[useFights] ❌ Failed to fetch worksheet "${worksheet.title}":`, response.status)
+          const valuesResponse = await fetch(valuesUrl)
+
+          if (!valuesResponse.ok) {
+            console.error(`[useFights] Failed to load "${sheetTitle}":`, valuesResponse.statusText)
             continue
           }
 
-          const csvText = await response.text()
-          console.log(`[useFights] Worksheet "${worksheet.title}" CSV length:`, csvText.length, 'chars')
+          const valuesData = await valuesResponse.json()
+          const rows = valuesData.values || []
 
-          const fights = parseCSVToFights(csvText)
-
-          if (fights.length > 0) {
-            console.log(`[useFights] ✅ Parsed ${fights.length} fight(s) from "${worksheet.title}"`)
-            allFights.push(...fights.map(fight => convertToFight(fight)))
-          } else {
-            console.log(`[useFights] ⚠️ No fights in "${worksheet.title}"`)
+          if (rows.length < 2) {
+            console.log(`[useFights] Sheet "${sheetTitle}" is empty`)
+            continue
           }
+
+          // Первая строка - заголовки
+          const headers = rows[0]
+
+          // Остальные строки - данные
+          for (let i = 1; i < rows.length; i++) {
+            const row = rows[i]
+            if (!row || row.length === 0) continue
+
+            // Создаём объект из заголовков и значений
+            const rowData: Record<string, string> = {}
+            headers.forEach((header: string, index: number) => {
+              const value = row[index]?.trim() || ''
+              if (value && value !== '-') {
+                rowData[header.trim()] = value
+              }
+            })
+
+            // Нормализуем ключи
+            const cleanData: Record<string, string> = {}
+            Object.keys(rowData).forEach(key => {
+              // Убираем всё что в скобках, затем нормализуем
+              const cleanKey = key
+                .trim()
+                .toLowerCase()
+                .replace(/\(.*?\)/g, '') // Убираем текст в скобках
+                .replace(/\s+/g, '_')    // Заменяем пробелы на _
+                .replace(/_+$/g, '')     // Убираем trailing _
+              const value = rowData[key]
+              if (value !== undefined) {
+                cleanData[cleanKey] = value
+              }
+            })
+
+            // Проверяем обязательные поля и конвертируем
+            if (i === 1) {
+              console.log('[useFights] First row cleanData:', cleanData)
+            }
+
+            if (cleanData.event_name && cleanData.date) {
+              allFights.push(convertToFight(cleanData))
+            } else if (i === 1) {
+              console.log('[useFights] ❌ Missing required fields! event_name:', cleanData.event_name, 'date:', cleanData.date)
+            }
+          }
+
+          console.log(`[useFights] ✅ Loaded ${rows.length - 1} row(s) from "${sheetTitle}"`)
         } catch (error) {
-          console.error(`[useFights] Error loading worksheet "${worksheet.title}":`, error)
+          console.error(`[useFights] Error loading "${sheetTitle}":`, error)
           continue
         }
       }
@@ -165,86 +189,6 @@ export const useFights = () => {
       console.error('[useFights] ❌ Error loading fights:', error)
       return []
     }
-  }
-
-  /**
-   * Парсинг CSV в массив боёв (горизонтальный формат)
-   * Первая строка - заголовки, остальные - данные
-   */
-  const parseCSVToFights = (csvText: string): any[] => {
-    const lines = csvText.split('\n').filter(line => line.trim())
-
-    if (lines.length < 2) {
-      return []
-    }
-
-    // Первая строка - заголовки
-    const headers = parseCSVLine(lines[0])
-    console.log('[useFights] CSV headers:', headers)
-
-    const fights: any[] = []
-
-    // Остальные строки - данные
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i]
-      if (!line.trim()) continue
-
-      const values = parseCSVLine(line)
-
-      // Создаём объект из заголовков и значений
-      const rowData: Record<string, string> = {}
-      headers.forEach((header, index) => {
-        const value = values[index]?.trim() || ''
-        if (value && value !== '-') {
-          rowData[header.trim()] = value
-        }
-      })
-
-      // Нормализуем ключи
-      const cleanData: Record<string, string> = {}
-      Object.keys(rowData).forEach(key => {
-        const cleanKey = key.trim().toLowerCase().replace(/\s+/g, '_')
-        cleanData[cleanKey] = rowData[key]
-      })
-
-      // Проверяем обязательные поля
-      if (cleanData.event_name && cleanData.date) {
-        fights.push(cleanData)
-      }
-    }
-
-    return fights
-  }
-
-  /**
-   * Парсинг строки CSV с учетом кавычек
-   */
-  const parseCSVLine = (line: string): string[] => {
-    const result: string[] = []
-    let current = ''
-    let inQuotes = false
-
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i]
-      const nextChar = i + 1 < line.length ? line[i + 1] : undefined
-
-      if (char === '"') {
-        if (inQuotes && nextChar === '"') {
-          current += '"'
-          i++
-        } else {
-          inQuotes = !inQuotes
-        }
-      } else if (char === ',' && !inQuotes) {
-        result.push(current)
-        current = ''
-      } else {
-        current += char
-      }
-    }
-
-    result.push(current)
-    return result
   }
 
   /**

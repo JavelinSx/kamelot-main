@@ -1,319 +1,133 @@
 /**
  * API endpoint для получения анонсов боёв из Google Sheets
- *
- * Возвращает:
- * - fights: массив анонсов боёв
- * - total: общее количество боёв
- * - source: 'google_sheets' | 'local' - источник данных
  */
 
 import type { FightAnnouncement, FightsResponse } from "~/types/fight";
 
+// Типы для Google Sheets API v4
+interface GoogleSheetsMetadata {
+  sheets: Array<{
+    properties: {
+      title: string;
+    };
+  }>;
+}
+
+interface GoogleSheetsValues {
+  values: string[][];
+}
+
 export default defineEventHandler(async (event): Promise<FightsResponse> => {
   const config = useRuntimeConfig();
+  const { googleSheetsId, googleSheetsApiKey } = config.public;
 
-  // URL к Google Sheets (ID таблицы)
-  const googleSheetsId = config.public.googleSheetsId;
-
-  console.log('[Fights API] Runtime config:', {
-    googleSheetsId,
-    allPublicConfig: config.public,
-    env: {
-      NUXT_PUBLIC_GOOGLE_SHEETS_ID: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID
-    }
-  });
-
-  // Если URL не настроен, возвращаем локальные данные
-  if (!googleSheetsId) {
-    console.warn('[Fights API] ❌ Google Sheets ID not configured, using local data');
-    return {
-      fights: getLocalFights(),
-      total: getLocalFights().length,
-      source: "local",
-    };
+  if (!googleSheetsId || !googleSheetsApiKey) {
+    throw createError({ statusCode: 500, message: 'Google Sheets not configured' });
   }
 
-  console.log('[Fights API] ✅ Using Google Sheets ID:', googleSheetsId);
+  const fights = await loadFightsFromGoogleSheets(googleSheetsId, googleSheetsApiKey);
 
-  try {
-    // Загружаем данные из Google Sheets
-    console.log('[Fights API] Attempting to load fights from Google Sheets...');
-    const fights = await loadFightsFromGoogleSheets(googleSheetsId);
-
-    console.log('[Fights API] ✅ Successfully loaded', fights.length, 'fights from Google Sheets');
-
-    return {
-      fights,
-      total: fights.length,
-      source: "google_sheets" as any,
-      lastUpdated: new Date().toISOString(),
-    };
-  } catch (error: any) {
-    // В случае ошибки возвращаем локальные данные
-    console.error('[Fights API] ❌ Error loading from Google Sheets:', error.message || error);
-    console.log('[Fights API] Falling back to local data');
-    return {
-      fights: getLocalFights(),
-      total: getLocalFights().length,
-      source: "local",
-    };
-  }
+  return {
+    fights,
+    total: fights.length,
+    source: "google_sheets" as any,
+    lastUpdated: new Date().toISOString(),
+  };
 });
 
 /**
- * Получение списка всех листов (worksheets) из Google Sheets
- */
-async function getWorksheetList(sheetId: string): Promise<Array<{title: string, gid: string}>> {
-  // Используем публичный feed для получения списка листов
-  const feedUrl = `https://spreadsheets.google.com/feeds/worksheets/${sheetId}/public/basic?alt=json`;
-  console.log('[getWorksheetList] Fetching worksheets from:', feedUrl);
-
-  try {
-    const response = await fetch(feedUrl);
-    if (!response.ok) {
-      console.warn('[getWorksheetList] Failed to fetch worksheet list, falling back to first sheet only');
-      return [{ title: 'Sheet1', gid: '0' }]; // Fallback to first sheet
-    }
-
-    const data = await response.json();
-    const entries = data.feed?.entry || [];
-
-    const worksheets = entries.map((entry: any) => {
-      const title = entry.title?.$t || 'Untitled';
-      // Extract gid from link
-      const link = entry.link?.find((l: any) => l.rel === 'http://schemas.google.com/spreadsheets/2006#cellsfeed');
-      const gid = link?.href?.match(/\/([^\/]+)$/)?.[1] || '0';
-
-      return { title, gid };
-    });
-
-    console.log('[getWorksheetList] Found worksheets:', worksheets.length);
-    return worksheets;
-  } catch (error) {
-    console.error('[getWorksheetList] Error:', error);
-    return [{ title: 'Sheet1', gid: '0' }]; // Fallback to first sheet
-  }
-}
-
-/**
- * Загрузка боёв из Google Sheets через CSV экспорт
- * Каждый лист (worksheet) в таблице = один бой
+ * Загрузка боёв из Google Sheets API v4
+ * Просто: API → JSON → готово!
  */
 async function loadFightsFromGoogleSheets(
-  sheetId: string
+  sheetId: string,
+  apiKey: string
 ): Promise<FightAnnouncement[]> {
-  console.log('[loadFightsFromGoogleSheets] Loading all worksheets...');
-
-  // Получаем список всех листов
-  const worksheets = await getWorksheetList(sheetId);
-  console.log('[loadFightsFromGoogleSheets] Processing', worksheets.length, 'worksheets');
+  // 1. Получаем список листов
+  const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`;
+  const metadata = await $fetch<GoogleSheetsMetadata>(metadataUrl);
+  const sheets = metadata.sheets || [];
 
   const allFights: FightAnnouncement[] = [];
 
-  // Загружаем каждый лист отдельно
-  for (let i = 0; i < worksheets.length; i++) {
-    const worksheet = worksheets[i];
-    console.log(`[loadFightsFromGoogleSheets] Loading worksheet ${i + 1}/${worksheets.length}: "${worksheet.title}" (gid: ${worksheet.gid})`);
+  // 2. Загружаем каждый лист
+  for (const sheet of sheets) {
+    const sheetTitle = sheet.properties?.title;
+    const range = `${sheetTitle}!A:Z`;
+    const valuesUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
 
     try {
-      // Формируем URL для экспорта конкретного листа в CSV
-      const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${worksheet.gid}`;
+      const data = await $fetch<GoogleSheetsValues>(valuesUrl);
+      const rows = data.values || [];
 
-      const response = await fetch(csvUrl);
+      if (rows.length < 2) continue; // Пропускаем пустые листы
 
-      if (!response.ok) {
-        console.error(`[loadFightsFromGoogleSheets] ❌ Failed to download worksheet "${worksheet.title}":`, response.status);
-        continue; // Skip this worksheet
-      }
+      const headers = rows[0];
+      const dataRows = rows.slice(1);
 
-      const csvText = await response.text();
-      console.log(`[loadFightsFromGoogleSheets] Worksheet "${worksheet.title}" CSV length:`, csvText.length, 'chars');
+      if (!headers) continue; // Нет заголовков
 
-      // Парсим CSV в бой
-      const fights = parseCSVToFights(csvText);
+      // 3. Преобразуем строки в объекты
+      const fights = dataRows
+        .filter((row): row is string[] => row && row.length > 0)
+        .map(row => rowToFight(headers, row))
+        .filter((fight): fight is FightAnnouncement => fight !== null);
 
-      if (fights.length > 0) {
-        console.log(`[loadFightsFromGoogleSheets] ✅ Parsed ${fights.length} fight(s) from "${worksheet.title}"`);
-        allFights.push(...fights);
-      } else {
-        console.log(`[loadFightsFromGoogleSheets] ⚠️ No fights found in "${worksheet.title}"`);
-      }
+      allFights.push(...fights);
     } catch (error) {
-      console.error(`[loadFightsFromGoogleSheets] Error processing worksheet "${worksheet.title}":`, error);
-      continue; // Skip this worksheet
+      console.error(`Error loading sheet "${sheetTitle}":`, error);
     }
   }
 
-  console.log('[loadFightsFromGoogleSheets] Total fights loaded:', allFights.length);
   return allFights;
 }
 
 /**
- * Парсинг CSV в массив боёв
- * Формат: горизонтальный - первая строка заголовки, остальные строки - данные боёв
+ * Преобразование строки из Google Sheets в объект FightAnnouncement
  */
-function parseCSVToFights(csvText: string): FightAnnouncement[] {
-  const lines = csvText.split("\n").filter((line) => line.trim());
-
-  if (lines.length < 2) {
-    console.warn("[Fights API] CSV file is empty or has no data rows");
-    return [];
-  }
-
-  // Первая строка - заголовки
-  const headers = parseCSVLine(lines[0]);
-  console.log("[Fights API] CSV headers:", headers);
-
-  const fights: FightAnnouncement[] = [];
-
-  // Остальные строки - данные
-  for (let i = 1; i < lines.length; i++) {
-    try {
-      const line = lines[i];
-      if (!line.trim()) continue;
-
-      const values = parseCSVLine(line);
-
-      // Создаём объект из заголовков и значений
-      const rowData: Record<string, string> = {};
-      headers.forEach((header, index) => {
-        const value = values[index]?.trim() || "";
-        if (value && value !== "-") {
-          rowData[header.trim()] = value;
-        }
-      });
-
-      // Парсим строку в объект боя
-      const fight = parseFightData(rowData, i);
-      if (fight) {
-        fights.push(fight);
-      }
-    } catch (error) {
-      console.error(`[Fights API] Error parsing row ${i}:`, error);
-    }
-  }
-
-  return fights;
-}
-
-/**
- * Парсинг строки CSV с учетом кавычек
- */
-function parseCSVLine(line: string): string[] {
-  const result: string[] = [];
-  let current = "";
-  let inQuotes = false;
-
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-    const nextChar = i + 1 < line.length ? line[i + 1] : undefined;
-
-    if (char === '"') {
-      if (inQuotes && nextChar === '"') {
-        // Escaped quote
-        current += '"';
-        i++; // Skip next quote
-      } else {
-        // Toggle quotes
-        inQuotes = !inQuotes;
-      }
-    } else if (char === "," && !inQuotes) {
-      // End of field
-      result.push(current);
-      current = "";
-    } else {
-      current += char;
-    }
-  }
-
-  // Add last field
-  result.push(current);
-
-  return result;
-}
-
-/**
- * Парсинг данных боя из объекта
- */
-function parseFightData(
-  data: Record<string, string>,
-  rowNumber: number
-): FightAnnouncement | null {
-  // Очищаем названия полей от пробелов и приводим к нижнему регистру для сравнения
-  const cleanData: Record<string, string> = {};
-  Object.keys(data).forEach((key) => {
-    const cleanKey = key.trim().toLowerCase().replace(/\s+/g, "_");
-    const value = data[key];
-    if (value !== undefined) {
-      cleanData[cleanKey] = value;
+function rowToFight(headers: string[], row: string[]): FightAnnouncement | null {
+  // Создаём объект из headers и row
+  const data: Record<string, string> = {};
+  headers.forEach((header, i) => {
+    // Убираем всё что в скобках, затем нормализуем
+    const key = header
+      .trim()
+      .toLowerCase()
+      .replace(/\(.*?\)/g, '') // Убираем текст в скобках
+      .replace(/\s+/g, '_')    // Заменяем пробелы на _
+      .replace(/_+$/g, '');    // Убираем trailing _
+    const value = row[i]?.trim();
+    if (value && value !== '-') {
+      data[key] = value;
     }
   });
 
   // Проверяем обязательные поля
-  if (!cleanData.event_name || !cleanData.date) {
-    console.warn(
-      `[Fights API] Row ${rowNumber} missing required fields (event_name or date)`
-    );
-    return null;
-  }
+  if (!data.event_name || !data.date) return null;
 
-  // Формируем объект боя
-  const fight: FightAnnouncement = {
-    id: cleanData.id || String(rowNumber),
-    status: (cleanData.status || "upcoming") as any,
-    event_name: String(cleanData.event_name),
-    fight_type: (cleanData.fight_type || "MMA") as any,
-    date: String(cleanData.date),
-    time: cleanData.time || undefined,
-    location: cleanData.location || "",
-    fighter1_name: cleanData.fighter1_name || "",
-    fighter1_club: cleanData.fighter1_club || undefined,
-    fighter1_record: cleanData.fighter1_record || undefined,
-    fighter2_name: cleanData.fighter2_name || "",
-    fighter2_club: cleanData.fighter2_club || undefined,
-    fighter2_record: cleanData.fighter2_record || undefined,
-    weight_class: cleanData.weight_class || undefined,
-    rounds: cleanData.round
-      ? Number(cleanData.round)
-      : cleanData.rounds
-      ? Number(cleanData.rounds)
-      : undefined,
-    title_fight: cleanData.title_fight as any,
-    description: cleanData.description || undefined,
-    poster_url: cleanData.poster_url || undefined,
-    tickets_url: cleanData.tickets_url || undefined,
-    stream_url: cleanData.stream_url || undefined,
-    result: cleanData.result || undefined,
-    highlight_url: cleanData.highlight_url || undefined,
+  // Возвращаем объект
+  return {
+    id: data.id || String(Math.random()),
+    status: (data.status || 'upcoming') as any,
+    event_name: data.event_name,
+    fight_type: (data.fight_type || 'MMA') as any,
+    date: data.date,
+    time: data.time,
+    location: data.location || '',
+    fighter1_name: data.fighter1_name || '',
+    fighter1_club: data.fighter1_club,
+    fighter1_record: data.fighter1_record,
+    fighter2_name: data.fighter2_name || '',
+    fighter2_club: data.fighter2_club,
+    fighter2_record: data.fighter2_record,
+    weight_class: data.weight_class,
+    rounds: data.rounds ? Number(data.rounds) : undefined,
+    title_fight: data.title_fight as any,
+    description: data.description,
+    poster_url: data.poster_url,
+    tickets_url: data.tickets_url,
+    stream_url: data.stream_url,
+    result: data.result,
+    highlight_url: data.highlight_url,
   };
-
-  return fight;
-}
-
-/**
- * Локальные данные боёв (fallback)
- */
-function getLocalFights(): FightAnnouncement[] {
-  return [
-    {
-      id: 1,
-      status: "upcoming",
-      event_name: "Bears FC 3",
-      fight_type: "MMA",
-      date: "2025-12-20",
-      time: "19:00",
-      location: 'Москва, Спорткомплекс "Олимпийский"',
-      fighter1_name: "Султонов Нажмиддин",
-      fighter1_club: "Kamelot FC",
-      fighter1_record: "5-1-0",
-      fighter2_name: "Алексей Смирнов",
-      fighter2_club: "Tigers MMA",
-      fighter2_record: "7-2-0",
-      weight_class: "Легкий вес (до 70 кг)",
-      rounds: 3,
-      title_fight: "yes",
-      description: "Титульный бой за пояс Bears FC",
-      poster_url: "/images/fights/bears-fc-3.jpg",
-    },
-  ];
 }

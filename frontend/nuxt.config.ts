@@ -3,6 +3,7 @@
 // Логируем переменные окружения при сборке
 console.log('[nuxt.config] Environment variables at build time:', {
   NUXT_PUBLIC_GOOGLE_SHEETS_ID: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID,
+  NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY ? '***set***' : 'undefined',
   NUXT_PUBLIC_STORAGE_URL: process.env.NUXT_PUBLIC_STORAGE_URL,
   NODE_ENV: process.env.NODE_ENV,
 });
@@ -23,6 +24,7 @@ export default defineNuxtConfig({
     public: {
       storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL || "",
       googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID || "",
+      googleSheetsApiKey: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY || "",
       // Устаревшая переменная для Excel (оставлена для обратной совместимости)
       fightsExcelUrl: process.env.NUXT_PUBLIC_FIGHTS_EXCEL_URL || "",
     },
