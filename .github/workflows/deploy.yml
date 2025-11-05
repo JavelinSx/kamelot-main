@@ -9,6 +9,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      NUXT_PUBLIC_GOOGLE_SHEETS_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}
+      NUXT_PUBLIC_STORAGE_URL: https://storage.yandexcloud.net/kamelot
 
     steps:
       - name: Checkout code
@@ -19,15 +22,53 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
+
+      - name: Verify secrets are set
+        run: |
+          echo "Verifying GitHub secrets..."
+          if [ -z "${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}" ]; then
+            echo "❌ ERROR: NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is NOT set!"
+            echo "Please add it in: Settings > Secrets and variables > Actions > Secrets"
+            exit 1
+          else
+            echo "✅ NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is set"
+            echo "Length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_ID} characters"
+          fi
 
       - name: Install dependencies
-        working-directory: ./frontend
         run: npm ci
 
+      - name: Inject environment variables into nuxt.config.ts
+        run: |
+          echo "Injecting GOOGLE_SHEETS_ID directly into nuxt.config.ts..."
+          sed -i "s|googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID \|\| \"\"|googleSheetsId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_ID\"|g" nuxt.config.ts
+          sed -i "s|storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL \|\| \"\"|storageUrl: \"$NUXT_PUBLIC_STORAGE_URL\"|g" nuxt.config.ts
+          echo "✅ Variables injected into nuxt.config.ts"
+          echo "Modified config (relevant lines):"
+          grep -A 3 "public:" nuxt.config.ts
+
       - name: Build static site
-        working-directory: ./frontend
-        run: npm run generate
+        run: |
+          echo "Building site..."
+          npm run generate
+
+      - name: Verify build output
+        run: |
+          echo "Checking generated files..."
+          echo "Output directory structure:"
+          ls -la .output/
+          ls -la .output/public/
+          echo ""
+          echo "Searching for googleSheetsId in generated files..."
+          grep -r "googleSheetsId" .output/public/ || echo "Not found in generated files"
+          echo ""
+          echo "Searching for GOOGLE_SHEETS_ID value in generated files..."
+          grep -r "1XEGC57BVzCyl3cjoE2ouU8z6VpdpFudhN6n5j-AAAS4" .output/public/ || echo "Value not found in generated files"
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
 
       - name: Configure AWS CLI for Yandex Cloud
         run: |
@@ -38,8 +79,7 @@ jobs:
       - name: Deploy to Yandex Object Storage
         run: |
           aws --endpoint-url=https://storage.yandexcloud.net \
-            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
-            --delete \
+            s3 sync .output/public s3://${{ secrets.YC_BUCKET_NAME }} \
             --exclude ".git/*" \
             --exclude ".github/*" \
             --acl public-read
