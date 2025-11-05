@@ -2,10 +2,20 @@
   <div class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
     <!-- Hero секция -->
     <section class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 dark:from-orange-600 dark:to-green-700 text-white overflow-hidden">
+      <!-- Анимированный фон -->
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-bounce"></div>
-        <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce"
-          style="animation-delay: 0.5s"></div>
+        <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce" style="animation-delay: 0.5s"></div>
+        <div class="absolute top-1/2 left-1/4 w-20 h-20 bg-white rounded-full animate-ping"></div>
+        <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-white rounded-full animate-pulse" style="animation-delay: 1s"></div>
+      </div>
+
+      <!-- Плавающие иконки боевых искусств -->
+      <div class="absolute inset-0 opacity-20 pointer-events-none">
+        <div class="absolute top-20 left-20 text-6xl animate-float">🥋</div>
+        <div class="absolute top-40 right-32 text-5xl animate-float-delayed">🥊</div>
+        <div class="absolute bottom-32 left-1/4 text-4xl animate-float" style="animation-delay: 1.5s">⚡</div>
+        <div class="absolute bottom-20 right-20 text-5xl animate-float-delayed" style="animation-delay: 2s">🏆</div>
       </div>
 
       <UContainer class="relative z-10 px-6">
@@ -46,6 +56,42 @@
             </div>
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ benefit.title }}</h3>
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ benefit.description }}</p>
+          </div>
+        </div>
+      </UContainer>
+    </section>
+
+    <!-- Наши достижения (анимированные счетчики) -->
+    <section class="py-20 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-700 dark:to-pink-700 text-white overflow-hidden relative">
+      <!-- Анимированные фоновые элементы -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1s"></div>
+      </div>
+
+      <UContainer class="px-6 relative z-10">
+        <div class="text-center mb-12">
+          <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">
+            Наши достижения
+          </h2>
+          <p class="text-xl drop-shadow-md opacity-90">
+            Цифры, которые говорят сами за себя
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div v-for="(stat, index) in stats" :key="stat.label"
+            class="text-center transform hover:scale-110 transition-all duration-300"
+            :style="{ animationDelay: `${index * 100}ms` }">
+            <div class="mb-3 animate-bounce" :style="{ animationDelay: `${index * 200}ms` }">
+              <UIcon :name="stat.icon" class="w-12 h-12 md:w-16 md:h-16 mx-auto drop-shadow-lg" />
+            </div>
+            <div ref="counterRefs" class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">
+              {{ animatedValues[index] || 0 }}+
+            </div>
+            <div class="text-lg md:text-xl opacity-90 drop-shadow-md">
+              {{ stat.label }}
+            </div>
           </div>
         </div>
       </UContainer>
@@ -160,6 +206,82 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+// Данные для анимированных счетчиков
+const stats = [
+  {
+    icon: 'i-heroicons-users',
+    value: 200,
+    label: 'Учеников'
+  },
+  {
+    icon: 'i-heroicons-trophy',
+    value: 50,
+    label: 'Призеров'
+  },
+  {
+    icon: 'i-heroicons-calendar',
+    value: 8,
+    label: 'Лет опыта'
+  },
+  {
+    icon: 'i-heroicons-star',
+    value: 100,
+    label: '% Довольных родителей'
+  }
+]
+
+// Реактивные значения для анимации
+const animatedValues = ref<number[]>(stats.map(() => 0))
+const counterRefs = ref<HTMLElement[]>([])
+
+// Функция анимации счетчика
+const animateCounter = (index: number, targetValue: number, duration: number = 2000) => {
+  const startTime = Date.now()
+  const startValue = 0
+
+  const updateCounter = () => {
+    const currentTime = Date.now()
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+
+    // Easing function (ease-out)
+    const easedProgress = 1 - Math.pow(1 - progress, 3)
+
+    animatedValues.value[index] = Math.floor(startValue + (targetValue - startValue) * easedProgress)
+
+    if (progress < 1) {
+      requestAnimationFrame(updateCounter)
+    }
+  }
+
+  updateCounter()
+}
+
+// Запуск анимации при загрузке
+onMounted(() => {
+  // Используем Intersection Observer для запуска анимации при появлении секции
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        // Запускаем анимацию с задержкой для каждого счетчика
+        stats.forEach((stat, index) => {
+          setTimeout(() => {
+            animateCounter(index, stat.value)
+          }, index * 100)
+        })
+        observer.disconnect()
+      }
+    })
+  }, { threshold: 0.3 })
+
+  // Наблюдаем за первым счетчиком
+  if (counterRefs.value[0]) {
+    observer.observe(counterRefs.value[0])
+  }
+})
+
 const benefits = [
   {
     icon: 'i-heroicons-bolt',
@@ -303,3 +425,48 @@ useSeoMeta({
   description: 'Детские секции боевых искусств в Москве. Развиваем силу, дисциплину и уверенность в себе. Группы для детей от 5 до 16 лет. Бесплатное пробное занятие!'
 })
 </script>
+
+<style scoped>
+/* Плавающая анимация */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-30px) rotate(-5deg);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+}
+
+/* Fade-in анимация */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+</style>

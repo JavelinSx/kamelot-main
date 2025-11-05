@@ -5,37 +5,31 @@
       <div class="space-y-4 border-b border-gray-200 dark:border-gray-700 pb-6">
         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Выберите категорию</h3>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div @click="state.userType = 'teenager'"
-               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-                        state.userType === 'teenager'
-                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
-                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+          <div @click="state.userType = 'teenager'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+            state.userType === 'teenager'
+              ? 'border-red-500 bg-red-50 dark:bg-red-950'
+              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
             <div class="text-center">
-              <div class="text-2xl mb-2">👦</div>
               <div class="font-medium text-gray-900 dark:text-gray-100">Подросток</div>
               <div class="text-sm text-gray-600 dark:text-gray-400">5-17 лет</div>
             </div>
           </div>
 
-          <div @click="state.userType = 'parent'"
-               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-                        state.userType === 'parent'
-                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
-                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+          <div @click="state.userType = 'parent'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+            state.userType === 'parent'
+              ? 'border-red-500 bg-red-50 dark:bg-red-950'
+              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
             <div class="text-center">
-              <div class="text-2xl mb-2">👨‍👧</div>
               <div class="font-medium text-gray-900 dark:text-gray-100">Родитель</div>
               <div class="text-sm text-gray-600 dark:text-gray-400">Запись для ребёнка</div>
             </div>
           </div>
 
-          <div @click="state.userType = 'adult'"
-               :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-                        state.userType === 'adult'
-                          ? 'border-red-500 bg-red-50 dark:bg-red-950'
-                          : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
+          <div @click="state.userType = 'adult'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
+            state.userType === 'adult'
+              ? 'border-red-500 bg-red-50 dark:bg-red-950'
+              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
             <div class="text-center">
-              <div class="text-2xl mb-2">👨</div>
               <div class="font-medium text-gray-900 dark:text-gray-100">Взрослый</div>
               <div class="text-sm text-gray-600 dark:text-gray-400">18+ лет</div>
             </div>
@@ -165,20 +159,17 @@
       <!-- Согласие с условиями -->
       <div v-if="state.userType" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
         <div class="space-y-3">
-          <UCheckbox
-            v-model="state.agreeToTerms"
-            color="error"
-            size="lg"
-            :error="!!errors.agreeToTerms"
-          >
+          <UCheckbox v-model="state.agreeToTerms" color="error" size="lg" :error="!!errors.agreeToTerms">
             <template #label>
               <span class="text-sm text-gray-700 dark:text-gray-300">
                 Я согласен с
-                <ULink to="/privacy-policy" target="_blank" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
+                <ULink to="/privacy-policy" target="_blank"
+                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
                   политикой конфиденциальности
                 </ULink>
                 и
-                <ULink to="/terms-of-service" target="_blank" class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
+                <ULink to="/terms-of-service" target="_blank"
+                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
                   пользовательским соглашением
                 </ULink>
                 <span class="text-red-500">*</span>
@@ -190,7 +181,8 @@
 
         <div class="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <div class="flex items-start gap-3">
-            <UIcon name="i-heroicons-information-circle" class="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+            <UIcon name="i-heroicons-information-circle"
+              class="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
             <div class="text-sm text-blue-800 dark:text-blue-300">
               <p class="font-medium mb-1">Важная информация:</p>
               <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-400">
@@ -205,13 +197,8 @@
 
       <!-- Кнопка отправки -->
       <div class="flex justify-center pt-6">
-        <UButton
-          type="submit"
-          color="success"
-          size="lg"
-          :loading="isSubmitting"
-          :disabled="isSubmitting || !state.agreeToTerms"
-          class="px-8 py-3 text-black">
+        <UButton type="submit" color="success" size="lg" :loading="isSubmitting"
+          :disabled="isSubmitting || !state.agreeToTerms" class="px-8 py-3 text-black">
           {{ isSubmitting ? 'Отправка...' : 'Записаться на тренировку' }}
         </UButton>
       </div>

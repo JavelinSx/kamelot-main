@@ -4,6 +4,7 @@
     <MartialArtsCards />
     <TrainersCards />
     <FightersCards />
+    <LocationMap />
     <Gallery
       :images="photos"
       :can-load-more="hasMore"

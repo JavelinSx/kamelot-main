@@ -1,13 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-// Логируем переменные окружения при сборке
-console.log('[nuxt.config] Environment variables at build time:', {
-  NUXT_PUBLIC_GOOGLE_SHEETS_ID: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID,
-  NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY ? '***set***' : 'undefined',
-  NUXT_PUBLIC_STORAGE_URL: process.env.NUXT_PUBLIC_STORAGE_URL,
-  NODE_ENV: process.env.NODE_ENV,
-});
-
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
@@ -34,7 +26,15 @@ export default defineNuxtConfig({
   ssr: true, // Включаем SSR для генерации статического контента с данными
   nitro: {
     prerender: {
-      routes: ["/", "/trainers", "/schedule", "/blog", "/kids", "/privacy-policy", "/terms-of-service"], // Маршруты для пререндеринга
+      routes: [
+        "/",
+        "/trainers",
+        "/schedule",
+        "/blog",
+        "/kids",
+        "/privacy-policy",
+        "/terms-of-service",
+      ], // Маршруты для пререндеринга
     },
   },
 

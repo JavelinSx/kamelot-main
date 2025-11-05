@@ -1,28 +1,22 @@
 <template>
-  <div class="bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 transition-colors duration-300">
+  <div
+    class="bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 transition-colors duration-300 overflow-hidden">
     <!-- Заголовок галереи -->
     <div v-if="title || description" class="text-center pt-8 pb-8">
-      <h2 v-if="title"
-        data-aos="fade-down"
-        data-aos-duration="600"
+      <h2 v-if="title" data-aos="fade-down" data-aos-duration="600"
         class="text-5xl font-bold text-gray-900 dark:text-gray-300 mb-12">{{ title }}</h2>
-      <p v-if="description"
-        data-aos="fade-up"
-        data-aos-duration="600"
-        data-aos-delay="100"
+      <p v-if="description" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
         class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
     </div>
 
     <!-- Галерея -->
     <div ref="galleryContainer" class="masonry-container" :style="{ columnCount: columnCount, columnGap: gap + 'px' }">
-      <div v-for="(image, index) in images" :key="index"
-        data-aos="fade-up"
-        :data-aos-delay="(index % 10) * 50"
-        data-aos-duration="500"
-        class="masonry-item group cursor-pointer break-inside-avoid"
+      <div v-for="(image, index) in images" :key="index" data-aos="fade-up" :data-aos-delay="(index % 10) * 50"
+        data-aos-duration="500" class="masonry-item group cursor-pointer break-inside-avoid"
         :style="{ marginBottom: gap + 'px' }" @click="handleImageClick(image, index)">
         <!-- Контейнер изображения -->
-        <div class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-lg">
+        <div
+          class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-lg">
           <!-- Изображение -->
           <img :src="image" :alt="`Gallery image ${index + 1}`"
             class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
@@ -124,10 +118,14 @@ const lightboxImage = ref<string | null>(null)
 const lightboxIndex = ref(-1)
 
 // Адаптивные колонки
-const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1280)
+// Используем 0 для SSR, чтобы избежать hydration mismatch
+const windowWidth = ref(0)
 
 const columnCount = computed(() => {
   if (props.columns > 0) return props.columns
+
+  // Если windowWidth еще не установлен (SSR), возвращаем mobile-first значение
+  if (windowWidth.value === 0) return 1
 
   // Автоматическое определение количества колонок
   const width = windowWidth.value
