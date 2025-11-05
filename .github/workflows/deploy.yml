@@ -69,14 +69,6 @@ jobs:
           echo "Searching for GOOGLE_SHEETS_ID value in generated files..."
           grep -r "1XEGC57BVzCyl3cjoE2ouU8z6VpdpFudhN6n5j-AAAS4" .output/public/ || echo "Value not found in generated files"
 
-      - name: Install AWS CLI
-        run: |
-          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-          unzip awscliv2.zip
-          sudo ./aws/install
-          aws --version
-        working-directory: .
-
       - name: Configure AWS CLI for Yandex Cloud
         run: |
           aws configure set aws_access_key_id ${{ secrets.YC_KEY_ID }}
