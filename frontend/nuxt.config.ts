@@ -1,4 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// Логируем переменные окружения при сборке
+console.log('[nuxt.config] Environment variables at build time:', {
+  NUXT_PUBLIC_GOOGLE_SHEETS_ID: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID,
+  NUXT_PUBLIC_STORAGE_URL: process.env.NUXT_PUBLIC_STORAGE_URL,
+  NODE_ENV: process.env.NODE_ENV,
+});
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },

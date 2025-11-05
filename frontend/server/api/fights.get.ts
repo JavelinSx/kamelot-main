@@ -15,8 +15,17 @@ export default defineEventHandler(async (event): Promise<FightsResponse> => {
   // URL к Google Sheets (ID таблицы)
   const googleSheetsId = config.public.googleSheetsId;
 
+  console.log('[Fights API] Runtime config:', {
+    googleSheetsId,
+    allPublicConfig: config.public,
+    env: {
+      NUXT_PUBLIC_GOOGLE_SHEETS_ID: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID
+    }
+  });
+
   // Если URL не настроен, возвращаем локальные данные
   if (!googleSheetsId) {
+    console.warn('[Fights API] ❌ Google Sheets ID not configured, using local data');
     return {
       fights: getLocalFights(),
       total: getLocalFights().length,
@@ -24,9 +33,14 @@ export default defineEventHandler(async (event): Promise<FightsResponse> => {
     };
   }
 
+  console.log('[Fights API] ✅ Using Google Sheets ID:', googleSheetsId);
+
   try {
     // Загружаем данные из Google Sheets
+    console.log('[Fights API] Attempting to load fights from Google Sheets...');
     const fights = await loadFightsFromGoogleSheets(googleSheetsId);
+
+    console.log('[Fights API] ✅ Successfully loaded', fights.length, 'fights from Google Sheets');
 
     return {
       fights,
@@ -36,6 +50,8 @@ export default defineEventHandler(async (event): Promise<FightsResponse> => {
     };
   } catch (error: any) {
     // В случае ошибки возвращаем локальные данные
+    console.error('[Fights API] ❌ Error loading from Google Sheets:', error.message || error);
+    console.log('[Fights API] Falling back to local data');
     return {
       fights: getLocalFights(),
       total: getLocalFights().length,
@@ -52,19 +68,24 @@ async function loadFightsFromGoogleSheets(
 ): Promise<FightAnnouncement[]> {
   // Формируем URL для экспорта Google Sheets в CSV
   const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+  console.log('[loadFightsFromGoogleSheets] Fetching CSV from:', csvUrl);
 
   // Скачиваем CSV файл
   const response = await fetch(csvUrl);
+  console.log('[loadFightsFromGoogleSheets] Response status:', response.status, response.statusText);
 
   if (!response.ok) {
+    console.error('[loadFightsFromGoogleSheets] ❌ Failed to download CSV:', response.status, response.statusText);
     throw new Error(`Failed to download CSV: ${response.statusText}`);
   }
 
   // Получаем текст CSV
   const csvText = await response.text();
+  console.log('[loadFightsFromGoogleSheets] CSV downloaded, length:', csvText.length, 'chars');
 
   // Парсим CSV в массив боёв
   const fights = parseCSVToFights(csvText);
+  console.log('[loadFightsFromGoogleSheets] Parsed fights count:', fights.length);
 
   return fights;
 }

@@ -70,30 +70,46 @@ export const useFights = () => {
   const config = useRuntimeConfig()
   const googleSheetsId = config.public.googleSheetsId
 
+  console.log('[useFights] Runtime config:', {
+    googleSheetsId,
+    allPublicConfig: config.public
+  })
+
   /**
    * Загрузка всех боёв напрямую из Google Sheets
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
+      console.log('[useFights] loadFights called, googleSheetsId:', googleSheetsId)
+
       if (!googleSheetsId) {
-        console.warn('Google Sheets ID not configured')
+        console.warn('[useFights] ❌ Google Sheets ID not configured')
         return []
       }
 
+      console.log('[useFights] ✅ Google Sheets ID is set:', googleSheetsId)
+
       // Загружаем CSV напрямую из Google Sheets
       const csvUrl = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/export?format=csv`
+      console.log('[useFights] Fetching CSV from:', csvUrl)
+
       const response = await fetch(csvUrl)
+      console.log('[useFights] Response status:', response.status, response.statusText)
 
       if (!response.ok) {
+        console.error('[useFights] ❌ Failed to fetch CSV:', response.status, response.statusText)
         throw new Error(`Failed to fetch CSV: ${response.statusText}`)
       }
 
       const csvText = await response.text()
+      console.log('[useFights] CSV loaded, length:', csvText.length, 'chars')
+
       const fights = parseCSVToFights(csvText)
+      console.log('[useFights] Parsed fights count:', fights.length)
 
       return fights.map(fight => convertToFight(fight))
     } catch (error) {
-      console.error('Error loading fights:', error)
+      console.error('[useFights] ❌ Error loading fights:', error)
       return []
     }
   }
