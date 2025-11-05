@@ -38,31 +38,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install dotenv-cli
-        run: npm install -g dotenv-cli
-
-      - name: Create .env file
+      - name: Inject environment variables into nuxt.config.ts
         run: |
-          echo "Creating .env file with environment variables..."
-          echo "NUXT_PUBLIC_GOOGLE_SHEETS_ID=$NUXT_PUBLIC_GOOGLE_SHEETS_ID" > .env
-          echo "NUXT_PUBLIC_STORAGE_URL=$NUXT_PUBLIC_STORAGE_URL" >> .env
-          echo "✅ .env file created"
-          echo "File contents:"
-          cat .env
-          echo ""
-          echo "Checking environment variables:"
-          echo "NUXT_PUBLIC_GOOGLE_SHEETS_ID = $NUXT_PUBLIC_GOOGLE_SHEETS_ID"
-          echo "NUXT_PUBLIC_STORAGE_URL = $NUXT_PUBLIC_STORAGE_URL"
+          echo "Injecting GOOGLE_SHEETS_ID directly into nuxt.config.ts..."
+          sed -i "s|googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID \|\| \"\"|googleSheetsId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_ID\"|g" nuxt.config.ts
+          sed -i "s|storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL \|\| \"\"|storageUrl: \"$NUXT_PUBLIC_STORAGE_URL\"|g" nuxt.config.ts
+          echo "✅ Variables injected into nuxt.config.ts"
+          echo "Modified config (relevant lines):"
+          grep -A 3 "public:" nuxt.config.ts
 
       - name: Build static site
         run: |
           echo "Building site..."
-          echo "Environment variables available during build:"
-          echo "NUXT_PUBLIC_GOOGLE_SHEETS_ID = $NUXT_PUBLIC_GOOGLE_SHEETS_ID"
-          echo "NUXT_PUBLIC_STORAGE_URL = $NUXT_PUBLIC_STORAGE_URL"
-          echo ""
-          echo "Running generate with dotenv..."
-          dotenv -e .env -- npm run generate
+          npm run generate
 
       - name: Verify build output
         run: |
