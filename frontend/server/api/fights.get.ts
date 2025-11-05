@@ -150,7 +150,7 @@ async function loadFightsFromGoogleSheets(
 
 /**
  * Парсинг CSV в массив боёв
- * Формат: вертикальный - колонка A содержит названия полей, колонка B - значения
+ * Формат: горизонтальный - первая строка заголовки, остальные строки - данные боёв
  */
 function parseCSVToFights(csvText: string): FightAnnouncement[] {
   const lines = csvText.split("\n").filter((line) => line.trim());
@@ -160,54 +160,40 @@ function parseCSVToFights(csvText: string): FightAnnouncement[] {
     return [];
   }
 
-  // Создаём объект из пар ключ-значение (вертикальный формат)
-  const fightData: Record<string, string> = {};
+  // Первая строка - заголовки
+  const headers = parseCSVLine(lines[0]);
+  console.log("[Fights API] CSV headers:", headers);
 
-  for (let i = 0; i < lines.length; i++) {
+  const fights: FightAnnouncement[] = [];
+
+  // Остальные строки - данные
+  for (let i = 1; i < lines.length; i++) {
     try {
       const line = lines[i];
-      if (!line) continue;
+      if (!line.trim()) continue;
 
       const values = parseCSVLine(line);
 
-      if (values.length >= 2 && values[0] && values[1]) {
-        // Первая колонка - название поля, вторая - значение
-        let fieldName = values[0].trim();
-        const fieldValue = values[1].trim();
-
-        // Очищаем название поля от дополнительных описаний в скобках
-        // Например: "status(upcoming, completed, cancelled)" -> "status"
-        const splitField = fieldName.split("(")[0];
-        if (splitField) {
-          fieldName = splitField.trim();
+      // Создаём объект из заголовков и значений
+      const rowData: Record<string, string> = {};
+      headers.forEach((header, index) => {
+        const value = values[index]?.trim() || "";
+        if (value && value !== "-") {
+          rowData[header.trim()] = value;
         }
+      });
 
-        // Также убираем описания типов
-        fieldName = fieldName.replace(/\s*\(.+?\)\s*/g, "");
-
-        // Игнорируем пустые значения и "-"
-        if (
-          fieldName &&
-          fieldValue &&
-          fieldValue !== "" &&
-          fieldValue !== "-"
-        ) {
-          fightData[fieldName] = fieldValue;
-        }
+      // Парсим строку в объект боя
+      const fight = parseFightData(rowData, i);
+      if (fight) {
+        fights.push(fight);
       }
     } catch (error) {
-      console.error(`[Fights API] Error parsing line ${i}:`, error);
+      console.error(`[Fights API] Error parsing row ${i}:`, error);
     }
   }
 
-  // Парсим собранные данные в объект FightAnnouncement
-  const fight = parseFightData(fightData, 1);
-
-  if (fight) {
-    return [fight];
-  }
-
-  return [];
+  return fights;
 }
 
 /**

@@ -168,7 +168,8 @@ export const useFights = () => {
   }
 
   /**
-   * Парсинг CSV в массив боёв (вертикальный формат)
+   * Парсинг CSV в массив боёв (горизонтальный формат)
+   * Первая строка - заголовки, остальные - данные
    */
   const parseCSVToFights = (csvText: string): any[] => {
     const lines = csvText.split('\n').filter(line => line.trim())
@@ -177,46 +178,42 @@ export const useFights = () => {
       return []
     }
 
-    const fightData: Record<string, string> = {}
+    // Первая строка - заголовки
+    const headers = parseCSVLine(lines[0])
+    console.log('[useFights] CSV headers:', headers)
 
-    for (let i = 0; i < lines.length; i++) {
+    const fights: any[] = []
+
+    // Остальные строки - данные
+    for (let i = 1; i < lines.length; i++) {
       const line = lines[i]
-      if (!line) continue
+      if (!line.trim()) continue
 
       const values = parseCSVLine(line)
 
-      if (values.length >= 2 && values[0] && values[1]) {
-        let fieldName = values[0].trim()
-        const fieldValue = values[1].trim()
-
-        // Очищаем название поля от описаний в скобках
-        const splitField = fieldName.split('(')[0]
-        if (splitField) {
-          fieldName = splitField.trim()
+      // Создаём объект из заголовков и значений
+      const rowData: Record<string, string> = {}
+      headers.forEach((header, index) => {
+        const value = values[index]?.trim() || ''
+        if (value && value !== '-') {
+          rowData[header.trim()] = value
         }
+      })
 
-        if (fieldName && fieldValue && fieldValue !== '' && fieldValue !== '-') {
-          fightData[fieldName] = fieldValue
-        }
+      // Нормализуем ключи
+      const cleanData: Record<string, string> = {}
+      Object.keys(rowData).forEach(key => {
+        const cleanKey = key.trim().toLowerCase().replace(/\s+/g, '_')
+        cleanData[cleanKey] = rowData[key]
+      })
+
+      // Проверяем обязательные поля
+      if (cleanData.event_name && cleanData.date) {
+        fights.push(cleanData)
       }
     }
 
-    // Преобразуем в формат с нормализованными ключами
-    const cleanData: Record<string, string> = {}
-    Object.keys(fightData).forEach(key => {
-      const cleanKey = key.trim().toLowerCase().replace(/\s+/g, '_')
-      const value = fightData[key]
-      if (value !== undefined) {
-        cleanData[cleanKey] = value
-      }
-    })
-
-    // Проверяем обязательные поля
-    if (!cleanData.event_name || !cleanData.date) {
-      return []
-    }
-
-    return [cleanData]
+    return fights
   }
 
   /**
