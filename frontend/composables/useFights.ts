@@ -76,7 +76,40 @@ export const useFights = () => {
   })
 
   /**
-   * Загрузка всех боёв напрямую из Google Sheets
+   * Получение списка всех листов из Google Sheets
+   */
+  const getWorksheetList = async (sheetId: string): Promise<Array<{title: string, gid: string}>> => {
+    const feedUrl = `https://spreadsheets.google.com/feeds/worksheets/${sheetId}/public/basic?alt=json`
+    console.log('[useFights] Fetching worksheets from:', feedUrl)
+
+    try {
+      const response = await fetch(feedUrl)
+      if (!response.ok) {
+        console.warn('[useFights] Failed to fetch worksheet list, using first sheet only')
+        return [{ title: 'Sheet1', gid: '0' }]
+      }
+
+      const data = await response.json()
+      const entries = data.feed?.entry || []
+
+      const worksheets = entries.map((entry: any) => {
+        const title = entry.title?.$t || 'Untitled'
+        const link = entry.link?.find((l: any) => l.rel === 'http://schemas.google.com/spreadsheets/2006#cellsfeed')
+        const gid = link?.href?.match(/\/([^\/]+)$/)?.[1] || '0'
+        return { title, gid }
+      })
+
+      console.log('[useFights] Found', worksheets.length, 'worksheets')
+      return worksheets
+    } catch (error) {
+      console.error('[useFights] Error fetching worksheets:', error)
+      return [{ title: 'Sheet1', gid: '0' }]
+    }
+  }
+
+  /**
+   * Загрузка всех боёв из всех листов Google Sheets
+   * Каждый лист = один бой
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
@@ -89,25 +122,45 @@ export const useFights = () => {
 
       console.log('[useFights] ✅ Google Sheets ID is set:', googleSheetsId)
 
-      // Загружаем CSV напрямую из Google Sheets
-      const csvUrl = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/export?format=csv`
-      console.log('[useFights] Fetching CSV from:', csvUrl)
+      // Получаем список всех листов
+      const worksheets = await getWorksheetList(googleSheetsId)
+      console.log('[useFights] Processing', worksheets.length, 'worksheets')
 
-      const response = await fetch(csvUrl)
-      console.log('[useFights] Response status:', response.status, response.statusText)
+      const allFights: Fight[] = []
 
-      if (!response.ok) {
-        console.error('[useFights] ❌ Failed to fetch CSV:', response.status, response.statusText)
-        throw new Error(`Failed to fetch CSV: ${response.statusText}`)
+      // Загружаем каждый лист отдельно
+      for (let i = 0; i < worksheets.length; i++) {
+        const worksheet = worksheets[i]
+        console.log(`[useFights] Loading worksheet ${i + 1}/${worksheets.length}: "${worksheet.title}"`)
+
+        try {
+          const csvUrl = `https://docs.google.com/spreadsheets/d/${googleSheetsId}/export?format=csv&gid=${worksheet.gid}`
+          const response = await fetch(csvUrl)
+
+          if (!response.ok) {
+            console.error(`[useFights] ❌ Failed to fetch worksheet "${worksheet.title}":`, response.status)
+            continue
+          }
+
+          const csvText = await response.text()
+          console.log(`[useFights] Worksheet "${worksheet.title}" CSV length:`, csvText.length, 'chars')
+
+          const fights = parseCSVToFights(csvText)
+
+          if (fights.length > 0) {
+            console.log(`[useFights] ✅ Parsed ${fights.length} fight(s) from "${worksheet.title}"`)
+            allFights.push(...fights.map(fight => convertToFight(fight)))
+          } else {
+            console.log(`[useFights] ⚠️ No fights in "${worksheet.title}"`)
+          }
+        } catch (error) {
+          console.error(`[useFights] Error loading worksheet "${worksheet.title}":`, error)
+          continue
+        }
       }
 
-      const csvText = await response.text()
-      console.log('[useFights] CSV loaded, length:', csvText.length, 'chars')
-
-      const fights = parseCSVToFights(csvText)
-      console.log('[useFights] Parsed fights count:', fights.length)
-
-      return fights.map(fight => convertToFight(fight))
+      console.log('[useFights] Total fights loaded:', allFights.length)
+      return allFights
     } catch (error) {
       console.error('[useFights] ❌ Error loading fights:', error)
       return []

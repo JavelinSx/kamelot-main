@@ -61,33 +61,91 @@ export default defineEventHandler(async (event): Promise<FightsResponse> => {
 });
 
 /**
+ * Получение списка всех листов (worksheets) из Google Sheets
+ */
+async function getWorksheetList(sheetId: string): Promise<Array<{title: string, gid: string}>> {
+  // Используем публичный feed для получения списка листов
+  const feedUrl = `https://spreadsheets.google.com/feeds/worksheets/${sheetId}/public/basic?alt=json`;
+  console.log('[getWorksheetList] Fetching worksheets from:', feedUrl);
+
+  try {
+    const response = await fetch(feedUrl);
+    if (!response.ok) {
+      console.warn('[getWorksheetList] Failed to fetch worksheet list, falling back to first sheet only');
+      return [{ title: 'Sheet1', gid: '0' }]; // Fallback to first sheet
+    }
+
+    const data = await response.json();
+    const entries = data.feed?.entry || [];
+
+    const worksheets = entries.map((entry: any) => {
+      const title = entry.title?.$t || 'Untitled';
+      // Extract gid from link
+      const link = entry.link?.find((l: any) => l.rel === 'http://schemas.google.com/spreadsheets/2006#cellsfeed');
+      const gid = link?.href?.match(/\/([^\/]+)$/)?.[1] || '0';
+
+      return { title, gid };
+    });
+
+    console.log('[getWorksheetList] Found worksheets:', worksheets.length);
+    return worksheets;
+  } catch (error) {
+    console.error('[getWorksheetList] Error:', error);
+    return [{ title: 'Sheet1', gid: '0' }]; // Fallback to first sheet
+  }
+}
+
+/**
  * Загрузка боёв из Google Sheets через CSV экспорт
+ * Каждый лист (worksheet) в таблице = один бой
  */
 async function loadFightsFromGoogleSheets(
   sheetId: string
 ): Promise<FightAnnouncement[]> {
-  // Формируем URL для экспорта Google Sheets в CSV
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
-  console.log('[loadFightsFromGoogleSheets] Fetching CSV from:', csvUrl);
+  console.log('[loadFightsFromGoogleSheets] Loading all worksheets...');
 
-  // Скачиваем CSV файл
-  const response = await fetch(csvUrl);
-  console.log('[loadFightsFromGoogleSheets] Response status:', response.status, response.statusText);
+  // Получаем список всех листов
+  const worksheets = await getWorksheetList(sheetId);
+  console.log('[loadFightsFromGoogleSheets] Processing', worksheets.length, 'worksheets');
 
-  if (!response.ok) {
-    console.error('[loadFightsFromGoogleSheets] ❌ Failed to download CSV:', response.status, response.statusText);
-    throw new Error(`Failed to download CSV: ${response.statusText}`);
+  const allFights: FightAnnouncement[] = [];
+
+  // Загружаем каждый лист отдельно
+  for (let i = 0; i < worksheets.length; i++) {
+    const worksheet = worksheets[i];
+    console.log(`[loadFightsFromGoogleSheets] Loading worksheet ${i + 1}/${worksheets.length}: "${worksheet.title}" (gid: ${worksheet.gid})`);
+
+    try {
+      // Формируем URL для экспорта конкретного листа в CSV
+      const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${worksheet.gid}`;
+
+      const response = await fetch(csvUrl);
+
+      if (!response.ok) {
+        console.error(`[loadFightsFromGoogleSheets] ❌ Failed to download worksheet "${worksheet.title}":`, response.status);
+        continue; // Skip this worksheet
+      }
+
+      const csvText = await response.text();
+      console.log(`[loadFightsFromGoogleSheets] Worksheet "${worksheet.title}" CSV length:`, csvText.length, 'chars');
+
+      // Парсим CSV в бой
+      const fights = parseCSVToFights(csvText);
+
+      if (fights.length > 0) {
+        console.log(`[loadFightsFromGoogleSheets] ✅ Parsed ${fights.length} fight(s) from "${worksheet.title}"`);
+        allFights.push(...fights);
+      } else {
+        console.log(`[loadFightsFromGoogleSheets] ⚠️ No fights found in "${worksheet.title}"`);
+      }
+    } catch (error) {
+      console.error(`[loadFightsFromGoogleSheets] Error processing worksheet "${worksheet.title}":`, error);
+      continue; // Skip this worksheet
+    }
   }
 
-  // Получаем текст CSV
-  const csvText = await response.text();
-  console.log('[loadFightsFromGoogleSheets] CSV downloaded, length:', csvText.length, 'chars');
-
-  // Парсим CSV в массив боёв
-  const fights = parseCSVToFights(csvText);
-  console.log('[loadFightsFromGoogleSheets] Parsed fights count:', fights.length);
-
-  return fights;
+  console.log('[loadFightsFromGoogleSheets] Total fights loaded:', allFights.length);
+  return allFights;
 }
 
 /**
