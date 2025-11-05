@@ -14,6 +14,7 @@ jobs:
         working-directory: frontend
     env:
       NUXT_PUBLIC_GOOGLE_SHEETS_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}
+      NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
       NUXT_PUBLIC_STORAGE_URL: https://storage.yandexcloud.net/kamelot
 
     steps:
@@ -44,12 +45,13 @@ jobs:
 
       - name: Inject environment variables into nuxt.config.ts
         run: |
-          echo "Injecting GOOGLE_SHEETS_ID directly into nuxt.config.ts..."
+          echo "Injecting environment variables directly into nuxt.config.ts..."
           sed -i "s|googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID \|\| \"\"|googleSheetsId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_ID\"|g" nuxt.config.ts
+          sed -i "s|googleSheetsApiKey: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY \|\| \"\"|googleSheetsApiKey: \"$NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY\"|g" nuxt.config.ts
           sed -i "s|storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL \|\| \"\"|storageUrl: \"$NUXT_PUBLIC_STORAGE_URL\"|g" nuxt.config.ts
           echo "✅ Variables injected into nuxt.config.ts"
           echo "Modified config (relevant lines):"
-          grep -A 3 "public:" nuxt.config.ts
+          grep -A 5 "public:" nuxt.config.ts
 
       - name: Build static site
         run: |
