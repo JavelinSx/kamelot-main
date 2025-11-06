@@ -76,7 +76,7 @@
               </div>
               <div>
                 <h3 class="text-white font-semibold mb-2">Телефон</h3>
-                <a href="tel:+74951234567" class="text-gray-400 text hover:text-red-500 transition-colors">
+                <a href="tel:+79520957776" class="text-gray-400 text hover:text-red-500 transition-colors">
                   +7 (952) 095-77-76
                 </a>
               </div>

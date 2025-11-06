@@ -71,5 +71,30 @@ export default defineNuxtConfig({
   // Page transitions
   app: {
     pageTransition: { name: "page", mode: "out-in" },
+    head: {
+      htmlAttrs: {
+        lang: 'ru'
+      },
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      meta: [
+        { name: 'format-detection', content: 'telephone=no' },
+        { name: 'yandex-verification', content: '' }, // Добавьте ваш код верификации Яндекса
+        { name: 'google-site-verification', content: '' }, // Добавьте ваш код верификации Google
+        // Geo meta tags для локального SEO
+        { name: 'geo.region', content: 'RU-SPE' },
+        { name: 'geo.placename', content: 'Санкт-Петербург, Парнас' },
+        { name: 'geo.position', content: '60.069444;30.340833' },
+        { name: 'ICBM', content: '60.069444, 30.340833' },
+        // Robots meta
+        { name: 'robots', content: 'index, follow' },
+        { name: 'googlebot', content: 'index, follow' },
+        { name: 'yandex', content: 'index, follow' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'canonical', href: 'https://kamelot-academy.ru' }
+      ]
+    }
   },
 });

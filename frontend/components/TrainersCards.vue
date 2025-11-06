@@ -8,7 +8,7 @@
       <!-- Заголовок секции -->
       <div class="text-center mb-8">
         <ClientOnly>
-          <h2 v-motion-slide-visible-once-top :duration="600"
+          <h2 v-motion-slide-visible-once-left :duration="600"
             class="lg:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Наши тренеры
           </h2>
@@ -105,7 +105,7 @@
                   <div class="flex items-center justify-between">
                     <span class="text-gray-500 dark:text-gray-400">Тренировок:</span>
                     <span class="font-semibold text-gray-900 dark:text-white">{{ trainer.stats.sessionsCompleted
-                    }}</span>
+                      }}</span>
                   </div>
                 </div>
 
