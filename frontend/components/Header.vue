@@ -45,7 +45,7 @@
           </ClientOnly>
 
           <UModal v-model:open="isBookingOpen" title="Запись на тренировку"
-            description="Заполните форму для записи на тренировку. Мы свяжемся с вами в ближайшее время." :ui="{
+            :description="modalDescription" :ui="{
               overlay: 'fixed inset-0 bg-elevated/75',
               content: 'fixed bg-default divide-y divide-default flex flex-col focus:outline-none min-w-[650]px',
               title: 'text-highlighted font-semibold pr-8',
@@ -140,7 +140,18 @@
 <script setup lang="ts">
 const logo = '/images/logo.png';
 const isMenuOpen = ref(false)
-const isBookingOpen = ref(false)
+
+// Используем глобальное состояние для модалки записи
+const { isBookingModalOpen, closeBookingModal, selectedSession, clearBookingData } = useBooking()
+const isBookingOpen = isBookingModalOpen
+
+// Формируем описание модалки в зависимости от выбранной сессии
+const modalDescription = computed(() => {
+  if (selectedSession.value) {
+    return `${selectedSession.value.discipline} • ${selectedSession.value.day}, ${selectedSession.value.time} • Тренер: ${selectedSession.value.trainer}`
+  }
+  return 'Заполните форму для записи на тренировку. Мы свяжемся с вами в ближайшее время.'
+})
 
 // Переключатель темы
 const colorMode = useColorMode()
@@ -150,24 +161,34 @@ function toggleColorMode() {
 }
 
 function handleBookingSuccess() {
-  isBookingOpen.value = false
+  closeBookingModal()
+
+  // Показываем уведомление
+  const toast = useToast()
+  toast.add({
+    title: 'Заявка отправлена!',
+    description: 'Мы свяжемся с вами в ближайшее время',
+    icon: 'i-heroicons-check-circle',
+    color: 'success'
+  })
+
+  // Очищаем данные после небольшой задержки
+  setTimeout(() => {
+    clearBookingData()
+  }, 500)
 }
 
 function closeMenu() {
   isMenuOpen.value = false
 }
 
-// Слушаем событие открытия модалки бронирования
-onMounted(() => {
-  window.addEventListener('openBookingModal', () => {
-    isBookingOpen.value = true
-  })
-})
-
-onUnmounted(() => {
-  window.removeEventListener('openBookingModal', () => {
-    isBookingOpen.value = true
-  })
+// Очищаем данные при закрытии модалки
+watch(isBookingOpen, (newValue) => {
+  if (!newValue) {
+    setTimeout(() => {
+      clearBookingData()
+    }, 300)
+  }
 })
 
 function smoothScrollTo(targetPosition: number, duration: number = 1000) {

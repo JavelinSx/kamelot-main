@@ -23,6 +23,8 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
+    "@iconify-json/lucide": "^1.2.72",
     "@nuxt/eslint": "^1.9.0",
     "@types/node": "^24.9.2",
     "eslint": "^9.36.0",

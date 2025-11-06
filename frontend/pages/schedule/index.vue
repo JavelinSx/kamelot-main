@@ -295,10 +295,22 @@ function formatDate(dateString: string): string {
 }
 
 // Запись на тренировку
+const { openBookingModal } = useBooking()
+
 function bookSession(session: any) {
-  // TODO: Добавить логику записи на тренировку
-  console.log('Запись на тренировку:', session)
-  alert(`Запись на "${session.discipline}" в ${session.time}\nТренер: ${session.trainer}\n\nДля записи позвоните по телефону или напишите в мессенджер.`)
+  const dayLabel = daysOfWeek[selectedDayIndex.value]?.label || ''
+  const zoneName = selectedZone.value?.name || ''
+
+  // Открываем модальное окно с предзаполненными данными
+  openBookingModal({
+    discipline: session.discipline,
+    time: session.time,
+    day: dayLabel,
+    trainer: session.trainer,
+    ageGroup: session.ageGroup,
+    level: session.level,
+    zone: zoneName
+  })
 }
 
 // SEO

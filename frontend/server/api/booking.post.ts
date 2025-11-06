@@ -69,8 +69,30 @@ function formatTelegramMessage(data: any) {
   const contactLabel =
     data.contactMethod === "telegram" ? "Telegram" : "Телефон";
 
-  let message = `🥊 <b>НОВАЯ ЗАЯВКА НА ТРЕНИРОВКУ</b>
+  let message = `🥊 <b>НОВАЯ ЗАЯВКА НА ТРЕНИРОВКУ</b>\n`;
 
+  // Если есть информация о выбранной сессии из расписания
+  if (data.sessionInfo) {
+    message += `
+📅 <b>Выбранная тренировка:</b>
+   🥋 Дисциплина: ${escapeHtml(data.sessionInfo.discipline)}
+   📆 День: ${escapeHtml(data.sessionInfo.day)}
+   🕐 Время: ${escapeHtml(data.sessionInfo.time)}
+   👨‍🏫 Тренер: ${escapeHtml(data.sessionInfo.trainer)}`;
+
+    if (data.sessionInfo.ageGroup) {
+      message += `\n   👥 Группа: ${escapeHtml(data.sessionInfo.ageGroup)}`;
+    }
+    if (data.sessionInfo.level) {
+      message += `\n   🎓 Уровень: ${escapeHtml(data.sessionInfo.level)}`;
+    }
+    if (data.sessionInfo.zone) {
+      message += `\n   📍 Зона: ${escapeHtml(data.sessionInfo.zone)}`;
+    }
+    message += `\n`;
+  }
+
+  message += `
 👤 <b>Контактные данные${data.isParent ? " (родитель)" : ""}:</b>
    Имя: ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}
    ${contactIcon} ${contactLabel}: ${escapeHtml(data.contact)}

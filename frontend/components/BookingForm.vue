@@ -236,7 +236,7 @@ const childSchema = {
   childAge: z.number().min(3, 'Минимальный возраст ребёнка 3 года').max(17, 'Максимальный возраст ребёнка 17 лет')
 }
 
-const { selectedTrainingType, clearSelectedTrainingType } = useBooking()
+const { selectedTrainingType, selectedSession, clearSelectedTrainingType } = useBooking()
 
 const state = reactive({
   userType: '', // 'teenager', 'parent', 'adult'
@@ -360,7 +360,13 @@ async function onSubmit() {
   isSubmitting.value = true
 
   try {
-    await sendToTelegram(state)
+    // Подготавливаем данные для отправки
+    const bookingData = {
+      ...state,
+      sessionInfo: selectedSession.value // Добавляем информацию о выбранной тренировке
+    }
+
+    await sendToTelegram(bookingData)
 
     // Показываем уведомление об успехе
     console.log('Заявка успешно отправлена!')
