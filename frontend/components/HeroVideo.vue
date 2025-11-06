@@ -1,6 +1,6 @@
 <template>
   <section class="relative h-screen flex items-center justify-center overflow-hidden mt-20">
-    <video v-if="props.videoSrc" autoplay muted loop playsinline
+    <video v-if="props.videoSrc" autoplay muted loop playsinline preload="metadata"
       class="absolute inset-0 w-full h-full object-cover  scale-110 ">
       <source :src="props.videoSrc" type="video/mp4" />
     </video>
@@ -28,14 +28,8 @@
     <div class="absolute inset-0 flex items-center justify-center z-20">
       <div class="text-center text-white max-w-4xl mx-auto px-4">
         <h1 class="font-bold mb-6 leading-tight">
-          <ClientOnly>
-            <span v-motion :initial="{ opacity: 0, y: -50 }"
-              :visible-once="{ opacity: 1, y: 0, transition: { duration: 600 } }"
-              class="inline-block text-red-500 text-6xl lg:text-7xl">KAMELOT</span><br>
-            <span v-motion :initial="{ opacity: 0, y: 50 }"
-              :visible-once="{ opacity: 1, y: 0, transition: { duration: 600, delay: 200 } }"
-              class="inline-block text-white text-6xl lg:text-7xl">FIGHT CLUB</span>
-          </ClientOnly>
+          <span class="inline-block text-red-500 text-6xl lg:text-7xl hero-title-line1">KAMELOT</span><br>
+          <span class="inline-block text-white text-6xl lg:text-7xl hero-title-line2">FIGHT CLUB</span>
         </h1>
       </div>
     </div>

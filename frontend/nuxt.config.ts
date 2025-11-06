@@ -93,7 +93,17 @@ export default defineNuxtConfig({
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'canonical', href: 'https://kamelot-academy.ru' }
+        { rel: 'canonical', href: 'https://kamelot-academy.ru' },
+        // Preconnect для Google Fonts (критично для производительности)
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },
+        // Загрузка шрифтов с display=swap для мгновенного отображения текста
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap',
+          media: 'print',
+          onload: "this.media='all'"
+        }
       ]
     }
   },

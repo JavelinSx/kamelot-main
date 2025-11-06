@@ -35,28 +35,28 @@
       ],
       "schedule": {
         "monday": [
-          {"start": "09:00", "end": "11:00", "type": "wrestling"},
-          {"start": "18:00", "end": "20:00", "type": "mma"}
+          { "start": "09:00", "end": "11:00", "type": "wrestling" },
+          { "start": "18:00", "end": "20:00", "type": "mma" }
         ],
         "tuesday": [
-          {"start": "10:00", "end": "12:00", "type": "grappling"},
-          {"start": "19:00", "end": "21:00", "type": "mma"}
+          { "start": "10:00", "end": "12:00", "type": "grappling" },
+          { "start": "19:00", "end": "21:00", "type": "mma" }
         ],
         "wednesday": [
-          {"start": "09:00", "end": "11:00", "type": "wrestling"},
-          {"start": "18:00", "end": "20:00", "type": "grappling"}
+          { "start": "09:00", "end": "11:00", "type": "wrestling" },
+          { "start": "18:00", "end": "20:00", "type": "grappling" }
         ],
         "thursday": [
-          {"start": "10:00", "end": "12:00", "type": "mma"},
-          {"start": "19:00", "end": "21:00", "type": "wrestling"}
+          { "start": "10:00", "end": "12:00", "type": "mma" },
+          { "start": "19:00", "end": "21:00", "type": "wrestling" }
         ],
         "friday": [
-          {"start": "09:00", "end": "11:00", "type": "grappling"},
-          {"start": "18:00", "end": "20:00", "type": "mma"}
+          { "start": "09:00", "end": "11:00", "type": "grappling" },
+          { "start": "18:00", "end": "20:00", "type": "mma" }
         ],
         "saturday": [
-          {"start": "11:00", "end": "13:00", "type": "wrestling"},
-          {"start": "15:00", "end": "17:00", "type": "mma"}
+          { "start": "11:00", "end": "13:00", "type": "wrestling" },
+          { "start": "15:00", "end": "17:00", "type": "mma" }
         ],
         "sunday": []
       },
@@ -73,12 +73,12 @@
     {
       "id": 2,
       "firstName": "Артем",
-      "lastName": "Владимирович",
+      "lastName": "Озеров",
       "email": "artem@kamelot.com",
       "phone": "+7 (495) 123-45-02",
       "avatar": "https://storage.yandexcloud.net/kamelot/trainers/artem.jpg",
       "isActive": true,
-      "specializations": ["kickboxing", "grappling", "mma"],
+      "specializations": ["kickboxing", "grappling", "mma", "wrestling", "pankration"],
       "experience": 8,
       "rating": 4.8,
       "reviewsCount": 94,
@@ -97,31 +97,27 @@
       ],
       "schedule": {
         "monday": [
-          {"start": "10:00", "end": "12:00", "type": "kickboxing"},
-          {"start": "17:00", "end": "19:00", "type": "grappling"}
+          { "start": "10:00", "end": "12:00", "type": "kickboxing" },
+          { "start": "17:00", "end": "19:00", "type": "grappling" }
         ],
         "tuesday": [
-          {"start": "09:00", "end": "11:00", "type": "mma"},
-          {"start": "18:00", "end": "20:00", "type": "kickboxing"}
+          { "start": "09:00", "end": "11:00", "type": "mma" },
+          { "start": "18:00", "end": "20:00", "type": "kickboxing" }
         ],
         "wednesday": [
-          {"start": "10:00", "end": "12:00", "type": "grappling"},
-          {"start": "17:00", "end": "19:00", "type": "kickboxing"}
+          { "start": "10:00", "end": "12:00", "type": "grappling" },
+          { "start": "17:00", "end": "19:00", "type": "kickboxing" }
         ],
         "thursday": [
-          {"start": "09:00", "end": "11:00", "type": "kickboxing"},
-          {"start": "18:00", "end": "20:00", "type": "mma"}
+          { "start": "09:00", "end": "11:00", "type": "kickboxing" },
+          { "start": "18:00", "end": "20:00", "type": "mma" }
         ],
-        "friday": [
-          {"start": "10:00", "end": "12:00", "type": "grappling"}
-        ],
+        "friday": [{ "start": "10:00", "end": "12:00", "type": "grappling" }],
         "saturday": [
-          {"start": "12:00", "end": "14:00", "type": "kickboxing"},
-          {"start": "15:00", "end": "17:00", "type": "mma"}
+          { "start": "12:00", "end": "14:00", "type": "kickboxing" },
+          { "start": "15:00", "end": "17:00", "type": "mma" }
         ],
-        "sunday": [
-          {"start": "11:00", "end": "13:00", "type": "grappling"}
-        ]
+        "sunday": [{ "start": "11:00", "end": "13:00", "type": "grappling" }]
       },
       "price": 3800,
       "stats": {
@@ -141,7 +137,7 @@
       "phone": "+7 (495) 123-45-03",
       "avatar": "https://storage.yandexcloud.net/kamelot/trainers/ismail.jpg",
       "isActive": true,
-      "specializations": ["kickboxing", "mma"],
+      "specializations": ["kickboxing", "mma", "boxing"],
       "experience": 9,
       "rating": 4.8,
       "reviewsCount": 143,
@@ -162,30 +158,30 @@
       ],
       "schedule": {
         "monday": [
-          {"start": "08:00", "end": "10:00", "type": "kickboxing"},
-          {"start": "15:00", "end": "17:00", "type": "mma"},
-          {"start": "19:00", "end": "21:00", "type": "kickboxing"}
+          { "start": "08:00", "end": "10:00", "type": "kickboxing" },
+          { "start": "15:00", "end": "17:00", "type": "mma" },
+          { "start": "19:00", "end": "21:00", "type": "kickboxing" }
         ],
         "tuesday": [
-          {"start": "08:00", "end": "10:00", "type": "mma"},
-          {"start": "16:00", "end": "18:00", "type": "kickboxing"}
+          { "start": "08:00", "end": "10:00", "type": "mma" },
+          { "start": "16:00", "end": "18:00", "type": "kickboxing" }
         ],
         "wednesday": [
-          {"start": "08:00", "end": "10:00", "type": "kickboxing"},
-          {"start": "15:00", "end": "17:00", "type": "mma"},
-          {"start": "19:00", "end": "21:00", "type": "kickboxing"}
+          { "start": "08:00", "end": "10:00", "type": "kickboxing" },
+          { "start": "15:00", "end": "17:00", "type": "mma" },
+          { "start": "19:00", "end": "21:00", "type": "kickboxing" }
         ],
         "thursday": [
-          {"start": "08:00", "end": "10:00", "type": "mma"},
-          {"start": "16:00", "end": "18:00", "type": "kickboxing"}
+          { "start": "08:00", "end": "10:00", "type": "mma" },
+          { "start": "16:00", "end": "18:00", "type": "kickboxing" }
         ],
         "friday": [
-          {"start": "08:00", "end": "10:00", "type": "kickboxing"},
-          {"start": "15:00", "end": "17:00", "type": "mma"}
+          { "start": "08:00", "end": "10:00", "type": "kickboxing" },
+          { "start": "15:00", "end": "17:00", "type": "mma" }
         ],
         "saturday": [
-          {"start": "10:00", "end": "12:00", "type": "kickboxing"},
-          {"start": "14:00", "end": "16:00", "type": "mma"}
+          { "start": "10:00", "end": "12:00", "type": "kickboxing" },
+          { "start": "14:00", "end": "16:00", "type": "mma" }
         ],
         "sunday": []
       },
@@ -201,69 +197,58 @@
     },
     {
       "id": 4,
-      "firstName": "Александр",
-      "lastName": "Скрипник",
-      "email": "skripnik@kamelot.com",
+      "firstName": "Валерий",
+      "lastName": "Крылов",
+      "email": "krylov@kamelot.com",
       "phone": "+7 (495) 123-45-04",
-      "avatar": "https://storage.yandexcloud.net/kamelot/trainers/skripnik.jpg",
+      "avatar": "/trener1.jpg",
       "isActive": true,
-      "specializations": ["grappling", "mma"],
+      "specializations": ["mma", "boxing", "armwrestling"],
       "experience": 7,
-      "rating": 4.7,
-      "reviewsCount": 89,
-      "bio": "КМС по панкратиону. Призер Чемпионата Санкт-Петербурга по панкратиону. Призер Всероссийских турниров по панкратиону. КМС по грэпплингу. Чемпион СЗФО по грэпплингу. Победитель боя по ММА в матчевой встрече Россия - Беларусь. Призер и победитель региональных и международных турниров по ММА, Панкратиону и грэпплингу.",
+      "rating": 4.8,
+      "reviewsCount": 82,
+      "bio": "КМС по боксу и армрестлингу. Победитель лиги Панч-клаб. Боец лиги Хардкор. Действующий профессиональный спортсмен кулачных боев. Образование: Колледж Бена Вейдера - инструктор фитнеса, бодибилдинга, оздоровительной и физической культуры. Тренерский стаж с 2018 года.",
       "achievements": [
-        "КМС по панкратиону",
-        "Призер Чемпионата Санкт-Петербурга по панкратиону",
-        "Призер Всероссийских турниров по панкратиону",
-        "КМС по грэпплингу",
-        "Чемпион СЗФО по грэпплингу",
-        "Победитель боя по ММА в матчевой встрече Россия - Беларусь",
-        "Призер и победитель региональных и международных турниров по ММА, Панкратиону и грэпплингу"
+        "КМС по боксу",
+        "КМС по армрестлингу",
+        "Победитель лиги Панч-клаб",
+        "Боец лиги Хардкор",
+        "Действующий профессиональный спортсмен кулачных боев",
+        "Профессиональный рекорд в кулачных боях 4-0",
+        "Тренерский стаж с 2018 года"
       ],
       "certifications": [
-        "Сертифицированный тренер по грэпплингу",
-        "Инструктор по панкратиону",
+        "Колледж Бена Вейдера - инструктор фитнеса, бодибилдинга, оздоровительной и физической культуры",
+        "Сертифицированный тренер по боксу",
         "Тренер по ММА",
-        "Специалист по спортивной борьбе"
+        "Инструктор по физической подготовке"
       ],
       "schedule": {
         "monday": [
-          {"start": "11:00", "end": "13:00", "type": "grappling"},
-          {"start": "17:00", "end": "19:00", "type": "mma"}
+          { "start": "19:30", "end": "21:00", "type": "mma" }
         ],
-        "tuesday": [
-          {"start": "10:00", "end": "12:00", "type": "mma"},
-          {"start": "18:00", "end": "20:00", "type": "grappling"}
-        ],
+        "tuesday": [],
         "wednesday": [
-          {"start": "11:00", "end": "13:00", "type": "grappling"},
-          {"start": "17:00", "end": "19:00", "type": "mma"}
+          { "start": "18:00", "end": "19:30", "type": "boxing" },
+          { "start": "19:30", "end": "21:00", "type": "mma" }
         ],
-        "thursday": [
-          {"start": "10:00", "end": "12:00", "type": "mma"},
-          {"start": "18:00", "end": "20:00", "type": "grappling"}
-        ],
+        "thursday": [],
         "friday": [
-          {"start": "11:00", "end": "13:00", "type": "grappling"}
+          { "start": "18:00", "end": "19:30", "type": "boxing" },
+          { "start": "19:30", "end": "21:00", "type": "mma" }
         ],
-        "saturday": [
-          {"start": "13:00", "end": "15:00", "type": "mma"},
-          {"start": "16:00", "end": "18:00", "type": "grappling"}
-        ],
-        "sunday": [
-          {"start": "12:00", "end": "14:00", "type": "grappling"}
-        ]
+        "saturday": [],
+        "sunday": []
       },
-      "price": 3600,
+      "price": 3500,
       "stats": {
-        "totalStudents": 58,
-        "sessionsCompleted": 723,
-        "averageRating": 4.7,
+        "totalStudents": 52,
+        "sessionsCompleted": 634,
+        "averageRating": 4.8,
         "yearsExperience": 7
       },
-      "createdAt": "2020-01-01T00:00:00Z",
-      "updatedAt": "2024-12-01T00:00:00Z"
+      "createdAt": "2018-01-01T00:00:00Z",
+      "updatedAt": "2025-11-06T00:00:00Z"
     }
   ]
 }
