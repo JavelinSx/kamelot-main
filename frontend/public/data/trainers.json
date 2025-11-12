@@ -6,7 +6,7 @@
       "lastName": "Коваль",
       "email": "koval@kamelot.com",
       "phone": "+7 (495) 123-45-01",
-      "avatar": "https://storage.yandexcloud.net/kamelot/trainers/koval.jpg",
+      "avatar": "/images/trainers/koval.webp",
       "isActive": true,
       "specializations": ["mma", "wrestling", "grappling"],
       "experience": 10,
@@ -76,9 +76,15 @@
       "lastName": "Озеров",
       "email": "artem@kamelot.com",
       "phone": "+7 (495) 123-45-02",
-      "avatar": "https://storage.yandexcloud.net/kamelot/trainers/artem.jpg",
+      "avatar": "/images/trainers/ozerov.webp",
       "isActive": true,
-      "specializations": ["kickboxing", "grappling", "mma", "wrestling", "pankration"],
+      "specializations": [
+        "kickboxing",
+        "grappling",
+        "mma",
+        "wrestling",
+        "pankration"
+      ],
       "experience": 8,
       "rating": 4.8,
       "reviewsCount": 94,
@@ -135,7 +141,7 @@
       "lastName": "Исмаилов",
       "email": "ismail@kamelot.com",
       "phone": "+7 (495) 123-45-03",
-      "avatar": "https://storage.yandexcloud.net/kamelot/trainers/ismail.jpg",
+      "avatar": "/images/trainers/ismailov.webp",
       "isActive": true,
       "specializations": ["kickboxing", "mma", "boxing"],
       "experience": 9,
@@ -201,7 +207,7 @@
       "lastName": "Крылов",
       "email": "krylov@kamelot.com",
       "phone": "+7 (495) 123-45-04",
-      "avatar": "/trener1.jpg",
+      "avatar": "/images/trainers/krilov.webp",
       "isActive": true,
       "specializations": ["mma", "boxing", "armwrestling"],
       "experience": 7,
@@ -224,9 +230,7 @@
         "Инструктор по физической подготовке"
       ],
       "schedule": {
-        "monday": [
-          { "start": "19:30", "end": "21:00", "type": "mma" }
-        ],
+        "monday": [{ "start": "19:30", "end": "21:00", "type": "mma" }],
         "tuesday": [],
         "wednesday": [
           { "start": "18:00", "end": "19:30", "type": "boxing" },

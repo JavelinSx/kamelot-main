@@ -100,6 +100,38 @@ export interface Review {
   updatedAt: string;
 }
 
+// ===== Типы для прайсинга =====
+
+// Тип абонемента
+export type PricingType =
+  | "trial" // Пробное занятие
+  | "single" // Разовое
+  | "package" // Абонемент (8 или 12 тренировок)
+  | "unlimited_trainer" // Безлимит к тренеру
+  | "unlimited_full"; // Полный безлимит
+
+// Структура ценового плана
+export interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  sessions_count: number; // -1 для безлимита
+  description: string;
+  type: PricingType;
+  trainer_limited: boolean;
+  trial_allowed: boolean;
+  active: boolean;
+  valid_days?: number; // Срок действия в днях
+}
+
+// Ответ API прайсинга
+export interface PricingResponse {
+  plans: PricingPlan[];
+  total: number;
+  source: "google_sheets";
+  lastUpdated: string;
+}
+
 // Типы для галереи
 export interface GalleryImage {
   id: number;

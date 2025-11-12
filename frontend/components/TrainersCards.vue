@@ -24,174 +24,124 @@
         <ClientOnly>
           <div v-for="(trainer, index) in trainers" :key="trainer.id" v-motion-slide-visible-once-left :duration="600"
             :delay="index * 100">
-            <UCard :ui="{
-              root: 'overflow-hidden bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 rounded-2xl shadow-lg hover:shadow-2xl',
-              body: 'p-4 h-full',
-              header: 'p-0 sm:px-0 relative'
-            }" class="group transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2">
-              <!-- Заголовок карточки с изображением -->
-              <template #header>
-                <div class="relative h-80 overflow-hidden">
-                  <!-- Основное изображение тренера -->
-                  <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
-                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            <div
+              class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full min-h-[1000px]">
+              <!-- Фоновое изображение на всю карточку -->
+              <div class="absolute inset-0">
+                <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
+                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110" />
+                <!-- Затемнение -->
+                <div class="absolute inset-0 bg-black/40" />
+              </div>
 
-                  <!-- Градиентный оверлей -->
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <!-- Бейджи поверх изображения -->
+              <div class="relative z-10">
+                <!-- Бейдж рейтинга -->
+                <div class="absolute top-4 right-4">
+                  <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="lg" :ui="{
+                    base: 'font-bold rounded-full shadow-lg',
+                    label: 'font-semibold text-xs'
+                  }">
+                    ⭐ Топ тренер
+                  </UBadge>
+                </div>
 
-                  <!-- Бейдж рейтинга -->
-                  <div class="absolute top-4 right-4">
-                    <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="lg" :ui="{
-                      base: 'font-bold rounded-full',
-                      label: 'font-semibold text-xs'
-                    }">
-                      ⭐ Топ тренер
+                <!-- Цена в углу -->
+                <div class="absolute top-4 left-4">
+                  <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                    {{ trainer.price }} ₽
+                  </div>
+                </div>
+              </div>
+
+              <!-- Текстовая часть с эффектом стекла внизу -->
+              <div class="relative z-10 h-full flex flex-col justify-end">
+                <!-- Glassmorphism контейнер -->
+                <div class="backdrop-blur-xl bg-black/60 border-t border-white/20 p-6 space-y-4">
+                  <!-- Специализации -->
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    <UBadge v-for="specialty in trainer.specializations" :key="specialty" color="error" variant="soft"
+                      size="sm" :ui="{
+                        base: 'backdrop-blur-sm rounded-lg'
+                      }">
+                      {{ getSpecializationName(specialty) }}
                     </UBadge>
                   </div>
 
-                  <!-- Специализации (показываются при ховере) -->
-                  <div
-                    class="absolute bottom-4 left-4 right-4 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <div class="flex flex-wrap gap-2">
-                      <UBadge v-for="specialty in trainer.specializations" :key="specialty" color="error" variant="soft"
-                        size="sm" :ui="{
-                          base: 'backdrop-blur-sm rounded-lg'
-                        }">
-                        {{ getSpecializationName(specialty) }}
-                      </UBadge>
-                    </div>
-                  </div>
-
-                  <!-- Цена в углу -->
-                  <div class="absolute top-4 left-4">
-                    <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      {{ trainer.price }} ₽
-                    </div>
-                  </div>
-                </div>
-              </template>
-
-              <!-- Основное содержимое карточки -->
-              <div class="space-y-4">
-                <!-- Имя и специализация -->
-                <div class="space-y-2">
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-                    {{ trainer.firstName }} {{ trainer.lastName }}
-                  </h3>
-                  <p class="text-red-600 dark:text-red-400 font-semibold text-lg">
-                    {{ getMainSpecialization(trainer.specializations) }}
-                  </p>
-                </div>
-
-                <!-- Биография -->
-                <div v-if="trainer.bio">
-                  <p class="text-gray-600 dark:text-gray-300 leading-relaxed"
-                    :class="expandedBio[trainer.id] ? '' : 'line-clamp-3'">
-                    {{ trainer.bio }}
-                  </p>
-                  <button v-if="trainer.bio.length > 150" @click="toggleBio(trainer.id)"
-                    class="text-red-600 dark:text-red-400 text-sm font-semibold mt-2 hover:underline">
-                    {{ expandedBio[trainer.id] ? 'Скрыть' : 'Читать далее' }}
-                  </button>
-                </div>
-
-                <!-- Дополнительная информация -->
-                <div class="space-y-3 text-sm">
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">Учеников:</span>
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ trainer.stats.totalStudents }}</span>
-                  </div>
-
-                  <div class="flex items-center justify-between">
-                    <span class="text-gray-500 dark:text-gray-400">Тренировок:</span>
-                    <span class="font-semibold text-gray-900 dark:text-white">{{ trainer.stats.sessionsCompleted
-                      }}</span>
-                  </div>
-                </div>
-
-                <!-- Достижения (аккордеон) -->
-                <details class="group/details">
-                  <summary
-                    class="cursor-pointer list-none flex items-center justify-between py-2 text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-                    <span class="font-semibold">Достижения</span>
-                    <UIcon name="i-heroicons-chevron-down"
-                      class="w-4 h-4 transition-transform group-open/details:rotate-180" />
-                  </summary>
-                  <div class="mt-2 space-y-1">
-                    <ul class="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                      <li v-for="achievement in trainer.achievements?.slice(0, 4)" :key="achievement"
-                        class="flex items-start gap-2">
-                        <span class="text-red-500 mt-1">•</span>
-                        <span>{{ achievement }}</span>
-                      </li>
-                    </ul>
-                  </div>
-                </details>
-
-                <!-- Кнопки действий -->
-                <div class="pt-4 space-y-3 ">
-                  <UButton color="success" variant="solid" size="lg" block
-                    class="hover:cursor-pointer justify-center rounded-xl font-bold pt-3 pb-3 hover:bg-amber-50 hover:text-blue-600 transition-all duration-300"
-                    @click="contactTrainer(trainer)">
-                    <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
-                    Связаться с тренером
-                  </UButton>
-
-                  <UButton color="neutral" variant="outline" size="lg" block
-                    class="hover:cursor-pointer justify-center rounded-xl font-semibold pt-3 pb-3 hover:bg-amber-50 hover:text-slate-600 transition-all duration-300"
-                    @click="viewTrainerProfile(trainer)">
-                    <UIcon name="i-heroicons-user-circle" class="w-5 h-5 mr-2" />
-                    Посмотреть профиль
-                  </UButton>
-                </div>
-              </div>
-            </UCard>
-          </div>
-          <template #fallback>
-            <div v-for="(trainer, index) in trainers" :key="trainer.id">
-              <UCard :ui="{
-                root: 'overflow-hidden bg-white dark:bg-gray-800 ring-1 ring-gray-200 dark:ring-gray-700 rounded-2xl shadow-lg hover:shadow-2xl',
-                body: 'p-4 h-full',
-                header: 'p-0 sm:px-0 relative'
-              }" class="group transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2">
-                <template #header>
-                  <div class="relative h-80 overflow-hidden">
-                    <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
-                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div class="absolute top-4 right-4">
-                      <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="lg" :ui="{
-                        base: 'font-bold rounded-full',
-                        label: 'font-semibold text-xs'
-                      }">
-                        ⭐ Топ тренер
-                      </UBadge>
-                    </div>
-                    <div class="absolute top-4 left-4">
-                      <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold">
-                        {{ trainer.price }} ₽
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <div class="space-y-4">
+                  <!-- Имя и специализация -->
                   <div class="space-y-2">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+                    <h3 class="text-2xl font-bold text-white">
                       {{ trainer.firstName }} {{ trainer.lastName }}
                     </h3>
-                    <p class="text-red-600 dark:text-red-400 font-semibold text-lg">
+                    <p class="text-red-400 font-semibold text-lg">
                       {{ getMainSpecialization(trainer.specializations) }}
                     </p>
                   </div>
+
+                  <!-- Биография -->
                   <div v-if="trainer.bio">
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-3">
+                    <p class="text-gray-200 leading-relaxed text-sm"
+                      :class="expandedBio[trainer.id] ? '' : 'line-clamp-2'">
                       {{ trainer.bio }}
                     </p>
+                    <button v-if="trainer.bio.length > 100" @click="toggleBio(trainer.id)"
+                      class="text-red-400 text-sm font-semibold mt-2 hover:text-red-300 transition-colors">
+                      {{ expandedBio[trainer.id] ? 'Скрыть' : 'Читать далее' }}
+                    </button>
+                  </div>
+
+                  <!-- Дополнительная информация -->
+                  <div class="flex items-center justify-around gap-4 text-sm border-t border-white/20 pt-3">
+                    <div class="text-center">
+                      <div class="font-bold text-white text-lg">{{ trainer.stats.totalStudents }}</div>
+                      <div class="text-gray-300 text-xs">Учеников</div>
+                    </div>
+                    <div class="h-8 w-px bg-white/20"></div>
+                    <div class="text-center">
+                      <div class="font-bold text-white text-lg">{{ trainer.stats.sessionsCompleted }}</div>
+                      <div class="text-gray-300 text-xs">Тренировок</div>
+                    </div>
+                    <div class="h-8 w-px bg-white/20"></div>
+                    <div class="text-center">
+                      <div class="font-bold text-white text-lg">{{ trainer.experience }}</div>
+                      <div class="text-gray-300 text-xs">Лет опыта</div>
+                    </div>
+                  </div>
+
+                  <!-- Достижения (аккордеон) -->
+                  <details class="group/details">
+                    <summary
+                      class="cursor-pointer list-none flex items-center justify-between py-2 text-white hover:text-red-400 transition-colors">
+                      <span class="font-semibold">Достижения</span>
+                      <UIcon name="i-heroicons-chevron-down"
+                        class="w-4 h-4 transition-transform group-open/details:rotate-180" />
+                    </summary>
+                    <div class="mt-2 space-y-1">
+                      <ul class="text-sm text-gray-200 space-y-1">
+                        <li v-for="achievement in trainer.achievements?.slice(0, 3)" :key="achievement"
+                          class="flex items-start gap-2">
+                          <span class="text-red-400 mt-1">•</span>
+                          <span>{{ achievement }}</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  <!-- Кнопки действий -->
+                  <div class="pt-2 space-y-3">
+
+                    <UButton color="neutral" variant="outline" size="lg" block
+                      class="hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-white hover:bg-white/10 transition-all duration-300"
+                      @click="viewTrainerProfile(trainer)">
+                      <UIcon name="i-heroicons-user-circle" class="w-5 h-5 mr-2" />
+                      Посмотреть профиль
+                    </UButton>
                   </div>
                 </div>
-              </UCard>
+              </div>
             </div>
-          </template>
+          </div>
+
         </ClientOnly>
       </div>
     </UContainer>

@@ -28,6 +28,9 @@
           <ULink to="/schedule" class="nav-link">
             Расписание
           </ULink>
+          <ULink to="/pricing" class="nav-link">
+            Цены
+          </ULink>
           <ULink to="/kids" class="nav-link">
             Детям
           </ULink>
@@ -107,9 +110,14 @@
               :style="{ animationDelay: '150ms' }" @click="closeMenu">
               Расписание
             </ULink>
-            <ULink to="/kids"
+            <ULink to="/pricing"
               class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
               :style="{ animationDelay: '200ms' }" @click="closeMenu">
+              Цены
+            </ULink>
+            <ULink to="/kids"
+              class="menu-item text-white hover:text-red-500 transition-all duration-300 hover:translate-x-2"
+              :style="{ animationDelay: '250ms' }" @click="closeMenu">
               Детям
             </ULink>
             <!-- <ULink

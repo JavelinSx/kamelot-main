@@ -147,6 +147,30 @@
         <span v-if="errors.trainingType" class="text-red-500 text-sm">{{ errors.trainingType }}</span>
       </div>
 
+      <!-- Выбор тарифа -->
+      <div class="space-y-2">
+        <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
+          Тариф <span class="text-red-500">*</span>
+        </label>
+        <USelect v-model="state.pricingPlan" :items="pricingOptions" value-key="value"
+          class="w-full relative z-[9999]" :popper="{
+            strategy: 'fixed',
+            placement: 'bottom-start'
+          }" :loading="isLoadingPricing" />
+        <span v-if="errors.pricingPlan" class="text-red-500 text-sm">{{ errors.pricingPlan }}</span>
+
+        <!-- Показываем информацию о выбранном тарифе -->
+        <div v-if="selectedPlanInfo" class="mt-3 p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950 dark:to-orange-950 border border-red-200 dark:border-red-800 rounded-lg">
+          <div class="flex items-start gap-2">
+            <UIcon name="i-heroicons-information-circle" class="text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
+            <div class="text-sm text-red-900 dark:text-red-100">
+              <p class="font-semibold">{{ selectedPlanInfo.name }} - {{ selectedPlanInfo.price }}₽</p>
+              <p class="text-red-700 dark:text-red-300 mt-1">{{ selectedPlanInfo.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Дополнительная информация -->
       <div class="space-y-2">
         <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -209,6 +233,7 @@
 
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui';
+import type { PricingPlan } from '~/types';
 import { z } from 'zod';
 
 const emit = defineEmits<{
@@ -222,6 +247,7 @@ const baseSchema = {
   contact: z.string().min(3, 'Введите корректные контактные данные'),
   age: z.number().min(5, 'Минимальный возраст 5 лет').max(99, 'Максимальный возраст 99 лет'),
   trainingType: z.string().min(1, 'Выберите направление тренировок'),
+  pricingPlan: z.string().min(1, 'Выберите тариф'),
   agreeToTerms: z.boolean().refine(val => val === true, {
     message: 'Необходимо согласиться с условиями'
   }),
@@ -237,6 +263,7 @@ const childSchema = {
 }
 
 const { selectedTrainingType, selectedSession, clearSelectedTrainingType } = useBooking()
+const { pricingPlans, selectedPlan, fetchPricingPlans } = usePricing()
 
 const state = reactive({
   userType: '', // 'teenager', 'parent', 'adult'
@@ -246,6 +273,7 @@ const state = reactive({
   contact: '',
   age: 0,
   trainingType: '',
+  pricingPlan: '',
   agreeToTerms: false,
   isPrivate: false,
   isParent: false,
@@ -253,6 +281,24 @@ const state = reactive({
   childLastName: '',
   childAge: 0,
   additionalInfo: ''
+})
+
+// Загружаем тарифы
+const isLoadingPricing = ref(false)
+onMounted(async () => {
+  if (selectedTrainingType.value) {
+    state.trainingType = selectedTrainingType.value
+  }
+
+  // Загружаем тарифы
+  isLoadingPricing.value = true
+  await fetchPricingPlans()
+  isLoadingPricing.value = false
+
+  // Если уже выбран тариф, устанавливаем его
+  if (selectedPlan.value) {
+    state.pricingPlan = selectedPlan.value.id
+  }
 })
 
 // Следим за изменением типа пользователя
@@ -275,11 +321,25 @@ watch(selectedTrainingType, (newValue) => {
   }
 })
 
-// Инициализируем при монтировании, если уже что-то выбрано
-onMounted(() => {
-  if (selectedTrainingType.value) {
-    state.trainingType = selectedTrainingType.value
+// Следим за изменением выбранного тарифа
+watch(selectedPlan, (newValue) => {
+  if (newValue) {
+    state.pricingPlan = newValue.id
   }
+})
+
+// Опции для выбора тарифов
+const pricingOptions = computed(() => {
+  return pricingPlans.value.map(plan => ({
+    label: `${plan.name} - ${plan.price}₽`,
+    value: plan.id
+  }))
+})
+
+// Информация о выбранном тарифе
+const selectedPlanInfo = computed(() => {
+  if (!state.pricingPlan) return null
+  return pricingPlans.value.find(plan => plan.id === state.pricingPlan)
 })
 
 const errors = reactive({
@@ -289,6 +349,7 @@ const errors = reactive({
   contact: '',
   age: '',
   trainingType: '',
+  pricingPlan: '',
   agreeToTerms: '',
   childFirstName: '',
   childLastName: '',
@@ -318,6 +379,7 @@ function clearErrors() {
   errors.contact = ''
   errors.age = ''
   errors.trainingType = ''
+  errors.pricingPlan = ''
   errors.agreeToTerms = ''
   errors.childFirstName = ''
   errors.childLastName = ''
@@ -363,7 +425,8 @@ async function onSubmit() {
     // Подготавливаем данные для отправки
     const bookingData = {
       ...state,
-      sessionInfo: selectedSession.value // Добавляем информацию о выбранной тренировке
+      sessionInfo: selectedSession.value, // Добавляем информацию о выбранной тренировке
+      pricingPlanInfo: selectedPlanInfo.value // Добавляем информацию о выбранном тарифе
     }
 
     await sendToTelegram(bookingData)
@@ -402,6 +465,7 @@ function resetForm() {
   state.contact = ''
   state.age = 0
   state.trainingType = ''
+  state.pricingPlan = ''
   state.agreeToTerms = false
   state.isPrivate = false
   state.isParent = false

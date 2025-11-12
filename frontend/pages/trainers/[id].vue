@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
+  <div class="pt-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
     <UContainer class="py-12">
       <!-- Hero секция с фото и основной информацией -->
       <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-8">
@@ -67,10 +67,6 @@
 
             <!-- Цена и кнопка -->
             <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-              <div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Стоимость тренировки</p>
-                <p class="text-3xl font-bold text-green-600">{{ trainer?.price }} ₽</p>
-              </div>
               <UButton color="error" size="xl" @click="contactTrainer">
                 <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
                 Записаться

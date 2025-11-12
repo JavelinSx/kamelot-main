@@ -92,6 +92,28 @@ function formatTelegramMessage(data: any) {
     message += `\n`;
   }
 
+  // Если есть информация о выбранном тарифе
+  if (data.pricingPlanInfo) {
+    message += `
+💰 <b>Выбранный тариф:</b>
+   📋 ${escapeHtml(data.pricingPlanInfo.name)} - ${escapeHtml(data.pricingPlanInfo.price)}₽`;
+
+    if (data.pricingPlanInfo.sessions_count > 0) {
+      message += `\n   🎟️ Количество тренировок: ${escapeHtml(data.pricingPlanInfo.sessions_count)}`;
+    } else if (data.pricingPlanInfo.sessions_count === -1) {
+      message += `\n   ♾️ Безлимитные тренировки`;
+    }
+
+    if (data.pricingPlanInfo.valid_days) {
+      message += `\n   📆 Срок действия: ${escapeHtml(data.pricingPlanInfo.valid_days)} дней`;
+    }
+
+    if (data.pricingPlanInfo.description) {
+      message += `\n   ℹ️ ${escapeHtml(data.pricingPlanInfo.description)}`;
+    }
+    message += `\n`;
+  }
+
   message += `
 👤 <b>Контактные данные${data.isParent ? " (родитель)" : ""}:</b>
    Имя: ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}
