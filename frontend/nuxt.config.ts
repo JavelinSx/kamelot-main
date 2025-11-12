@@ -18,8 +18,6 @@ export default defineNuxtConfig({
       googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID || "",
       googleSheetsPricingId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID || "",
       googleSheetsApiKey: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY || "",
-      // Устаревшая переменная для Excel (оставлена для обратной совместимости)
-      fightsExcelUrl: process.env.NUXT_PUBLIC_FIGHTS_EXCEL_URL || "",
     },
   },
 
