@@ -6,6 +6,14 @@
 import type { PricingPlan, PricingResponse } from "~/types";
 
 // Типы для Google Sheets API v4
+interface GoogleSheetsMetadata {
+  sheets: Array<{
+    properties: {
+      title: string;
+    };
+  }>;
+}
+
 interface GoogleSheetsValues {
   values: string[][];
 }
@@ -28,7 +36,7 @@ export default defineEventHandler(async (event): Promise<PricingResponse> => {
 
   return {
     plans: plans.filter((plan) => plan.active),
-    total: plans.length,
+    total: plans.filter((plan) => plan.active).length,
     source: "google_sheets",
     lastUpdated: new Date().toISOString(),
   };
@@ -36,49 +44,51 @@ export default defineEventHandler(async (event): Promise<PricingResponse> => {
 
 /**
  * Загрузка прайсинга из Google Sheets API v4
- * Используем лист "Pricing"
+ * Просто: API → JSON → готово!
  */
 async function loadPricingFromGoogleSheets(
   sheetId: string,
   apiKey: string
 ): Promise<PricingPlan[]> {
-  const sheetName = "kamelot-price";
-  const range = `${sheetName}!A:J`; // A-J столбцы
-  const valuesUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(
-    range
-  )}?key=${apiKey}`;
+  // 1. Получаем список листов
+  const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`;
+  const metadata = await $fetch<GoogleSheetsMetadata>(metadataUrl);
+  const sheets = metadata.sheets || [];
 
-  try {
-    const data = await $fetch<GoogleSheetsValues>(valuesUrl);
-    const rows = data.values || [];
+  const allPlans: PricingPlan[] = [];
 
-    if (rows.length < 2) {
-      console.warn("Pricing sheet is empty or has no data rows");
-      return [];
+  // 2. Загружаем каждый лист
+  for (const sheet of sheets) {
+    const sheetTitle = sheet.properties?.title;
+    const range = `${sheetTitle}!A:Z`;
+    const valuesUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(
+      range
+    )}?key=${apiKey}`;
+
+    try {
+      const data = await $fetch<GoogleSheetsValues>(valuesUrl);
+      const rows = data.values || [];
+
+      if (rows.length < 2) continue; // Пропускаем пустые листы
+
+      const headers = rows[0];
+      const dataRows = rows.slice(1);
+
+      if (!headers) continue; // Нет заголовков
+
+      // 3. Преобразуем строки в объекты
+      const plans = dataRows
+        .filter((row): row is string[] => row && row.length > 0)
+        .map((row) => rowToPricingPlan(headers, row))
+        .filter((plan): plan is PricingPlan => plan !== null);
+
+      allPlans.push(...plans);
+    } catch (error) {
+      console.error(`Error loading sheet "${sheetTitle}":`, error);
     }
-
-    const headers = rows[0];
-    const dataRows = rows.slice(1);
-
-    if (!headers) {
-      console.error("No headers found in Pricing sheet");
-      return [];
-    }
-
-    // Преобразуем строки в объекты
-    const plans = dataRows
-      .filter((row): row is string[] => row && row.length > 0)
-      .map((row) => rowToPricingPlan(headers, row))
-      .filter((plan): plan is PricingPlan => plan !== null);
-
-    return plans;
-  } catch (error) {
-    console.error("Error loading Pricing sheet:", error);
-    throw createError({
-      statusCode: 500,
-      message: "Failed to load pricing data",
-    });
   }
+
+  return allPlans;
 }
 
 /**
