@@ -14,6 +14,7 @@ jobs:
         working-directory: frontend
     env:
       NUXT_PUBLIC_GOOGLE_SHEETS_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}
+      NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID }}
       NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
       NUXT_PUBLIC_STORAGE_URL: https://storage.yandexcloud.net/kamelot
 
@@ -31,13 +32,26 @@ jobs:
       - name: Verify secrets are set
         run: |
           echo "Verifying GitHub secrets..."
+
           if [ -z "${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}" ]; then
             echo "❌ ERROR: NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is NOT set!"
-            echo "Please add it in: Settings > Secrets and variables > Actions > Secrets"
             exit 1
           else
-            echo "✅ NUXT_PUBLIC_GOOGLE_SHEETS_ID secret is set"
-            echo "Length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_ID} characters"
+            echo "✅ NUXT_PUBLIC_GOOGLE_SHEETS_ID is set (${#NUXT_PUBLIC_GOOGLE_SHEETS_ID} chars)"
+          fi
+
+          if [ -z "${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID }}" ]; then
+            echo "❌ ERROR: NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID secret is NOT set!"
+            exit 1
+          else
+            echo "✅ NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID is set (${#NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID} chars)"
+          fi
+
+          if [ -z "${{ secrets.GOOGLE_SHEETS_API_KEY }}" ]; then
+            echo "❌ ERROR: GOOGLE_SHEETS_API_KEY secret is NOT set!"
+            exit 1
+          else
+            echo "✅ GOOGLE_SHEETS_API_KEY is set (${#NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY} chars)"
           fi
 
       - name: Install dependencies
@@ -46,12 +60,25 @@ jobs:
       - name: Inject environment variables into nuxt.config.ts
         run: |
           echo "Injecting environment variables directly into nuxt.config.ts..."
+          echo ""
+          echo "=== Environment variables before injection ==="
+          echo "NUXT_PUBLIC_GOOGLE_SHEETS_ID length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_ID}"
+          echo "NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID}"
+          echo "NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY}"
+          echo "NUXT_PUBLIC_STORAGE_URL: $NUXT_PUBLIC_STORAGE_URL"
+          echo ""
+          echo "=== Original nuxt.config.ts public section ==="
+          grep -A 6 "public:" nuxt.config.ts
+          echo ""
           sed -i "s|googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID \|\| \"\"|googleSheetsId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_ID\"|g" nuxt.config.ts
+          sed -i "s|googleSheetsPricingId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID \|\| \"\"|googleSheetsPricingId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID\"|g" nuxt.config.ts
           sed -i "s|googleSheetsApiKey: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY \|\| \"\"|googleSheetsApiKey: \"$NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY\"|g" nuxt.config.ts
           sed -i "s|storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL \|\| \"\"|storageUrl: \"$NUXT_PUBLIC_STORAGE_URL\"|g" nuxt.config.ts
+          echo ""
+          echo "=== Modified nuxt.config.ts public section ==="
+          grep -A 6 "public:" nuxt.config.ts
+          echo ""
           echo "✅ Variables injected into nuxt.config.ts"
-          echo "Modified config (relevant lines):"
-          grep -A 5 "public:" nuxt.config.ts
 
       - name: Build static site
         run: |
