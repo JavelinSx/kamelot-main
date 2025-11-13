@@ -20,12 +20,12 @@
       </div>
 
       <!-- Сетка карточек тренеров -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
         <ClientOnly>
           <div v-for="(trainer, index) in trainers" :key="trainer.id" v-motion-slide-visible-once-left :duration="600"
             :delay="index * 100">
             <div
-              class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full min-h-[1000px]">
+              class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full min-h-[800px]">
               <!-- Фоновое изображение на всю карточку -->
               <div class="absolute inset-0">
                 <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
@@ -37,8 +37,8 @@
               <!-- Бейджи поверх изображения -->
               <div class="relative z-10">
                 <!-- Бейдж рейтинга -->
-                <div class="absolute top-4 right-4">
-                  <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="lg" :ui="{
+                <div class="absolute top-3 right-3">
+                  <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="md" :ui="{
                     base: 'font-bold rounded-full shadow-lg',
                     label: 'font-semibold text-xs'
                   }">
@@ -47,8 +47,8 @@
                 </div>
 
                 <!-- Цена в углу -->
-                <div class="absolute top-4 left-4">
-                  <div class="bg-green-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                <div class="absolute top-3 left-3">
+                  <div class="bg-green-600 text-white px-2.5 py-0.5 rounded-full text-sm font-bold shadow-lg">
                     {{ trainer.price }} ₽
                   </div>
                 </div>
@@ -57,9 +57,9 @@
               <!-- Текстовая часть с эффектом стекла внизу -->
               <div class="relative z-10 h-full flex flex-col justify-end">
                 <!-- Glassmorphism контейнер -->
-                <div class="backdrop-blur-xl bg-black/60 border-t border-white/20 p-6 space-y-4">
+                <div class="backdrop-blur-xl bg-black/60 border-t border-white/20 p-5 space-y-3">
                   <!-- Специализации -->
-                  <div class="flex flex-wrap gap-2 mb-4">
+                  <div class="flex flex-wrap gap-1.5 mb-3">
                     <UBadge v-for="specialty in trainer.specializations" :key="specialty" color="error" variant="soft"
                       size="sm" :ui="{
                         base: 'backdrop-blur-sm rounded-lg'
@@ -69,11 +69,11 @@
                   </div>
 
                   <!-- Имя и специализация -->
-                  <div class="space-y-2">
-                    <h3 class="text-2xl font-bold text-white">
+                  <div class="space-y-1.5">
+                    <h3 class="text-xl font-bold text-white">
                       {{ trainer.firstName }} {{ trainer.lastName }}
                     </h3>
-                    <p class="text-red-400 font-semibold text-lg">
+                    <p class="text-red-400 font-semibold text-base">
                       {{ getMainSpecialization(trainer.specializations) }}
                     </p>
                   </div>
@@ -91,19 +91,19 @@
                   </div>
 
                   <!-- Дополнительная информация -->
-                  <div class="flex items-center justify-around gap-4 text-sm border-t border-white/20 pt-3">
+                  <div class="flex items-center justify-around gap-3 text-sm border-t border-white/20 pt-2.5">
                     <div class="text-center">
-                      <div class="font-bold text-white text-lg">{{ trainer.stats.totalStudents }}</div>
+                      <div class="font-bold text-white text-base">{{ trainer.stats.totalStudents }}</div>
                       <div class="text-gray-300 text-xs">Учеников</div>
                     </div>
-                    <div class="h-8 w-px bg-white/20"></div>
+                    <div class="h-6 w-px bg-white/20"></div>
                     <div class="text-center">
-                      <div class="font-bold text-white text-lg">{{ trainer.stats.sessionsCompleted }}</div>
+                      <div class="font-bold text-white text-base">{{ trainer.stats.sessionsCompleted }}</div>
                       <div class="text-gray-300 text-xs">Тренировок</div>
                     </div>
-                    <div class="h-8 w-px bg-white/20"></div>
+                    <div class="h-6 w-px bg-white/20"></div>
                     <div class="text-center">
-                      <div class="font-bold text-white text-lg">{{ trainer.experience }}</div>
+                      <div class="font-bold text-white text-base">{{ trainer.experience }}</div>
                       <div class="text-gray-300 text-xs">Лет опыта</div>
                     </div>
                   </div>
@@ -128,12 +128,12 @@
                   </details>
 
                   <!-- Кнопки действий -->
-                  <div class="pt-2 space-y-3">
+                  <div class="pt-1.5 space-y-2.5">
 
-                    <UButton color="neutral" variant="outline" size="lg" block
+                    <UButton color="neutral" variant="outline" size="md" block
                       class="hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-white hover:bg-white/10 transition-all duration-300"
                       @click="viewTrainerProfile(trainer)">
-                      <UIcon name="i-heroicons-user-circle" class="w-5 h-5 mr-2" />
+                      <UIcon name="i-heroicons-user-circle" class="w-4 h-4 mr-2" />
                       Посмотреть профиль
                     </UButton>
                   </div>

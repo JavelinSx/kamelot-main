@@ -2,135 +2,134 @@
   "fighters": [
     {
       "id": 1,
-      "name": "Иван Петров",
-      "nickname": "Железный Кулак",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter1.jpg",
-      "discipline": "Бокс",
+      "name": "Бахтовар Юнусов",
+      "nickname": "Первый из Таджикистана",
+      "photo": "/images/students/ynusov.webp",
+      "discipline": "ММА",
       "weightClass": "Средний вес",
       "age": 28,
-      "experience": "8 лет",
+      "experience": "10 лет",
       "record": {
-        "wins": 24,
-        "losses": 3,
+        "wins": 10,
+        "losses": 0,
         "draws": 1,
-        "knockouts": 18
+        "knockouts": 6
       },
       "achievements": [
-        "Чемпион России по боксу (2022-2023)",
-        "Обладатель кубка Европы",
-        "Лучший боксер года по версии WBC"
+        "Первый спортсмен из Таджикистана одержавший победу в лиге Brave",
+        "Первый Чемпион ММА Серии из Таджикистана",
+        "Чемпион Кубка России по боевому самбо"
       ],
       "isCurrentChampion": true
     },
     {
       "id": 2,
-      "name": "Елена Козлова",
-      "nickname": "Молния",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter2.jpg",
-      "discipline": "ММА",
-      "weightClass": "Наилегчайший вес",
-      "age": 25,
-      "experience": "6 лет",
+      "name": "Магомедзагид Набиев",
+      "nickname": "Боец ММА Серии",
+      "photo": "/images/students/zagid.webp",
+      "discipline": "ММА / Панкратион",
+      "weightClass": "Легкий вес",
+      "age": 26,
+      "experience": "8 лет",
       "record": {
-        "wins": 18,
-        "losses": 2,
+        "wins": 6,
+        "losses": 1,
         "draws": 0,
-        "knockouts": 8
+        "knockouts": 3
       },
       "achievements": [
-        "Чемпионка Европы по ММА",
-        "Обладательница пояса Fight Nights",
-        "Лучшая женщина-боец года"
+        "Бронзовый призер Первенства мира по панкратиону",
+        "Бронзовый призер Первенства России по грэпплингу",
+        "Чемпион России по панкратиону"
       ],
       "isCurrentChampion": true
     },
     {
       "id": 3,
-      "name": "Андрей Волков",
-      "nickname": "Медведь",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter3.jpg",
-      "discipline": "Кикбоксинг",
-      "weightClass": "Тяжелый вес",
-      "age": 32,
-      "experience": "12 лет",
+      "name": "Александр Скрипник",
+      "nickname": "Чемпион BEARS FC",
+      "photo": "/images/students/scripnik.webp",
+      "discipline": "ММА / Грэпплинг",
+      "weightClass": "Легчайший вес (61.2 кг)",
+      "age": 25,
+      "experience": "7 лет",
       "record": {
-        "wins": 31,
-        "losses": 5,
-        "draws": 2,
-        "knockouts": 23
+        "wins": 4,
+        "losses": 1,
+        "draws": 0,
+        "knockouts": 2
       },
       "achievements": [
-        "Чемпион мира по К-1",
-        "Двукратный чемпион России",
-        "Участник турнира Glory"
+        "Чемпион Санкт-Петербурга по ММА, Грэпплингу и панкратиону",
+        "Чемпион лиги BEARS Fighting Championship в легчайшем весе (61.2кг)"
       ],
-      "isCurrentChampion": false
+      "isCurrentChampion": true
     },
     {
       "id": 4,
-      "name": "Дмитрий Смирнов",
-      "nickname": "Вихрь",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter4.jpg",
-      "discipline": "Муай Тай",
-      "weightClass": "Полусредний вес",
-      "age": 26,
-      "experience": "7 лет",
+      "name": "Расул Омаров",
+      "nickname": "Непобедимый",
+      "photo": "/images/students/rasul.webp",
+      "discipline": "ММА / Грэпплинг",
+      "weightClass": "Полулегкий вес",
+      "age": 27,
+      "experience": "9 лет",
       "record": {
-        "wins": 22,
-        "losses": 4,
-        "draws": 1,
-        "knockouts": 15
+        "wins": 7,
+        "losses": 0,
+        "draws": 0,
+        "knockouts": 4
       },
       "achievements": [
-        "Чемпион WBC Muay Thai",
-        "Победитель турнира в Таиланде",
-        "Обладатель красного пояса"
+        "Финалист Чемпионата мира по грэпплингу",
+        "Боец корейской лиги Road FC",
+        "Боец Российской лиги MFP"
       ],
-      "isCurrentChampion": false
+      "isCurrentChampion": true
     },
     {
       "id": 5,
-      "name": "Мария Федорова",
-      "nickname": "Огонь",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter5.jpg",
-      "discipline": "Каратэ",
+      "name": "Магомедхабиб Рамазанов",
+      "nickname": "Боец международного уровня",
+      "photo": "/images/students/magomed.webp",
+      "discipline": "ММА / Панкратион",
       "weightClass": "Легкий вес",
-      "age": 23,
-      "experience": "10 лет",
+      "age": 24,
+      "experience": "6 лет",
       "record": {
-        "wins": 28,
-        "losses": 1,
+        "wins": 5,
+        "losses": 0,
         "draws": 0,
-        "knockouts": 12
+        "knockouts": 3
       },
       "achievements": [
-        "Чемпионка мира по каратэ Киокушин",
-        "Трехкратная чемпионка России",
-        "Черный пояс 3-й дан"
+        "Бронзовый призер Чемпионата России по ММА",
+        "Чемпион Санкт-Петербурга по панкратиону",
+        "Победитель в лигах WKG Китай, Octagon Казахстан"
       ],
       "isCurrentChampion": true
     },
     {
       "id": 6,
-      "name": "Роман Николаев",
-      "nickname": "Титан",
-      "photo": "https://storage.yandexcloud.net/YOUR-BUCKET/fighters/fighter6.jpg",
-      "discipline": "Бразильское джиу-джитсу",
-      "weightClass": "Супертяжелый вес",
-      "age": 29,
-      "experience": "9 лет",
+      "name": "Жасурбек Сабиров",
+      "nickname": "Чемпион WKG и MFP",
+      "photo": "/images/students/sabirov.webp",
+      "discipline": "ММА / Тайский бокс",
+      "weightClass": "Легчайший вес (61.2 кг)",
+      "age": 25,
+      "experience": "8 лет",
       "record": {
-        "wins": 16,
-        "losses": 3,
-        "draws": 1,
-        "knockouts": 4
+        "wins": 9,
+        "losses": 0,
+        "draws": 0,
+        "knockouts": 5
       },
       "achievements": [
-        "Черный пояс BJJ",
-        "Чемпион мира IBJJF",
-        "Обладатель кубка Mundials"
+        "Чемпион мира по тайскому боксу среди студентов",
+        "Чемпион Китайской организации WKG и Российской MFP в легчайшем весе (61.2 кг)",
+        "Победитель проф боев по ММА в ОАЭ, Китае и др. странах"
       ],
-      "isCurrentChampion": false
+      "isCurrentChampion": true
     }
   ]
 }

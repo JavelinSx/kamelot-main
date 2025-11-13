@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+// Подключаем useBooking для управления модалкой
+const { openBookingModal } = useBooking()
+
 // Яндекс.Метрика
 useHead({
   script: [
@@ -42,6 +45,17 @@ onMounted(() => {
     document.documentElement.style.scrollBehavior = 'smooth'
     document.body.style.scrollBehavior = 'smooth'
     console.log('Smooth scroll applied:', window.getComputedStyle(document.documentElement).scrollBehavior)
+
+    // Слушаем событие openBookingModal для открытия формы записи
+    const handleOpenBookingModal = () => {
+      openBookingModal()
+    }
+    window.addEventListener('openBookingModal', handleOpenBookingModal)
+
+    // Очищаем listener при unmount
+    onUnmounted(() => {
+      window.removeEventListener('openBookingModal', handleOpenBookingModal)
+    })
   }
 })
 </script>
