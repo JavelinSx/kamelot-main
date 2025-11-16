@@ -37,7 +37,6 @@ export const useGallery = () => {
       // Перемешиваем для случайного порядка
       return images.sort(() => Math.random() - 0.5);
     } catch (error) {
-      console.error("Error loading gallery:", error);
       return [];
     }
   };
@@ -87,8 +86,6 @@ export const useGallery = () => {
         source: 'local',
       };
     } catch (error) {
-      console.error('Error loading photos from local:', error);
-
       // Возвращаем пустой ответ в случае ошибки
       return {
         photos: [],
@@ -123,7 +120,7 @@ export const useGallery = () => {
         source.value = response.source;
         offset.value = response.photos.length;
       } catch (error) {
-        console.error('Error initializing gallery:', error);
+        // Silent error
       } finally {
         loading.value = false;
       }
@@ -142,7 +139,7 @@ export const useGallery = () => {
         hasMore.value = response.hasMore;
         offset.value += response.photos.length;
       } catch (error) {
-        console.error('Error loading more photos:', error);
+        // Silent error
       } finally {
         loading.value = false;
       }

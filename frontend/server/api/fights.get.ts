@@ -75,7 +75,7 @@ async function loadFightsFromGoogleSheets(
 
       allFights.push(...fights);
     } catch (error) {
-      console.error(`Error loading sheet "${sheetTitle}":`, error);
+      // Silent error
     }
   }
 

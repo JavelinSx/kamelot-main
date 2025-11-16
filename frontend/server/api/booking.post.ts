@@ -29,9 +29,6 @@ export default defineEventHandler(async (event) => {
 
     return { success: true, message: "Booking request sent successfully" };
   } catch (error: any) {
-    console.error("Telegram API error:", error);
-    console.error("Error details:", error.data || error.message);
-
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to send booking request",

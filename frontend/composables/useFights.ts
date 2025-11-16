@@ -71,46 +71,32 @@ export const useFights = () => {
   const googleSheetsId = config.public.googleSheetsId
   const googleSheetsApiKey = config.public.googleSheetsApiKey
 
-  console.log('[useFights] Runtime config:', {
-    googleSheetsId,
-    hasApiKey: !!googleSheetsApiKey,
-  })
-
   /**
    * Загрузка всех боёв используя Google Sheets API v4
    * Просто и красиво!
    */
   const loadFights = async (): Promise<Fight[]> => {
     try {
-      console.log('[useFights] loadFights called')
-
       if (!googleSheetsId || !googleSheetsApiKey) {
-        console.warn('[useFights] ❌ Google Sheets not configured')
         return []
       }
-
-      console.log('[useFights] ✅ Loading from Google Sheets API v4...')
 
       // Получаем информацию о таблице
       const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${googleSheetsId}?key=${googleSheetsApiKey}`
       const metadataResponse = await fetch(metadataUrl)
 
       if (!metadataResponse.ok) {
-        console.error('[useFights] ❌ Failed to fetch metadata:', metadataResponse.statusText)
         return []
       }
 
       const metadata = await metadataResponse.json()
       const sheets = metadata.sheets || []
 
-      console.log('[useFights] Found', sheets.length, 'sheets')
-
       const allFights: Fight[] = []
 
       // Загружаем данные из каждого листа
       for (const sheet of sheets) {
         const sheetTitle = sheet.properties?.title || 'Untitled'
-        console.log(`[useFights] Loading sheet: "${sheetTitle}"`)
 
         try {
           const range = `${sheetTitle}!A:Z`
@@ -119,7 +105,6 @@ export const useFights = () => {
           const valuesResponse = await fetch(valuesUrl)
 
           if (!valuesResponse.ok) {
-            console.error(`[useFights] Failed to load "${sheetTitle}":`, valuesResponse.statusText)
             continue
           }
 
@@ -127,7 +112,6 @@ export const useFights = () => {
           const rows = valuesData.values || []
 
           if (rows.length < 2) {
-            console.log(`[useFights] Sheet "${sheetTitle}" is empty`)
             continue
           }
 
@@ -165,28 +149,17 @@ export const useFights = () => {
             })
 
             // Проверяем обязательные поля и конвертируем
-            if (i === 1) {
-              console.log('[useFights] First row cleanData:', cleanData)
-            }
-
             if (cleanData.event_name && cleanData.date) {
               allFights.push(convertToFight(cleanData))
-            } else if (i === 1) {
-              console.log('[useFights] ❌ Missing required fields! event_name:', cleanData.event_name, 'date:', cleanData.date)
             }
           }
-
-          console.log(`[useFights] ✅ Loaded ${rows.length - 1} row(s) from "${sheetTitle}"`)
         } catch (error) {
-          console.error(`[useFights] Error loading "${sheetTitle}":`, error)
           continue
         }
       }
 
-      console.log('[useFights] Total fights loaded:', allFights.length)
       return allFights
     } catch (error) {
-      console.error('[useFights] ❌ Error loading fights:', error)
       return []
     }
   }
@@ -251,7 +224,7 @@ export const useFights = () => {
         }
       }
     } catch (e) {
-      console.error('Error parsing result:', e)
+      // Silent error
     }
     return undefined
   }

@@ -116,7 +116,7 @@ onMounted(async () => {
   try {
     fights.value = await loadFights()
   } catch (error) {
-    console.error('Error loading fights:', error)
+    // Silent error
   } finally {
     loading.value = false
   }

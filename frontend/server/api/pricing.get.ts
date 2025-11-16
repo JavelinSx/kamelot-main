@@ -84,7 +84,7 @@ async function loadPricingFromGoogleSheets(
 
       allPlans.push(...plans);
     } catch (error) {
-      console.error(`Error loading sheet "${sheetTitle}":`, error);
+      // Silent error
     }
   }
 

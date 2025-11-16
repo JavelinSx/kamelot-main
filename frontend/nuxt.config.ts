@@ -80,11 +80,33 @@ export default defineNuxtConfig({
         { name: 'format-detection', content: 'telephone=no' },
         { name: 'yandex-verification', content: '' }, // Добавьте ваш код верификации Яндекса
         { name: 'google-site-verification', content: '' }, // Добавьте ваш код верификации Google
+        // SEO Meta Tags
+        {
+          name: 'description',
+          content: 'Академия единоборств Kamelot в СПб (Парнас) - профессиональные тренировки по ММА, боксу, БЖЖ. Групповые и индивидуальные занятия для взрослых и детей. Запись на пробную тренировку!'
+        },
+        {
+          name: 'keywords',
+          content: 'мма спб, мма санкт-петербург, мма питер, тренировки мма спб, единоборства спб, бокс спб, бжж спб, джиу джитсу спб, каратэ спб, борьба спб, секция мма, школа единоборств спб, спортивный клуб спб, фитнес спб, тренажерный зал спб, парнас спб, тренировки парнас, спорт парнас, мма для детей спб, детские секции спб, единоборства для детей, kamelot academy, камелот спб, единоборства парнас'
+        },
+        { name: 'author', content: 'Академия единоборств Kamelot' },
+        // Open Graph Meta Tags
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'Академия единоборств Kamelot - ММА, Бокс, БЖЖ | СПб, Парнас' },
+        { property: 'og:description', content: 'Профессиональные тренировки по ММА, боксу, БЖЖ в Санкт-Петербурге. Современный зал на Парнасе. Групповые и индивидуальные занятия.' },
+        { property: 'og:url', content: 'https://kamelot-academy.ru' },
+        { property: 'og:site_name', content: 'Kamelot Academy' },
+        { property: 'og:locale', content: 'ru_RU' },
         // Geo meta tags для локального SEO
         { name: 'geo.region', content: 'RU-SPE' },
         { name: 'geo.placename', content: 'Санкт-Петербург, Парнас' },
         { name: 'geo.position', content: '60.069444;30.340833' },
         { name: 'ICBM', content: '60.069444, 30.340833' },
+        // Local Business Schema
+        { name: 'business:contact_data:street_address', content: 'Парнас' },
+        { name: 'business:contact_data:locality', content: 'Санкт-Петербург' },
+        { name: 'business:contact_data:region', content: 'SPE' },
+        { name: 'business:contact_data:country_name', content: 'Russia' },
         // Robots meta
         { name: 'robots', content: 'index, follow' },
         { name: 'googlebot', content: 'index, follow' },

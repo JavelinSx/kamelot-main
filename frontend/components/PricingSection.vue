@@ -146,7 +146,7 @@ import type { PricingPlan } from '~/types'
 
 const { pricingPlans, isLoading, error, fetchPricingPlans, setSelectedPlan, calculatePricePerSession, calculateSavings } = usePricing()
 const { setSelectedTrainingType } = useBooking()
-const trainerLimit = ['Все виды единоборств у одного тренера', 'Все виды единоборств увсехтренеров']
+const trainerLimit = ['Все виды единоборств у одного тренера', 'Все виды единоборств у всех тренеров']
 // Загрузить планы при монтировании
 onMounted(async () => {
   await fetchPricingPlans()

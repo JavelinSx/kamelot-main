@@ -119,14 +119,14 @@ const getBadgeColor = (wins: number, losses: number) => {
 }
 
 const viewFighterStats = (fighter: any) => {
-  console.log('Статистика бойца:', fighter.name)
+  // View fighter stats
 }
 
 const viewFighterProfile = (fighter: any) => {
-  console.log('Профиль бойца:', fighter.name)
+  // View fighter profile
 }
 
 const viewAllFighters = () => {
-  console.log('Просмотр всех бойцов')
+  // View all fighters
 }
 </script>

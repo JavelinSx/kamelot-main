@@ -44,7 +44,6 @@ onMounted(() => {
   if (typeof window !== 'undefined') {
     document.documentElement.style.scrollBehavior = 'smooth'
     document.body.style.scrollBehavior = 'smooth'
-    console.log('Smooth scroll applied:', window.getComputedStyle(document.documentElement).scrollBehavior)
 
     // Слушаем событие openBookingModal для открытия формы записи
     const handleOpenBookingModal = () => {

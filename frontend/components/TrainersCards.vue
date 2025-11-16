@@ -34,26 +34,6 @@
                 <div class="absolute inset-0 bg-black/40" />
               </div>
 
-              <!-- Бейджи поверх изображения -->
-              <div class="relative z-10">
-                <!-- Бейдж рейтинга -->
-                <div class="absolute top-3 right-3">
-                  <UBadge v-if="trainer.rating >= 4.8" color="warning" variant="solid" size="md" :ui="{
-                    base: 'font-bold rounded-full shadow-lg',
-                    label: 'font-semibold text-xs'
-                  }">
-                    ⭐ Топ тренер
-                  </UBadge>
-                </div>
-
-                <!-- Цена в углу -->
-                <div class="absolute top-3 left-3">
-                  <div class="bg-green-600 text-white px-2.5 py-0.5 rounded-full text-sm font-bold shadow-lg">
-                    {{ trainer.price }} ₽
-                  </div>
-                </div>
-              </div>
-
               <!-- Текстовая часть с эффектом стекла внизу -->
               <div class="relative z-10 h-full flex flex-col justify-end">
                 <!-- Glassmorphism контейнер -->
@@ -131,7 +111,7 @@
                   <div class="pt-1.5 space-y-2.5">
 
                     <UButton color="neutral" variant="outline" size="md" block
-                      class="hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-white hover:bg-white/10 transition-all duration-300"
+                      class="dark:text-white hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-gray-800 hover:bg-white/10 transition-all duration-300"
                       @click="viewTrainerProfile(trainer)">
                       <UIcon name="i-heroicons-user-circle" class="w-4 h-4 mr-2" />
                       Посмотреть профиль
@@ -182,7 +162,6 @@ const getMainSpecialization = (specializations: readonly WorkoutType[]): string 
 }
 
 const contactTrainer = (trainer: any) => {
-  console.log('Связаться с тренером:', trainer.firstName, trainer.lastName)
   // Здесь можно добавить логику открытия модального окна или перехода на страницу контактов
 }
 

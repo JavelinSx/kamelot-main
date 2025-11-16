@@ -7,11 +7,6 @@ export const usePricing = () => {
   const googleSheetsPricingId = config.public.googleSheetsPricingId;
   const googleSheetsApiKey = config.public.googleSheetsApiKey;
 
-  console.log("[usePricing] Runtime config:", {
-    googleSheetsPricingId,
-    hasApiKey: !!googleSheetsApiKey,
-  });
-
   const pricingPlans = useState<PricingPlan[]>("pricingPlans", () => []);
   const selectedPlan = useState<PricingPlan | null>("selectedPlan", () => null);
   const selectedTrainerId = useState<number | null>(
@@ -27,38 +22,26 @@ export const usePricing = () => {
    */
   const loadPricingPlans = async (): Promise<PricingPlan[]> => {
     try {
-      console.log("[usePricing] loadPricingPlans called");
-
       if (!googleSheetsPricingId || !googleSheetsApiKey) {
-        console.warn("[usePricing] ❌ Google Sheets Pricing not configured");
         return [];
       }
-
-      console.log("[usePricing] ✅ Loading from Google Sheets API v4...");
 
       // 1. Получаем метаданные таблицы
       const metadataUrl = `https://sheets.googleapis.com/v4/spreadsheets/${googleSheetsPricingId}?key=${googleSheetsApiKey}`;
       const metadataResponse = await fetch(metadataUrl);
 
       if (!metadataResponse.ok) {
-        console.error(
-          "[usePricing] ❌ Failed to fetch metadata:",
-          metadataResponse.statusText
-        );
         return [];
       }
 
       const metadata = await metadataResponse.json();
       const sheets = metadata.sheets || [];
 
-      console.log("[usePricing] Found", sheets.length, "sheets");
-
       const allPlans: PricingPlan[] = [];
 
       // 2. Загружаем данные из каждого листа
       for (const sheet of sheets) {
         const sheetTitle = sheet.properties?.title || "Untitled";
-        console.log(`[usePricing] Loading sheet: "${sheetTitle}"`);
 
         try {
           const range = `${sheetTitle}!A:Z`;
@@ -69,10 +52,6 @@ export const usePricing = () => {
           const valuesResponse = await fetch(valuesUrl);
 
           if (!valuesResponse.ok) {
-            console.error(
-              `[usePricing] Failed to load "${sheetTitle}":`,
-              valuesResponse.statusText
-            );
             continue;
           }
 
@@ -80,7 +59,6 @@ export const usePricing = () => {
           const rows = valuesData.values || [];
 
           if (rows.length < 2) {
-            console.log(`[usePricing] Sheet "${sheetTitle}" is empty`);
             continue;
           }
 
@@ -117,40 +95,20 @@ export const usePricing = () => {
             });
 
             // Проверяем обязательные поля
-            if (i === 1) {
-              console.log("[usePricing] First row cleanData:", cleanData);
-            }
-
             if (cleanData.name && cleanData.price && cleanData.type) {
               const plan = convertToPricingPlan(cleanData);
               if (plan) {
                 allPlans.push(plan);
               }
-            } else if (i === 1) {
-              console.log(
-                "[usePricing] ❌ Missing required fields! name:",
-                cleanData.name,
-                "price:",
-                cleanData.price,
-                "type:",
-                cleanData.type
-              );
             }
           }
-
-          console.log(
-            `[usePricing] ✅ Loaded ${rows.length - 1} row(s) from "${sheetTitle}"`
-          );
         } catch (error) {
-          console.error(`[usePricing] Error loading "${sheetTitle}":`, error);
           continue;
         }
       }
 
-      console.log("[usePricing] Total plans loaded:", allPlans.length);
       return allPlans;
     } catch (error) {
-      console.error("[usePricing] ❌ Error loading pricing plans:", error);
       return [];
     }
   };
@@ -199,7 +157,6 @@ export const usePricing = () => {
       return activePlans;
     } catch (e: any) {
       error.value = e.message || "Failed to load pricing plans";
-      console.error("Error fetching pricing plans:", e);
       return [];
     } finally {
       isLoading.value = false;

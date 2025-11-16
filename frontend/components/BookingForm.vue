@@ -431,13 +431,9 @@ async function onSubmit() {
 
     await sendToTelegram(bookingData)
 
-    // Показываем уведомление об успехе
-    console.log('Заявка успешно отправлена!')
-
     resetForm()
     emit('bookingSuccess')
   } catch (error) {
-    console.error('Ошибка отправки:', error)
     // Показываем уведомление об ошибке
     alert('Ошибка отправки. Попробуйте еще раз или свяжитесь с нами по телефону.')
   } finally {
