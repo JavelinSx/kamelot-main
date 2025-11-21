@@ -48,7 +48,7 @@
                 <div class="flex items-center justify-center gap-2 text-green-500 mb-1">
                   <UIcon name="i-heroicons-user-group-solid" class="w-6 h-6" />
                   <span class="font-bold text-2xl text-gray-900 dark:text-white">{{ trainer?.stats.totalStudents
-                    }}</span>
+                  }}</span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Учеников</p>
               </div>
@@ -138,6 +138,8 @@ const specializationNames: Record<WorkoutType, string> = {
   kickboxing: 'Кикбоксинг',
   boxing: 'Бокс',
   bjj: 'BJJ',
+  ofp: 'ОФП',
+  pankration: 'Панкратион'
 }
 
 const getSpecializationName = (type: WorkoutType): string => {

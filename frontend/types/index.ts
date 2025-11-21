@@ -17,6 +17,8 @@ export interface User {
 
 // Типы тренировок
 export type WorkoutType =
+  | "pankration"
+  | "ofp"
   | "mma"
   | "wrestling"
   | "grappling"

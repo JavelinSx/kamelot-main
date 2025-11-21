@@ -2,3 +2,4 @@ User-Agent: *
 Disallow:
 
 Sitemap: https://kamelot-academy.ru/sitemap.xml
+IndexNow-Key: ee30a7fff8363fe25f8453b2b32c12b4

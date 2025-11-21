@@ -39,17 +39,20 @@
                 <!-- Glassmorphism контейнер -->
                 <div class="backdrop-blur-xl bg-black/60 border-t border-white/20 p-5 space-y-3">
                   <!-- Специализации -->
-                  <div class="flex flex-wrap gap-1.5 mb-3">
+                  <!-- <div class="flex flex-wrap gap-1.5 mb-3">
                     <UBadge v-for="specialty in trainer.specializations" :key="specialty" color="error" variant="soft"
                       size="sm" :ui="{
                         base: 'backdrop-blur-sm rounded-lg'
                       }">
                       {{ getSpecializationName(specialty) }}
                     </UBadge>
-                  </div>
+                  </div> -->
 
                   <!-- Имя и специализация -->
                   <div class="space-y-1.5">
+                    <h3 class="text-xl font-bold text-red-400">
+                      Тренер
+                    </h3>
                     <h3 class="text-xl font-bold text-white">
                       {{ trainer.firstName }} {{ trainer.lastName }}
                     </h3>
@@ -148,6 +151,8 @@ const specializationNames: Record<WorkoutType, string> = {
   kickboxing: 'Кикбоксинг',
   boxing: 'Бокс',
   bjj: 'BJJ',
+  ofp: 'ОФП(детское)',
+  pankration: 'Панкратион'
 }
 
 const getSpecializationName = (type: WorkoutType): string => {
@@ -157,12 +162,9 @@ const getSpecializationName = (type: WorkoutType): string => {
 const getMainSpecialization = (specializations: readonly WorkoutType[]): string => {
   if (specializations.length === 0) return 'Тренер'
   const firstSpecialization = specializations[0]
-  if (!firstSpecialization) return 'Тренер'
-  return `Тренер по ${getSpecializationName(firstSpecialization)}`
-}
-
-const contactTrainer = (trainer: any) => {
-  // Здесь можно добавить логику открытия модального окна или перехода на страницу контактов
+  const secondSpecialization = specializations[1]
+  if (!firstSpecialization || !secondSpecialization) return 'Тренер'
+  return `${getSpecializationName(firstSpecialization)}, ${getSpecializationName(secondSpecialization)}`
 }
 
 const viewTrainerProfile = (trainer: any) => {

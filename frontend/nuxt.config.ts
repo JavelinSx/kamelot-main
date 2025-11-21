@@ -122,7 +122,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
-        { rel: 'manifest', href: '/site.webmanifest' },
+        { rel: 'manifest', href: '/manifest.json' },
         { rel: 'canonical', href: 'https://kamelot-academy.ru' },
         // Preconnect для Google Fonts (критично для производительности)
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
