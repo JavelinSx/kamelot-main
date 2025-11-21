@@ -31,7 +31,7 @@
                 <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
                   class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110" />
                 <!-- Затемнение -->
-                <div class="absolute inset-0 bg-black/40" />
+
               </div>
 
               <!-- Текстовая часть с эффектом стекла внизу -->
@@ -110,7 +110,7 @@
                   <!-- Кнопки действий -->
                   <div class="pt-1.5 space-y-2.5">
 
-                    <UButton color="neutral" variant="outline" size="md" block
+                    <UButton color="neutral" variant="outline" size="xl" block
                       class="dark:text-white hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-gray-800 hover:bg-white/10 transition-all duration-300"
                       @click="viewTrainerProfile(trainer)">
                       <UIcon name="i-heroicons-user-circle" class="w-4 h-4 mr-2" />

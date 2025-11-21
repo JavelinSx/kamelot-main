@@ -123,7 +123,7 @@ export const usePricing = () => {
       return lower === "true" || lower === "1" || lower === "yes";
     };
 
-    return {
+    const result = {
       id: data.id || String(Math.random()),
       name: data.name,
       price: Number(data.price) || 0,
@@ -138,13 +138,27 @@ export const usePricing = () => {
       active: parseBoolean(data.active),
       valid_days: data.valid_days ? Number(data.valid_days) : undefined,
     };
+
+    // DEBUG: Вывод для безлимитных тарифов
+    if (result.type && result.type.includes('unlimited')) {
+      console.log('DEBUG Pricing Plan:', {
+        name: result.name,
+        type: result.type,
+        description: result.description,
+        trainer_limited: result.trainer_limited,
+        raw_trainer_limited: data.trainer_limited || data.trainer_limit
+      });
+    }
+
+    return result;
   };
 
   // Загрузить планы с кешированием
   const fetchPricingPlans = async () => {
-    if (pricingPlans.value.length > 0) {
-      return pricingPlans.value; // Кеш
-    }
+    // ВРЕМЕННО ОТКЛЮЧЕН КЭШ ДЛЯ ДЕБАГА
+    // if (pricingPlans.value.length > 0) {
+    //   return pricingPlans.value; // Кеш
+    // }
 
     isLoading.value = true;
     error.value = null;

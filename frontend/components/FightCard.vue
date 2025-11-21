@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fight-card group relative overflow-hidden bg-gradient-to-br from-gray-900 to-black dark:from-gray-950 dark:to-black border border-gray-800 hover:border-red-600 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-2"
+    class="fight-card group relative overflow-hidden bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black border border-gray-300 dark:border-gray-800 hover:border-red-600 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-2"
     data-aos="fade-up" :data-aos-delay="aosDelay">
     <!-- Постер боя -->
     <div class="relative h-80 overflow-hidden">
@@ -9,7 +9,7 @@
         @error="onImageError" />
 
       <!-- Overlay градиент -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent dark:from-black/90 dark:via-black/40"></div>
 
       <!-- Статус бадж -->
       <div class="absolute top-4 right-4">
@@ -24,7 +24,7 @@
       <!-- Категория -->
       <div v-if="fight.category" class="absolute top-4 left-4">
         <span
-          class="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-gray-700">
+          class="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-gray-300 dark:border-gray-700">
           {{ fight.category }}
         </span>
       </div>
@@ -52,9 +52,9 @@
         <!-- Первый боец -->
         <div v-if="fight.fighters[0]" class="flex flex-col items-center text-center flex-1">
 
-          <p class="font-bold text-white text-sm">{{ fight.fighters[0].name }}</p>
-          <p class="text-gray-400 text-xs">{{ fight.fighters[0].record }}</p>
-          <p class="text-gray-500 text-xs">{{ fight.fighters[0].team }}</p>
+          <p class="font-bold text-gray-900 dark:text-white text-sm">{{ fight.fighters[0].name }}</p>
+          <p class="text-gray-600 dark:text-gray-400 text-xs">{{ fight.fighters[0].record }}</p>
+          <p class="text-gray-500 dark:text-gray-500 text-xs">{{ fight.fighters[0].team }}</p>
         </div>
 
         <!-- VS разделитель -->
@@ -65,20 +65,20 @@
         <!-- Второй боец -->
         <div v-if="fight.fighters[1]" class="flex flex-col items-center text-center flex-1">
 
-          <p class="font-bold text-white text-sm">{{ fight.fighters[1].name }}</p>
-          <p class="text-gray-400 text-xs">{{ fight.fighters[1].record }}</p>
-          <p class="text-gray-500 text-xs">{{ fight.fighters[1].team }}</p>
+          <p class="font-bold text-gray-900 dark:text-white text-sm">{{ fight.fighters[1].name }}</p>
+          <p class="text-gray-600 dark:text-gray-400 text-xs">{{ fight.fighters[1].record }}</p>
+          <p class="text-gray-500 dark:text-gray-500 text-xs">{{ fight.fighters[1].team }}</p>
         </div>
       </div>
 
       <!-- Описание -->
-      <p class="text-gray-300 text-sm mb-4 line-clamp-2">
+      <p class="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
         {{ fight.description }}
       </p>
 
       <!-- Локация и детали -->
       <div class="space-y-2 mb-4 text-sm">
-        <div class="flex items-start gap-2 text-gray-400">
+        <div class="flex items-start gap-2 text-gray-600 dark:text-gray-400">
           <UIcon name="i-heroicons-map-pin" class="w-4 h-4 mt-0.5" />
           <div>
             <p>{{ fight.location.venue }}</p>
@@ -86,12 +86,12 @@
           </div>
         </div>
 
-        <div v-if="fight.weightClass" class="flex items-center gap-2 text-gray-400">
+        <div v-if="fight.weightClass" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
           <UIcon name="i-heroicons-scale" class="w-4 h-4" />
           <span>Весовая категория: {{ fight.weightClass }}</span>
         </div>
 
-        <div v-if="fight.rounds" class="flex items-center gap-2 text-gray-400">
+        <div v-if="fight.rounds" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
           <UIcon name="i-heroicons-clock" class="w-4 h-4" />
           <span>{{ fight.rounds }} раундов</span>
         </div>
@@ -115,7 +115,7 @@
         </UButton>
 
         <UButton v-if="fight.vkPost" :to="fight.vkPost" target="_blank" variant="outline" color="neutral"
-          class="flex-1 border-gray-700 hover:border-red-600 text-white" size="md">
+          class="flex-1 border-gray-300 dark:border-gray-700 hover:border-red-600 text-gray-900 dark:text-white" size="md">
           <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 mr-2" />
           Подробнее
         </UButton>

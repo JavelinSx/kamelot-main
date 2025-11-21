@@ -1,5 +1,5 @@
 <template>
-  <section class="location-map-section py-20 bg-gray-900">
+  <section class="location-map-section py-20 bg-gray-50 dark:bg-gray-900">
     <div class="container mx-auto px-4">
       <!-- Заголовок секции -->
       <div class="text-center mb-12">
@@ -11,7 +11,7 @@
 
       <!-- Контейнер с картой -->
       <div class="map-container max-w-6xl mx-auto">
-        <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-800">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-300 dark:border-gray-800">
           <!-- Яндекс карта -->
           <iframe
             src="https://yandex.ru/map-widget/v1/?um=constructor%3A7c2a5b4697e8df987cf3a9987f5a2f08ee4f7ede139c841afa913b7cc82023ee&amp;source=constructor"
@@ -37,14 +37,14 @@
         <div class="grid md:grid-cols-3 gap-6 mt-8">
           <!-- Адрес -->
           <div
-            class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-red-500/50 transition-all">
+            class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-300 dark:border-gray-700 hover:border-red-500/50 transition-all">
             <div class="flex items-start gap-4">
               <div class="text-red-500 text-2xl">
                 📍
               </div>
               <div>
-                <h3 class="text-white font-semibold mb-2">Адрес</h3>
-                <p class="text-gray-400 text">
+                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Адрес</h3>
+                <p class="text-gray-600 dark:text-gray-400 text">
                   Улица Архитектора Белова 6к1, Санкт-Петербург
                 </p>
               </div>
@@ -59,8 +59,8 @@
                 🕐
               </div>
               <div>
-                <h3 class="text-white font-semibold mb-2">Время работы</h3>
-                <p class="text-gray-400 text">
+                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Время работы</h3>
+                <p class="text-gray-600 dark:text-gray-400 text">
                   Пн-ВС: 10:00 - 23:00
                 </p>
               </div>
@@ -69,14 +69,14 @@
 
           <!-- Телефон -->
           <div
-            class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-red-500/50 transition-all">
+            class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-300 dark:border-gray-700 hover:border-red-500/50 transition-all">
             <div class="flex items-start gap-4">
               <div class="text-red-500 text-2xl">
                 📞
               </div>
               <div>
-                <h3 class="text-white font-semibold mb-2">Телефон</h3>
-                <a href="tel:+79520957776" class="text-gray-400 text hover:text-red-500 transition-colors">
+                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Телефон</h3>
+                <a href="tel:+79520957776" class="text-gray-600 dark:text-gray-400 text hover:text-red-500 transition-colors">
                   +7 (952) 095-77-76
                 </a>
               </div>

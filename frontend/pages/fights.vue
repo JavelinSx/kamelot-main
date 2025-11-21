@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black">
+  <div class="min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 dark:from-black dark:via-gray-900 dark:to-black">
     <!-- Hero секция -->
     <div class="relative h-96 overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-r from-red-900/50 to-orange-900/50"></div>
-      <div class="absolute inset-0 bg-black/60"></div>
+      <div class="absolute inset-0 bg-white/60 dark:bg-black/60"></div>
 
       <UContainer class="relative h-full flex flex-col justify-center items-center text-center z-10">
         <h1
-          class="text-6xl lg:text-7xl font-black text-white mb-6"
+          class="text-6xl lg:text-7xl font-black text-gray-900 dark:text-white mb-6"
           data-aos="fade-down"
           data-aos-duration="800">
           Анонсы Боёв
         </h1>
         <p
-          class="text-xl lg:text-2xl text-gray-300 max-w-3xl"
+          class="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl"
           data-aos="fade-up"
           data-aos-duration="800"
           data-aos-delay="200">
@@ -36,7 +36,7 @@
             'px-6 py-3 rounded-lg font-bold transition-all duration-300',
             activeFilter === filter.value
               ? 'bg-red-600 text-white shadow-lg shadow-red-500/50 scale-105'
-              : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+              : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
           ]">
           {{ filter.label }}
         </button>
@@ -58,9 +58,9 @@
 
       <!-- Пусто -->
       <div v-else class="text-center py-20">
-        <UIcon name="i-heroicons-inbox" class="w-24 h-24 text-gray-600 mx-auto mb-4" />
-        <h3 class="text-2xl font-bold text-gray-400 mb-2">Нет боёв</h3>
-        <p class="text-gray-500">
+        <UIcon name="i-heroicons-inbox" class="w-24 h-24 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+        <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-2">Нет боёв</h3>
+        <p class="text-gray-500 dark:text-gray-500">
           {{ emptyMessage }}
         </p>
       </div>

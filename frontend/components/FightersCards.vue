@@ -11,14 +11,6 @@
             class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
             Бойцы, прошедшие подготовку в нашем клубе и добившиеся выдающихся результатов
           </p>
-          <template #fallback>
-            <h2 class="text-4xl text-gray-900 dark:text-white font-bold mb-4">
-              Наши чемпионы
-            </h2>
-            <p class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-              Бойцы, прошедшие подготовку в нашем клубе и добившиеся выдающихся результатов
-            </p>
-          </template>
         </ClientOnly>
       </div>
 
@@ -47,7 +39,7 @@
               </div>
 
               <div class="absolute bottom-4 left-4 right-4">
-                <h3 class="text-2xl dark:text-gray-100 font-bold mb-1">{{ fighter.name }}</h3>
+                <h3 class="text-2xl text-gray-100 font-bold mb-1">{{ fighter.name }}</h3>
                 <p class="text-red-400 font-semibold">{{ fighter.nickname }}</p>
               </div>
             </div>

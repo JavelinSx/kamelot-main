@@ -97,6 +97,10 @@ export default defineNuxtConfig({
         { property: 'og:url', content: 'https://kamelot-academy.ru' },
         { property: 'og:site_name', content: 'Kamelot Academy' },
         { property: 'og:locale', content: 'ru_RU' },
+        { property: 'og:image', content: 'https://kamelot-academy.ru/web-app-manifest-512x512.png' },
+        { property: 'og:image:width', content: '512' },
+        { property: 'og:image:height', content: '512' },
+        { property: 'og:image:type', content: 'image/png' },
         // Geo meta tags для локального SEO
         { name: 'geo.region', content: 'RU-SPE' },
         { name: 'geo.placename', content: 'Санкт-Петербург, Парнас' },
@@ -113,7 +117,12 @@ export default defineNuxtConfig({
         { name: 'yandex', content: 'index, follow' }
       ],
       link: [
+        // Favicons для браузеров и поисковиков
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/site.webmanifest' },
         { rel: 'canonical', href: 'https://kamelot-academy.ru' },
         // Preconnect для Google Fonts (критично для производительности)
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },

@@ -5,12 +5,8 @@
     <TrainersCards />
     <FightersCards />
     <LocationMap />
-    <Gallery
-      :images="photos"
-      :can-load-more="hasMore"
-      :loading-more="loading"
-      @load-more="handleLoadMore"
-    />
+    <YandexReviews />
+    <Gallery :images="photos" :can-load-more="hasMore" :loading-more="loading" @load-more="handleLoadMore" />
   </div>
 </template>
 
