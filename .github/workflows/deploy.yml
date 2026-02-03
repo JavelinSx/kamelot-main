@@ -16,7 +16,8 @@ jobs:
       NUXT_PUBLIC_GOOGLE_SHEETS_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_ID }}
       NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID: ${{ secrets.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID }}
       NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
-      NUXT_PUBLIC_STORAGE_URL: https://storage.yandexcloud.net/kamelot
+      NUXT_PUBLIC_STORAGE_URL: https://storage.yandexcloud.net/camelot-academy
+      NUXT_PUBLIC_BOOKING_API_URL: ${{ secrets.NUXT_PUBLIC_BOOKING_API_URL }}
 
     steps:
       - name: Checkout code
@@ -66,17 +67,19 @@ jobs:
           echo "NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID}"
           echo "NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY}"
           echo "NUXT_PUBLIC_STORAGE_URL: $NUXT_PUBLIC_STORAGE_URL"
+          echo "NUXT_PUBLIC_BOOKING_API_URL: $NUXT_PUBLIC_BOOKING_API_URL"
           echo ""
           echo "=== Original nuxt.config.ts public section ==="
-          grep -A 6 "public:" nuxt.config.ts
+          grep -A 7 "public:" nuxt.config.ts
           echo ""
           sed -i "s|googleSheetsId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_ID \|\| \"\"|googleSheetsId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_ID\"|g" nuxt.config.ts
           sed -i "s|googleSheetsPricingId: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID \|\| \"\"|googleSheetsPricingId: \"$NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID\"|g" nuxt.config.ts
           sed -i "s|googleSheetsApiKey: process.env.NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY \|\| \"\"|googleSheetsApiKey: \"$NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY\"|g" nuxt.config.ts
           sed -i "s|storageUrl: process.env.NUXT_PUBLIC_STORAGE_URL \|\| \"\"|storageUrl: \"$NUXT_PUBLIC_STORAGE_URL\"|g" nuxt.config.ts
+          sed -i "s|bookingApiUrl: process.env.NUXT_PUBLIC_BOOKING_API_URL \|\| \"/api/booking\"|bookingApiUrl: \"$NUXT_PUBLIC_BOOKING_API_URL\"|g" nuxt.config.ts
           echo ""
           echo "=== Modified nuxt.config.ts public section ==="
-          grep -A 6 "public:" nuxt.config.ts
+          grep -A 7 "public:" nuxt.config.ts
           echo ""
           echo "✅ Variables injected into nuxt.config.ts"
 

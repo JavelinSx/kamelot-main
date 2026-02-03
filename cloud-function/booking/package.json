@@ -1,0 +1,10 @@
+{
+  "name": "camelot-booking-function",
+  "version": "1.0.0",
+  "description": "Yandex Cloud Function для обработки бронирований",
+  "main": "index.js",
+  "dependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
