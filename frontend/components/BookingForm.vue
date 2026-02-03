@@ -454,36 +454,39 @@ async function onSubmit() {
 async function sendToTelegram(data: any) {
   const config = useRuntimeConfig()
 
-  // ЛОГИРОВАНИЕ: URL и конфиг
-  console.log('=== BOOKING API DEBUG ===')
-  console.log('1. API URL:', config.public.bookingApiUrl)
-  console.log('2. Full config.public:', config.public)
-  console.log('3. Sending data:', JSON.stringify(data, null, 2))
+  // КРИТИЧЕСКОЕ ЛОГИРОВАНИЕ: показываем реальный URL
+  const apiUrl = config.public.bookingApiUrl
+
+  // Используем alert чтобы гарантированно увидеть URL
+  if (typeof window !== 'undefined') {
+    window.console.log('=== BOOKING API DEBUG ===')
+    window.console.log('API URL:', apiUrl)
+    window.console.log('Full config.public:', JSON.stringify(config.public))
+  }
 
   try {
-    console.log('4. Making POST request...')
-    const response = await $fetch<{ success: boolean; message?: string; error?: string }>(config.public.bookingApiUrl, {
+    const response = await $fetch<{ success: boolean; message?: string; error?: string }>(apiUrl, {
       method: 'POST',
       body: data
     })
 
-    console.log('5. Response received:', JSON.stringify(response, null, 2))
-
     if (!response.success) {
-      console.error('6. Response indicates failure')
       throw new Error('Ошибка отправки в Telegram')
     }
-
-    console.log('7. Success!')
   } catch (error: any) {
-    console.error('8. Error caught:', {
-      message: error.message,
-      statusCode: error.statusCode,
-      statusMessage: error.statusMessage,
-      data: error.data,
-      cause: error.cause,
-      full: error
-    })
+    // Показываем детальную ошибку в alert
+    const errorDetails = `
+URL: ${apiUrl}
+Status: ${error.statusCode}
+Message: ${error.statusMessage || error.message}
+    `.trim()
+
+    if (typeof window !== 'undefined') {
+      window.console.error('BOOKING ERROR:', errorDetails, error)
+    }
+
+    // Показываем alert с URL для отладки
+    alert(`Ошибка отправки запроса:\n${errorDetails}`)
     throw error
   }
 }

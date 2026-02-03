@@ -67,7 +67,18 @@ jobs:
           echo "NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_PRICING_ID}"
           echo "NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY length: ${#NUXT_PUBLIC_GOOGLE_SHEETS_API_KEY}"
           echo "NUXT_PUBLIC_STORAGE_URL: $NUXT_PUBLIC_STORAGE_URL"
-          echo "NUXT_PUBLIC_BOOKING_API_URL: $NUXT_PUBLIC_BOOKING_API_URL"
+          echo "NUXT_PUBLIC_BOOKING_API_URL length: ${#NUXT_PUBLIC_BOOKING_API_URL}"
+          echo "NUXT_PUBLIC_BOOKING_API_URL first 30 chars: ${NUXT_PUBLIC_BOOKING_API_URL:0:30}..."
+          echo ""
+
+          # Критическая проверка: URL должен начинаться с https://
+          if [[ ! "$NUXT_PUBLIC_BOOKING_API_URL" =~ ^https:// ]]; then
+            echo "❌ ERROR: NUXT_PUBLIC_BOOKING_API_URL must be a full URL starting with https://"
+            echo "Current value: $NUXT_PUBLIC_BOOKING_API_URL"
+            echo "Expected format: https://functions.yandexcloud.net/..."
+            exit 1
+          fi
+          echo "✅ NUXT_PUBLIC_BOOKING_API_URL is a valid URL"
           echo ""
           echo "=== Original nuxt.config.ts public section ==="
           grep -A 7 "public:" nuxt.config.ts
