@@ -19,7 +19,7 @@ export const useGallery = () => {
       // Автоматический импорт всех изображений из public
       // eager: true делает импорт синхронным на этапе билда
       const modules = (import.meta as any).glob(
-        "/public/images/gallery/*.{png,jpg,jpeg,webp}",
+        "/public/images/gallery/*.webp",
         {
           eager: true,
           query: "?url",

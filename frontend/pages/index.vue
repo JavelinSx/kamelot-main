@@ -38,7 +38,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'SportsActivityLocation',
         '@id': 'https://kamelot-academy.ru',
-        name: 'KAMELOT Sport Academy',
+        name: 'CAMELOT Sport Academy',
         alternateName: 'Камелот Спорт Академия',
         description: 'Профессиональный клуб боевых искусств. Тренируйся с лучшими, становись чемпионом.',
         url: 'https://kamelot-academy.ru',

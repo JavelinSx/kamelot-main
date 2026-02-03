@@ -28,7 +28,7 @@
     <div class="absolute inset-0 flex items-center justify-center z-20">
       <div class="text-center text-white max-w-4xl mx-auto px-4">
         <h1 class="font-bold mb-6 leading-tight">
-          <span class="inline-block text-red-500 text-6xl lg:text-7xl hero-title-line1">KAMELOT</span><br>
+          <span class="inline-block text-red-500 text-6xl lg:text-7xl hero-title-line1">CAMELOT</span><br>
           <span class="inline-block text-white text-6xl lg:text-7xl hero-title-line2">FIGHT CLUB</span>
         </h1>
       </div>
@@ -44,6 +44,6 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   videoSrc: '/video/header-video.mp4',
-  logoSrc: '/images/logo.jpg'
+  logoSrc: '/images/logo.webp'
 })
 </script>

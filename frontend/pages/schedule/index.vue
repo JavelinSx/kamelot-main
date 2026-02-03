@@ -177,9 +177,9 @@
 </template>
 
 <script setup lang="ts">
-import adult from '~/public/images/fight-category/adult.png'
-import kid from '~/public/images/fight-category/kid.png'
-import teen from '~/public/images/fight-category/teen.png'
+import adult from '~/public/images/fight-category/adult.webp'
+import kid from '~/public/images/fight-category/kid.webp'
+import teen from '~/public/images/fight-category/teen.webp'
 
 // Используем composable - данные теперь доступны сразу, без асинхронной загрузки
 const { scheduleData } = useSchedule()

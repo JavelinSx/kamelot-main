@@ -5,7 +5,7 @@
         <div class="lg:col-span-1">
           <div class="flex items-center gap-3 mb-6">
             <img :src="logo" alt="Kamelot" class="h-12 w-auto fill-white" />
-            <span class="text-2xl font-bold text-gray-900 dark:text-white">KAMELOT<br> Sport Academy</span>
+            <span class="text-2xl font-bold text-gray-900 dark:text-white">CAMELOT<br> Sport Academy</span>
           </div>
 
           <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
@@ -153,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import logo from '~/public/images/logo.png'
+import logo from '~/public/images/logo.webp'
 
 // Используем composable - данные теперь доступны сразу, без асинхронной загрузки
 const { contacts } = useContacts()

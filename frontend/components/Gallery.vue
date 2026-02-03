@@ -16,7 +16,7 @@
         :style="{ marginBottom: gap + 'px' }" @click="handleImageClick(image, index)">
         <!-- Контейнер изображения -->
         <div
-          class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-lg">
+          class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
           <!-- Изображение -->
           <img :src="image" :alt="`Gallery image ${index + 1}`"
             class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
@@ -70,7 +70,7 @@
         <!-- Изображение -->
         <div class="relative w-full h-full flex items-center justify-center p-4 md:p-8" @click.stop>
           <img :src="lightboxImage" :alt="`Gallery image ${lightboxIndex + 1}`"
-            class="max-w-full max-h-[calc(100vh-8rem)] md:max-h-[calc(100vh-12rem)] object-contain rounded-lg" />
+            class="max-w-full max-h-[calc(100vh-8rem)] md:max-h-[calc(100vh-12rem)] object-contain" />
         </div>
 
         <!-- Счетчик изображений -->
@@ -98,7 +98,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   columns: 0, // 0 = автоматически
-  gap: 16,
+  gap: 4,
   canLoadMore: false,
   loadingMore: false
 })

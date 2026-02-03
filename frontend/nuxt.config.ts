@@ -55,7 +55,7 @@ export default defineNuxtConfig({
   // Подключение стилей
   css: ["~/assets/css/main.css"],
 
-  // Кастомная тема Kamelot для боевых искусств
+  // Кастомная тема Camelot для боевых искусств
   ui: {
     prefix: "U",
   },
@@ -83,21 +83,21 @@ export default defineNuxtConfig({
         // SEO Meta Tags
         {
           name: 'description',
-          content: 'Академия единоборств Kamelot в СПб (Парнас) - профессиональные тренировки по ММА, боксу, БЖЖ. Групповые и индивидуальные занятия для взрослых и детей. Запись на пробную тренировку!'
+          content: 'Академия единоборств Camelot в СПб (Парнас) - профессиональные тренировки по ММА, боксу, БЖЖ. Групповые и индивидуальные занятия для взрослых и детей. Запись на пробную тренировку!'
         },
         {
           name: 'keywords',
-          content: 'мма спб, мма санкт-петербург, мма питер, тренировки мма спб, единоборства спб, бокс спб, бжж спб, джиу джитсу спб, каратэ спб, борьба спб, секция мма, школа единоборств спб, спортивный клуб спб, фитнес спб, тренажерный зал спб, парнас спб, тренировки парнас, спорт парнас, мма для детей спб, детские секции спб, единоборства для детей, kamelot academy, камелот спб, единоборства парнас'
+          content: 'мма спб, мма санкт-петербург, мма питер, тренировки мма спб, единоборства спб, бокс спб, бжж спб, джиу джитсу спб, каратэ спб, борьба спб, секция мма, школа единоборств спб, спортивный клуб спб, фитнес спб, тренажерный зал спб, парнас спб, тренировки парнас, спорт парнас, мма для детей спб, детские секции спб, единоборства для детей, camelot academy, камелот спб, единоборства парнас'
         },
-        { name: 'author', content: 'Академия единоборств Kamelot' },
+        { name: 'author', content: 'Академия единоборств Camelot' },
         // Open Graph Meta Tags
         { property: 'og:type', content: 'website' },
-        { property: 'og:title', content: 'Академия единоборств Kamelot - ММА, Бокс, БЖЖ | СПб, Парнас' },
+        { property: 'og:title', content: 'Академия единоборств Camelot - ММА, Бокс, БЖЖ | СПб, Парнас' },
         { property: 'og:description', content: 'Профессиональные тренировки по ММА, боксу, БЖЖ в Санкт-Петербурге. Современный зал на Парнасе. Групповые и индивидуальные занятия.' },
-        { property: 'og:url', content: 'https://kamelot-academy.ru' },
-        { property: 'og:site_name', content: 'Kamelot Academy' },
+        { property: 'og:url', content: 'http://camelot-academy.ru' },
+        { property: 'og:site_name', content: 'Camelot Academy' },
         { property: 'og:locale', content: 'ru_RU' },
-        { property: 'og:image', content: 'https://kamelot-academy.ru/web-app-manifest-512x512.png' },
+        { property: 'og:image', content: 'http://camelot-academy.ru/web-app-manifest-512x512.png' },
         { property: 'og:image:width', content: '512' },
         { property: 'og:image:height', content: '512' },
         { property: 'og:image:type', content: 'image/png' },
@@ -123,7 +123,7 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
         { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
         { rel: 'manifest', href: '/manifest.json' },
-        { rel: 'canonical', href: 'https://kamelot-academy.ru' },
+        { rel: 'canonical', href: 'http://camelot-academy.ru' },
         // Preconnect для Google Fonts (критично для производительности)
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' },

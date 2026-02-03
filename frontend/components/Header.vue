@@ -5,11 +5,10 @@
         <div class="flex items-center gap-2">
 
           <div v-motion-fade-visible-once :delay="0">
-            <ULink to="/" class="nav-link hover:cursor-pointer flex flex-row justify-center items-center gap-2"><img
-                :src="logo" alt="Kamelot" class="h-10 w-auto " />
-              <span v-motion-fade-visible-once :delay="100" class="text-xl font-bold center text-white">KAMELOT</span>
+            <ULink to="/" class="nav-link hover:cursor-pointer flex flex-row justify-center items-center gap-2">
+              <img :src="logo" alt="Kamelot" class="h-8 lg:h-10 w-auto" />
+              <span v-motion-fade-visible-once :delay="100" class="text-lg lg:text-xl font-bold center text-white">CAMELOT</span>
             </ULink>
-
           </div>
 
 
@@ -39,7 +38,27 @@
           </ULink> -->
         </nav>
 
-        <div class="flex items-center gap-4 ">
+        <div class="flex items-center gap-2 lg:gap-4">
+          <!-- Социальные сети -->
+          <div class="flex items-center gap-1">
+            <UButton
+              icon="i-simple-icons-vk"
+              color="neutral"
+              variant="ghost"
+              size="md"
+              aria-label="ВКонтакте"
+              @click="openSocialLink('vk')"
+              class="text-blue-500 hover:text-blue-600 transition-colors [&_svg]:!w-5 [&_svg]:!h-5" />
+            <UButton
+              icon="i-simple-icons-telegram"
+              color="neutral"
+              variant="ghost"
+              size="md"
+              aria-label="Telegram"
+              @click="openSocialLink('telegram')"
+              class="text-sky-500 hover:text-sky-600 transition-colors [&_svg]:!w-5 [&_svg]:!h-5" />
+          </div>
+
           <!-- Переключатель темы -->
           <ClientOnly>
             <UButton :icon="colorMode.value === 'dark' ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
@@ -59,10 +78,11 @@
             }">
             <UButton color="error"
               class="relative text-white font-bold bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 shadow-lg shadow-red-500/50 hover:shadow-xl hover:shadow-red-500/70 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-300 border-0"
-              size="lg">
-              <span class="relative z-10 flex items-center gap-2">
-                <UIcon name="i-heroicons-calendar-days" class="w-5 h-5" />
-                Записаться
+              :size="isMobile ? 'md' : 'lg'">
+              <span class="relative z-10 flex items-center gap-1 lg:gap-2">
+                <UIcon name="i-heroicons-calendar-days" class="hidden lg:block w-5 h-5" />
+                <span class="hidden sm:inline">Записаться</span>
+                <span class="sm:hidden">Запись</span>
               </span>
             </UButton>
 
@@ -146,12 +166,44 @@
 </template>
 
 <script setup lang="ts">
-const logo = '/images/logo.png';
+const logo = '/images/logo.webp';
 const isMenuOpen = ref(false)
 
 // Используем глобальное состояние для модалки записи
 const { isBookingModalOpen, closeBookingModal, selectedSession, clearBookingData } = useBooking()
 const isBookingOpen = isBookingModalOpen
+
+// Contacts data for social links
+const { contacts } = useContacts()
+
+// Mobile detection
+const isMobile = ref(false)
+
+onMounted(() => {
+  // Check if mobile on mount
+  isMobile.value = window.innerWidth < 1024
+
+  // Update on resize
+  const handleResize = () => {
+    isMobile.value = window.innerWidth < 1024
+  }
+  window.addEventListener('resize', handleResize)
+
+  // Cleanup
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize)
+  })
+})
+
+// Open social media links
+function openSocialLink(platform: 'vk' | 'telegram') {
+  if (!contacts.value) return
+
+  const url = contacts.value.academy.socialLinks[platform]
+  if (url) {
+    window.open(url, '_blank')
+  }
+}
 
 // Формируем описание модалки в зависимости от выбранной сессии
 const modalDescription = computed(() => {

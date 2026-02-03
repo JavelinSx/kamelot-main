@@ -16,8 +16,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <ClientOnly>
-          <div v-for="(fighter, index) in fighters" :key="fighter.id" v-motion-pop-visible-once :delay="index * 100"
-            :duration="600"
+          <div v-for="(fighter, index) in fighters" :key="fighter.id" v-motion-pop-visible-once :duration="300"
             class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ring-1 ring-gray-200 dark:ring-gray-700">
             <div class="relative overflow-hidden">
               <img :src="fighter.photo" :alt="fighter.name"
