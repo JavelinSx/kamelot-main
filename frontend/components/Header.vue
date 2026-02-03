@@ -1,4 +1,5 @@
 <template>
+  <div>
   <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800 overflow-hidden">
     <UContainer class="py-4 relative">
       <div class="flex items-center justify-between">
@@ -163,6 +164,60 @@
       </Transition>
     </UContainer>
   </header>
+
+  <!-- Модалка успешной отправки (кастомная, без UModal) -->
+  <Teleport to="body">
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      leave-active-class="transition-opacity duration-200"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isSuccessModalOpen"
+        class="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+        @click="closeSuccessModal"
+      >
+        <div
+          class="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-8 text-center relative"
+          @click.stop
+        >
+          <!-- Иконка успеха с анимацией -->
+          <div class="mb-6 flex justify-center">
+            <div class="relative">
+              <div class="absolute inset-0 animate-ping bg-green-500 rounded-full opacity-20"></div>
+              <div class="relative flex items-center justify-center w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full shadow-lg">
+                <UIcon name="i-heroicons-check-20-solid" class="w-10 h-10 text-white" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Заголовок -->
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+            Заявка отправлена!
+          </h3>
+
+          <!-- Описание -->
+          <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+            Мы свяжемся с вами в ближайшее время
+          </p>
+
+          <!-- Кнопка закрытия -->
+          <UButton
+            @click="closeSuccessModal"
+            color="success"
+            size="lg"
+            class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            Отлично!
+          </UButton>
+        </div>
+      </div>
+    </Transition>
+  </Teleport>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -172,6 +227,9 @@ const isMenuOpen = ref(false)
 // Используем глобальное состояние для модалки записи
 const { isBookingModalOpen, closeBookingModal, selectedSession, clearBookingData } = useBooking()
 const isBookingOpen = isBookingModalOpen
+
+// Модалка успешной отправки
+const isSuccessModalOpen = ref(false)
 
 // Contacts data for social links
 const { contacts } = useContacts()
@@ -223,19 +281,19 @@ function toggleColorMode() {
 function handleBookingSuccess() {
   closeBookingModal()
 
-  // Показываем уведомление
-  const toast = useToast()
-  toast.add({
-    title: 'Заявка отправлена!',
-    description: 'Мы свяжемся с вами в ближайшее время',
-    icon: 'i-heroicons-check-circle',
-    color: 'success'
-  })
+  // Показываем модалку успеха
+  setTimeout(() => {
+    isSuccessModalOpen.value = true
+  }, 300)
 
   // Очищаем данные после небольшой задержки
   setTimeout(() => {
     clearBookingData()
   }, 500)
+}
+
+function closeSuccessModal() {
+  isSuccessModalOpen.value = false
 }
 
 function closeMenu() {

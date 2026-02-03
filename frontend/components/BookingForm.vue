@@ -415,14 +415,10 @@ function validateForm() {
 }
 
 async function onSubmit() {
-  console.log('=== FORM SUBMIT STARTED ===')
-
   if (!validateForm()) {
-    console.log('Form validation failed')
     return
   }
 
-  console.log('Form validation passed')
   isSubmitting.value = true
 
   try {
@@ -433,61 +429,30 @@ async function onSubmit() {
       pricingPlanInfo: selectedPlanInfo.value // Добавляем информацию о выбранном тарифе
     }
 
-    console.log('Prepared booking data:', bookingData)
-
     await sendToTelegram(bookingData)
 
-    console.log('Telegram send successful, resetting form')
     resetForm()
     emit('bookingSuccess')
   } catch (error: any) {
-    console.error('=== FORM SUBMIT ERROR ===', error)
     // Показываем уведомление об ошибке
     alert(`Ошибка отправки: ${error.message || 'Неизвестная ошибка'}. Попробуйте еще раз или свяжитесь с нами по телефону.`)
   } finally {
     isSubmitting.value = false
-    console.log('=== FORM SUBMIT ENDED ===')
   }
 }
 
 
 async function sendToTelegram(data: any) {
   const config = useRuntimeConfig()
-
-  // КРИТИЧЕСКОЕ ЛОГИРОВАНИЕ: показываем реальный URL
   const apiUrl = config.public.bookingApiUrl
 
-  // Используем alert чтобы гарантированно увидеть URL
-  if (typeof window !== 'undefined') {
-    window.console.log('=== BOOKING API DEBUG ===')
-    window.console.log('API URL:', apiUrl)
-    window.console.log('Full config.public:', JSON.stringify(config.public))
-  }
+  const response = await $fetch<{ success: boolean; message?: string; error?: string }>(apiUrl, {
+    method: 'POST',
+    body: data
+  })
 
-  try {
-    const response = await $fetch<{ success: boolean; message?: string; error?: string }>(apiUrl, {
-      method: 'POST',
-      body: data
-    })
-
-    if (!response.success) {
-      throw new Error('Ошибка отправки в Telegram')
-    }
-  } catch (error: any) {
-    // Показываем детальную ошибку в alert
-    const errorDetails = `
-URL: ${apiUrl}
-Status: ${error.statusCode}
-Message: ${error.statusMessage || error.message}
-    `.trim()
-
-    if (typeof window !== 'undefined') {
-      window.console.error('BOOKING ERROR:', errorDetails, error)
-    }
-
-    // Показываем alert с URL для отладки
-    alert(`Ошибка отправки запроса:\n${errorDetails}`)
-    throw error
+  if (!response.success) {
+    throw new Error('Ошибка отправки в Telegram')
   }
 }
 

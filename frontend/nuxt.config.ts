@@ -1,10 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-// ЛОГИРОВАНИЕ: Environment variables при сборке
-console.log('=== NUXT CONFIG BUILD DEBUG ===')
-console.log('NUXT_PUBLIC_BOOKING_API_URL:', process.env.NUXT_PUBLIC_BOOKING_API_URL)
-console.log('All NUXT_PUBLIC_* vars:', Object.keys(process.env).filter(k => k.startsWith('NUXT_PUBLIC_')))
-
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
