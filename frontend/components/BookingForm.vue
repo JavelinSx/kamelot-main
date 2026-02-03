@@ -415,10 +415,14 @@ function validateForm() {
 }
 
 async function onSubmit() {
+  console.log('=== FORM SUBMIT STARTED ===')
+
   if (!validateForm()) {
+    console.log('Form validation failed')
     return
   }
 
+  console.log('Form validation passed')
   isSubmitting.value = true
 
   try {
@@ -429,28 +433,58 @@ async function onSubmit() {
       pricingPlanInfo: selectedPlanInfo.value // Добавляем информацию о выбранном тарифе
     }
 
+    console.log('Prepared booking data:', bookingData)
+
     await sendToTelegram(bookingData)
 
+    console.log('Telegram send successful, resetting form')
     resetForm()
     emit('bookingSuccess')
-  } catch (error) {
+  } catch (error: any) {
+    console.error('=== FORM SUBMIT ERROR ===', error)
     // Показываем уведомление об ошибке
-    alert('Ошибка отправки. Попробуйте еще раз или свяжитесь с нами по телефону.')
+    alert(`Ошибка отправки: ${error.message || 'Неизвестная ошибка'}. Попробуйте еще раз или свяжитесь с нами по телефону.`)
   } finally {
     isSubmitting.value = false
+    console.log('=== FORM SUBMIT ENDED ===')
   }
 }
 
 
 async function sendToTelegram(data: any) {
   const config = useRuntimeConfig()
-  const response = await $fetch<{ success: boolean; message?: string; error?: string }>(config.public.bookingApiUrl, {
-    method: 'POST',
-    body: data
-  })
 
-  if (!response.success) {
-    throw new Error('Ошибка отправки в Telegram')
+  // ЛОГИРОВАНИЕ: URL и конфиг
+  console.log('=== BOOKING API DEBUG ===')
+  console.log('1. API URL:', config.public.bookingApiUrl)
+  console.log('2. Full config.public:', config.public)
+  console.log('3. Sending data:', JSON.stringify(data, null, 2))
+
+  try {
+    console.log('4. Making POST request...')
+    const response = await $fetch<{ success: boolean; message?: string; error?: string }>(config.public.bookingApiUrl, {
+      method: 'POST',
+      body: data
+    })
+
+    console.log('5. Response received:', JSON.stringify(response, null, 2))
+
+    if (!response.success) {
+      console.error('6. Response indicates failure')
+      throw new Error('Ошибка отправки в Telegram')
+    }
+
+    console.log('7. Success!')
+  } catch (error: any) {
+    console.error('8. Error caught:', {
+      message: error.message,
+      statusCode: error.statusCode,
+      statusMessage: error.statusMessage,
+      data: error.data,
+      cause: error.cause,
+      full: error
+    })
+    throw error
   }
 }
 
