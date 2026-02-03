@@ -443,7 +443,8 @@ async function onSubmit() {
 
 
 async function sendToTelegram(data: any) {
-  const response = await $fetch('/api/booking', {
+  const config = useRuntimeConfig()
+  const response = await $fetch(config.public.bookingApiUrl, {
     method: 'POST',
     body: data
   })
