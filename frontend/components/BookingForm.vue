@@ -444,7 +444,7 @@ async function onSubmit() {
 
 async function sendToTelegram(data: any) {
   const config = useRuntimeConfig()
-  const response = await $fetch(config.public.bookingApiUrl, {
+  const response = await $fetch<{ success: boolean; message?: string; error?: string }>(config.public.bookingApiUrl, {
     method: 'POST',
     body: data
   })
