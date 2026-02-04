@@ -4,7 +4,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <div class="lg:col-span-1">
           <div class="flex items-center gap-3 mb-6">
-            <img :src="logo" alt="Kamelot" class="h-12 w-auto fill-white" />
+            <img
+              :src="logo"
+              alt="Kamelot"
+              class="h-12 w-auto fill-white"
+              loading="lazy"
+              width="48"
+              height="48"
+            />
             <span class="text-2xl font-bold text-gray-900 dark:text-white">CAMELOT<br> Sport Academy</span>
           </div>
 
@@ -135,7 +142,7 @@
       <div class="pt-8 border-t border-gray-300 dark:border-gray-800">
         <div class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div class="flex flex-col md:flex-row items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-            <span>© 2025 Kamelot Sport Academy. Все права защищены.</span>
+            <span>© 2025 Camelot Sport Academy. Все права защищены.</span>
             <div class="flex gap-4">
               <ULink to="/privacy-policy" class="hover:text-red-600 dark:hover:text-white transition-colors">
                 Политика конфиденциальности
@@ -153,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import logo from '~/public/images/logo.webp'
+const logo = '/images/logo.webp'
 
 // Используем composable - данные теперь доступны сразу, без асинхронной загрузки
 const { contacts } = useContacts()

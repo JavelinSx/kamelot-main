@@ -12,10 +12,27 @@
       <!-- Контейнер с картой -->
       <div class="map-container max-w-6xl mx-auto">
         <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-300 dark:border-gray-800">
-          <!-- Яндекс карта -->
-          <iframe
-            src="https://yandex.ru/map-widget/v1/?um=constructor%3A7c2a5b4697e8df987cf3a9987f5a2f08ee4f7ede139c841afa913b7cc82023ee&amp;source=constructor"
-            width="100%" height="516" frameborder="0" class="w-full" loading="lazy"></iframe>
+          <!-- Яндекс карта с ленивой загрузкой -->
+          <ClientOnly>
+            <div v-if="!mapLoaded" class="w-full h-[516px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <button
+                @click="loadMap"
+                class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg hover:from-red-600 hover:to-orange-600 transition-all"
+              >
+                Загрузить карту
+              </button>
+            </div>
+            <iframe
+              v-else
+              src="https://yandex.ru/map-widget/v1/?um=constructor%3A7c2a5b4697e8df987cf3a9987f5a2f08ee4f7ede139c841afa913b7cc82023ee&amp;source=constructor"
+              width="100%"
+              height="516"
+              frameborder="0"
+              class="w-full"
+              loading="lazy"
+              title="Яндекс карта - местоположение Camelot Academy"
+            ></iframe>
+          </ClientOnly>
         </div>
 
         <!-- Кнопка "Маршрут" -->
@@ -87,6 +104,31 @@
     </div>
   </section>
 </template>
+
+<script setup lang="ts">
+const mapLoaded = ref(false)
+
+const loadMap = () => {
+  mapLoaded.value = true
+}
+
+// Автоматически загружать карту при скролле
+onMounted(() => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !mapLoaded.value) {
+        mapLoaded.value = true
+        observer.disconnect()
+      }
+    })
+  }, { rootMargin: '100px' })
+
+  const mapContainer = document.querySelector('.map-container')
+  if (mapContainer) {
+    observer.observe(mapContainer)
+  }
+})
+</script>
 
 <style scoped>
 /* Анимация при наведении на карточки */

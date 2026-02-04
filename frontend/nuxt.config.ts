@@ -3,7 +3,24 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
-  modules: ["@nuxt/ui", "@vueuse/motion/nuxt"],
+  modules: ["@nuxt/ui", "@vueuse/motion/nuxt", "@nuxt/image"],
+
+  // Настройка оптимизации изображений
+  image: {
+    format: ['webp'],
+    screens: {
+      xs: 320,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1280,
+      xxl: 1536,
+    },
+    densities: [1, 2],
+    quality: 80,
+    // Для статической генерации отключаем IPX и используем прямые пути
+    provider: 'none',
+  },
 
   // Runtime configuration
   runtimeConfig: {
@@ -53,6 +70,11 @@ export default defineNuxtConfig({
     define: {
       "import.meta.glob": "import.meta.glob",
     },
+  },
+
+  // Experimental оптимизации
+  experimental: {
+    payloadExtraction: false,
   },
   // Подключение стилей
   css: ["~/assets/css/main.css"],

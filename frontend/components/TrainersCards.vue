@@ -28,8 +28,14 @@
               class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full min-h-[800px]">
               <!-- Фоновое изображение на всю карточку -->
               <div class="absolute inset-0">
-                <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
-                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110" />
+                <img
+                  :src="trainer.avatar"
+                  :alt="`${trainer.firstName} ${trainer.lastName}`"
+                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  width="600"
+                  height="800"
+                />
                 <!-- Затемнение -->
 
               </div>

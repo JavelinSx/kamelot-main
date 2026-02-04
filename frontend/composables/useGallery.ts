@@ -26,12 +26,11 @@ export const useGallery = () => {
         }
       );
 
-      const images = Object.values(modules).map((module: unknown) => {
-        if (typeof module === 'string') return module
-        if (typeof module === 'object' && module && 'default' in module) {
-          return (module as any).default
-        }
-        return ''
+      const images = Object.keys(modules).map((key: string) => {
+        // Получаем путь из ключа, убираем /public/ префикс
+        // Ключи имеют формат: /public/images/gallery/image.webp
+        // Нужно вернуть: /images/gallery/image.webp
+        return key.replace(/^\/public/, '');
       }).filter(Boolean) as string[];
 
       // Перемешиваем для случайного порядка

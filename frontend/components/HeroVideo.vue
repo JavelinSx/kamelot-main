@@ -9,16 +9,25 @@
     <div v-else
       class="absolute inset-0 bg-gradient-to-br from-gray-900 via-red-900 to-black dark:from-gray-950 dark:via-red-950 dark:to-black" />
 
-    <!-- Стеклянный эффект по бокам -->
+    <!-- Градиенты по бокам -->
     <div v-if="props.videoSrc" class="absolute inset-0">
-      <!-- Левая сторона -->
-      <div
-        class="absolute left-0 top-0 w-1/10 lg:w-1/4 h-full bg-gradient-to-r from-black/60 to-transparent backdrop-blur-sm">
-      </div>
-      <!-- Правая сторона -->
-      <div
-        class="absolute right-0 top-0 w-1/10 lg:w-1/4 h-full bg-gradient-to-l from-black/60 to-transparent backdrop-blur-sm">
-      </div>
+      <!-- Градиент для скрытия watermark - правая сторона -->
+      <ClientOnly :key="`gradient-right-${colorMode.value}`">
+        <div class="absolute top-0 right-0 w-0 md:w-0 lg:w-0 xl:w-[350px] 2xl:w-[500px] h-full pointer-events-none"
+          :style="{
+            background: `linear-gradient(to left, ${colorMode.value === 'dark' ? 'black' : 'white'} 0%, ${colorMode.value === 'dark' ? 'black' : 'white'} 20%, transparent 100%)`
+          }">
+        </div>
+      </ClientOnly>
+
+      <!-- Градиент для скрытия watermark - левая сторона -->
+      <ClientOnly :key="`gradient-left-${colorMode.value}`">
+        <div class="absolute top-0 left-0 w-0 md:w-0 lg:w-0 xl:w-[350px] 2xl:w-[500px] h-full pointer-events-none"
+          :style="{
+            background: `linear-gradient(to right, ${colorMode.value === 'dark' ? 'black' : 'white'} 0%, ${colorMode.value === 'dark' ? 'black' : 'white'} 60%, transparent 100%)`
+          }">
+        </div>
+      </ClientOnly>
     </div>
 
     <!-- Дополнительное затемнение для читаемости текста -->
@@ -46,4 +55,6 @@ const props = withDefaults(defineProps<Props>(), {
   videoSrc: '/video/header-video.mp4',
   logoSrc: '/images/logo.webp'
 })
+
+const colorMode = useColorMode()
 </script>

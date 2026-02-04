@@ -18,9 +18,13 @@
         <div
           class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
           <!-- Изображение -->
-          <img :src="image" :alt="`Gallery image ${index + 1}`"
-            class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"
-            @error="onImageError" />
+          <img
+            :src="image"
+            :alt="`Gallery image ${index + 1}`"
+            class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+            @error="onImageError"
+          />
 
           <!-- Простой overlay при hover -->
           <div
@@ -33,16 +37,28 @@
       </div>
     </div>
 
-    <!-- Кнопка "Показать еще" -->
-    <div v-if="canLoadMore" class="text-center mt-8 pb-8">
-      <button @click="$emit('loadMore')" :disabled="loadingMore"
+    <!-- Кнопка "Показать еще" или ссылка на VK -->
+    <div class="text-center mt-8 pb-8">
+      <button v-if="canLoadMore" @click="$emit('loadMore')" :disabled="loadingMore"
         class="px-6 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-bold rounded-lg transition-colors disabled:opacity-50 shadow-lg">
         <span v-if="!loadingMore">Показать еще</span>
-        <span v-else class="flex items-center space-x-2">
+        <span v-else class="flex items-center justify-center space-x-2">
           <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
           <span>Загрузка...</span>
         </span>
       </button>
+
+      <!-- Ссылка на VK альбом когда все фото загружены -->
+      <a v-else
+        href="https://vk.com/albums-216306733"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-[#0077FF] hover:bg-[#005FCC] text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 13.72c-.37.46-.98.7-1.82.7h-1.21c-.51 0-.78-.12-1.32-.61-.54-.49-1.04-1.34-1.54-1.34-.08 0-.16.01-.23.03-.42.11-.57.53-.57 1.48 0 .39-.22.62-.75.62-.98 0-2.08-.2-3.02-1.14-.94-.94-1.92-2.82-1.92-2.82s-.15-.36 0-.54c.14-.17.52-.18.52-.18h1.5c.28 0 .38.13.49.36.26.61.78 1.58 1.11 1.88.09.08.13.12.19.12.06 0 .12-.05.12-.29V11.1c-.03-.77-.47-.84-.47-1.11 0-.14.11-.28.29-.28h2.35c.24 0 .33.13.33.35v2.89c0 .24.11.33.18.33.14 0 .25-.09.5-.34.77-.87 1.32-2.21 1.32-2.21.07-.16.21-.31.45-.31h1.5c.34 0 .41.17.34.41-.13.43-.98 1.93-1.63 2.77-.11.14-.15.21 0 .37.11.13.48.47.73.75.46.52.81 1.05.9 1.39.1.35-.05.52-.4.52z"/>
+        </svg>
+        Смотреть больше фото VK
+      </a>
     </div>
 
     <!-- Lightbox модалка -->
@@ -168,9 +184,10 @@ const navigateLightbox = (direction: number) => {
   }
 }
 
-const onImageError = (event: Event) => {
+const onImageError = (payload: string | Event) => {
   // Можно заменить на placeholder
-  const img = event.target as HTMLImageElement
+  if (typeof payload === 'string') return
+  const img = payload.target as HTMLImageElement
   img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjY2NjIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='
 }
 

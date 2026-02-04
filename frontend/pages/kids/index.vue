@@ -1,13 +1,17 @@
 <template>
-  <div class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
+  <div
+    class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
     <!-- Hero секция -->
-    <section class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 dark:from-orange-600 dark:to-green-700 text-white overflow-hidden">
+    <section
+      class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 dark:from-orange-600 dark:to-green-700 text-white overflow-hidden">
       <!-- Анимированный фон -->
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-bounce"></div>
-        <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce" style="animation-delay: 0.5s"></div>
+        <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce"
+          style="animation-delay: 0.5s"></div>
         <div class="absolute top-1/2 left-1/4 w-20 h-20 bg-white rounded-full animate-ping"></div>
-        <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-white rounded-full animate-pulse" style="animation-delay: 1s"></div>
+        <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-white rounded-full animate-pulse"
+          style="animation-delay: 1s"></div>
       </div>
 
       <!-- Плавающие иконки боевых искусств -->
@@ -27,7 +31,8 @@
             Развиваем силу, дисциплину и уверенность в себе с ранних лет
           </p>
           <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl" @click="openBooking">
+            class="bg-white !text-red-600 font-bold hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl"
+            @click="openBooking">
             <UIcon name="i-heroicons-rocket-launch" class="w-6 h-6 mr-2" />
             Записаться на пробное занятие
           </UButton>
@@ -62,11 +67,13 @@
     </section>
 
     <!-- Наши достижения (анимированные счетчики) -->
-    <section class="py-20 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-700 dark:to-pink-700 text-white overflow-hidden relative">
+    <section
+      class="py-20 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-700 dark:to-cyan-700 text-white overflow-hidden relative">
       <!-- Анимированные фоновые элементы -->
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style="animation-delay: 1s"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"
+          style="animation-delay: 1s"></div>
       </div>
 
       <UContainer class="px-6 relative z-10">
@@ -119,7 +126,8 @@
             <div class="p-8 bg-white dark:bg-gray-700">
               <ul class="space-y-3">
                 <li v-for="item in group.features" :key="item" class="flex items-start gap-3">
-                  <UIcon name="i-heroicons-check-circle" class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                  <UIcon name="i-heroicons-check-circle"
+                    class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                   <span class="text-gray-700 dark:text-gray-300">{{ item }}</span>
                 </li>
               </ul>
@@ -150,7 +158,7 @@
               <UIcon :name="activity.icon" class="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 class="text-xl font-bold text-gray-900 mb-2">{{ activity.title }}</h3>
+              <h3 class="text-xl font-bold text-gray-300 mb-2">{{ activity.title }}</h3>
               <p class="text-gray-700 dark:text-gray-300">{{ activity.description }}</p>
             </div>
           </div>
@@ -185,7 +193,8 @@
     </section>
 
     <!-- CTA секция -->
-    <section class="py-24 md:py-32 bg-gradient-to-r from-red-600 to-orange-600 dark:from-red-700 dark:to-orange-700 text-white">
+    <section
+      class="py-24 md:py-32 bg-gradient-to-r from-red-600 to-orange-600 dark:from-red-700 dark:to-orange-700 text-white">
       <UContainer class="px-6">
         <div class="text-center">
           <h2 class="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
@@ -195,7 +204,8 @@
             Запишитесь на бесплатное пробное занятие прямо сейчас!
           </p>
           <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl" @click="openBooking">
+            class="bg-white !text-red-600 font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl"
+            @click="openBooking">
             <UIcon name="i-heroicons-phone" class="w-6 h-6 mr-2" />
             Записаться на пробное занятие
           </UButton>
@@ -206,7 +216,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 // Данные для анимированных счетчиков
 const stats = [
@@ -429,18 +439,24 @@ useSeoMeta({
 <style scoped>
 /* Плавающая анимация */
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(-20px) rotate(5deg);
   }
 }
 
 @keyframes float-delayed {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(-30px) rotate(-5deg);
   }
@@ -460,6 +476,7 @@ useSeoMeta({
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

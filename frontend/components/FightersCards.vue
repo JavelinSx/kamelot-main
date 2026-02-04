@@ -19,8 +19,14 @@
           <div v-for="(fighter, index) in fighters" :key="fighter.id" v-motion-pop-visible-once :duration="300"
             class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ring-1 ring-gray-200 dark:ring-gray-700">
             <div class="relative overflow-hidden">
-              <img :src="fighter.photo" :alt="fighter.name"
-                class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" />
+              <img
+                :src="fighter.photo"
+                :alt="fighter.name"
+                class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+                width="400"
+                height="256"
+              />
 
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
@@ -82,8 +88,17 @@
             <div v-for="(fighter, index) in fighters" :key="fighter.id"
               class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ring-1 ring-gray-200 dark:ring-gray-700">
               <div class="relative overflow-hidden">
-                <img :src="fighter.photo" :alt="fighter.name"
-                  class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110" />
+                <NuxtImg
+                  :src="fighter.photo"
+                  :alt="fighter.name"
+                  class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  sizes="sm:100vw md:50vw lg:33vw"
+                  :width="400"
+                  :height="256"
+                  format="webp"
+                  quality="80"
+                />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                 <div class="absolute bottom-4 left-4 right-4">
                   <h3 class="text-2xl font-bold mb-1 text-white">{{ fighter.name }}</h3>

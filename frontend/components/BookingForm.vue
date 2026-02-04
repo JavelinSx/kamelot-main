@@ -152,20 +152,22 @@
         <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
           Тариф <span class="text-red-500">*</span>
         </label>
-        <USelect v-model="state.pricingPlan" :items="pricingOptions" value-key="value"
-          class="w-full relative z-[9999]" :popper="{
+        <USelect v-model="state.pricingPlan" :items="pricingOptions" value-key="value" class="w-full relative z-[9999]"
+          :popper="{
             strategy: 'fixed',
             placement: 'bottom-start'
           }" :loading="isLoadingPricing" />
         <span v-if="errors.pricingPlan" class="text-red-500 text-sm">{{ errors.pricingPlan }}</span>
 
         <!-- Показываем информацию о выбранном тарифе -->
-        <div v-if="selectedPlanInfo" class="mt-3 p-3 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950 dark:to-orange-950 border border-red-200 dark:border-red-800 rounded-lg">
+        <div v-if="selectedPlanInfo"
+          class="mt-3 p-3 bg-gradient-to-r from-red-50 to-green-50 dark:from-green-950 dark:to-green-950 border border-red-200 dark:border-green-800 rounded-lg">
           <div class="flex items-start gap-2">
-            <UIcon name="i-heroicons-information-circle" class="text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" />
-            <div class="text-sm text-red-900 dark:text-red-100">
+            <UIcon name="i-heroicons-information-circle"
+              class="text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+            <div class="text-sm text-green-900 dark:text-red-100">
               <p class="font-semibold">{{ selectedPlanInfo.name }} - {{ selectedPlanInfo.price }}₽</p>
-              <p class="text-red-700 dark:text-red-300 mt-1">{{ selectedPlanInfo.description }}</p>
+              <p class="text-green-700 dark:text-green-300 mt-1">{{ selectedPlanInfo.description }}</p>
             </div>
           </div>
         </div>
@@ -233,7 +235,6 @@
 
 <script setup lang="ts">
 import type { SelectItem } from '@nuxt/ui';
-import type { PricingPlan } from '~/types';
 import { z } from 'zod';
 
 const emit = defineEmits<{
