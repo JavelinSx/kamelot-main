@@ -13,13 +13,13 @@ export interface ScheduleSession {
 }
 
 export interface DaySchedule {
-  monday: ScheduleSession[];
-  tuesday: ScheduleSession[];
-  wednesday: ScheduleSession[];
-  thursday: ScheduleSession[];
-  friday: ScheduleSession[];
-  saturday: ScheduleSession[];
-  sunday: ScheduleSession[];
+  monday: readonly ScheduleSession[];
+  tuesday: readonly ScheduleSession[];
+  wednesday: readonly ScheduleSession[];
+  thursday: readonly ScheduleSession[];
+  friday: readonly ScheduleSession[];
+  saturday: readonly ScheduleSession[];
+  sunday: readonly ScheduleSession[];
 }
 
 export interface Zone {
@@ -73,7 +73,7 @@ export const useSchedule = () => {
     const sessions: ScheduleSession[] = [];
 
     scheduleData.value?.zones.forEach((zone) => {
-      Object.values(zone.schedule).forEach((daySessions: ScheduleSession[]) => {
+      Object.values(zone.schedule).forEach((daySessions: readonly ScheduleSession[]) => {
         const trainerSessions = daySessions.filter((session: ScheduleSession) =>
           session.trainer.toLowerCase().includes(trainerName.toLowerCase())
         );

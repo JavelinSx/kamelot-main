@@ -108,14 +108,17 @@ function sendToTelegram(botToken, chatId, message) {
       parse_mode: 'HTML'
     });
 
+    // ВАЖНО: для UTF-8 нужно считать байты, а не символы!
+    const dataBuffer = Buffer.from(data, 'utf8');
+
     const options = {
       hostname: 'api.telegram.org',
       port: 443,
       path: `/bot${botToken}/sendMessage`,
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Length': dataBuffer.length
       }
     };
 
@@ -132,18 +135,12 @@ function sendToTelegram(botToken, chatId, message) {
     });
 
     req.on('error', reject);
-    req.write(data);
+    req.write(dataBuffer);
     req.end();
   });
 }
 
 module.exports.handler = async function (event, context) {
-  // Логирование для отладки
-  console.log('=== CLOUD FUNCTION DEBUG ===');
-  console.log('HTTP Method:', event.httpMethod);
-  console.log('Headers:', JSON.stringify(event.headers));
-  console.log('Origin:', event.headers?.origin || event.headers?.Origin);
-
   // Расширенные CORS headers для всех доменов
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -155,7 +152,6 @@ module.exports.handler = async function (event, context) {
 
   // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS') {
-    console.log('Handling OPTIONS preflight request');
     return {
       statusCode: 200,
       headers,
@@ -165,7 +161,6 @@ module.exports.handler = async function (event, context) {
 
   // Only allow POST
   if (event.httpMethod !== 'POST') {
-    console.log('Method not allowed:', event.httpMethod);
     return {
       statusCode: 405,
       headers,
@@ -174,22 +169,14 @@ module.exports.handler = async function (event, context) {
   }
 
   try {
-    console.log('Processing POST request');
-    console.log('Body length:', event.body?.length);
-
     // Parse request body
     const body = JSON.parse(event.body);
-    console.log('Parsed body keys:', Object.keys(body));
 
     // Get environment variables
     const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    console.log('TELEGRAM_BOT_TOKEN exists:', !!TELEGRAM_BOT_TOKEN);
-    console.log('TELEGRAM_CHAT_ID exists:', !!TELEGRAM_CHAT_ID);
-
     if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
-      console.error('Missing Telegram configuration');
       return {
         statusCode: 500,
         headers,
@@ -201,13 +188,14 @@ module.exports.handler = async function (event, context) {
     }
 
     // Format and send message
-    console.log('Formatting message...');
     const message = formatTelegramMessage(body);
-    console.log('Sending to Telegram...');
-    const result = await sendToTelegram(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, message);
-    console.log('Telegram response:', result);
 
-    console.log('Success! Returning 200');
+    if (!message || message.trim().length === 0) {
+      throw new Error('Generated message is empty');
+    }
+
+    await sendToTelegram(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, message);
+
     return {
       statusCode: 200,
       headers,
@@ -218,9 +206,6 @@ module.exports.handler = async function (event, context) {
     };
 
   } catch (error) {
-    console.error('=== ERROR ===');
-    console.error('Error message:', error.message);
-    console.error('Error stack:', error.stack);
     return {
       statusCode: 500,
       headers,

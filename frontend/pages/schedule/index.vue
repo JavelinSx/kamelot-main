@@ -58,7 +58,7 @@
             </div>
           </div>
 
-          <div class="py-6">
+          <div ref="sessionsContainer" class="py-6">
             <!-- Нет тренировок -->
             <div v-if="!currentDaySessions || currentDaySessions.length === 0" class="text-center py-12">
               <UIcon name="i-heroicons-calendar-days" class="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
@@ -146,6 +146,17 @@
           </div>
         </div>
 
+        <!-- Календарь тренировок -->
+        <div class="mt-12" data-aos="fade-up" data-aos-duration="600">
+          <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+            Календарь тренировок
+          </h2>
+          <p class="text-center text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+            Выберите дату в календаре, чтобы увидеть доступные тренировки на этот день
+          </p>
+          <TrainingCalendar :zone="selectedZone" @date-select="handleDateSelect" />
+        </div>
+
         <!-- Дополнительная информация -->
         <div class="mt-12 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6" data-aos="fade-up" data-aos-duration="600">
           <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -186,6 +197,7 @@ const { scheduleData } = useSchedule()
 
 const selectedZoneIndex = ref(0)
 const selectedDayIndex = ref(getCurrentDayIndex())
+const sessionsContainer = ref<HTMLElement | null>(null)
 
 // Дни недели
 const daysOfWeek = [
@@ -291,6 +303,21 @@ function formatDate(dateString: string): string {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
+  })
+}
+
+// Обработка выбора даты в календаре
+function handleDateSelect(dayIndex: number) {
+  selectedDayIndex.value = dayIndex
+
+  // Плавный скролл к секции с тренировками
+  nextTick(() => {
+    if (sessionsContainer.value) {
+      sessionsContainer.value.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      })
+    }
   })
 }
 

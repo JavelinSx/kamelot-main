@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run start:static:*)"
+      "Bash(npm run start:static:*)",
+      "Bash(npm run generate:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

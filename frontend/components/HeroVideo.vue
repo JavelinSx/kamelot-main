@@ -38,7 +38,7 @@
       <div class="text-center text-white max-w-4xl mx-auto px-4">
         <h1 class="font-bold mb-6 leading-tight">
           <span class="inline-block text-red-500 text-6xl lg:text-7xl hero-title-line1">CAMELOT</span><br>
-          <span class="inline-block text-white text-6xl lg:text-7xl hero-title-line2">FIGHT CLUB</span>
+          <span class="inline-block text-white text-6xl lg:text-7xl hero-title-line2">SPORT ACADEMY</span>
         </h1>
       </div>
     </div>
