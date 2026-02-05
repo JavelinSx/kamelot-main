@@ -3,13 +3,13 @@
     class="fight-card group relative overflow-hidden bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black border border-gray-300 dark:border-gray-800 hover:border-red-600 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-2"
     data-aos="fade-up" :data-aos-delay="aosDelay">
     <!-- Постер боя -->
-    <div class="relative h-80 overflow-hidden">
+    <div class="relative h-[28rem] overflow-hidden">
       <img :src="fight.poster" :alt="fight.title"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         @error="onImageError" />
 
       <!-- Overlay градиент -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent dark:from-black/90 dark:via-black/40"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
 
       <!-- Статус бадж -->
       <div class="absolute top-4 right-4">
@@ -30,9 +30,9 @@
       </div>
 
       <!-- Информация внизу постера -->
-      <div class="absolute bottom-0 left-0 right-0 p-6">
-        <h3 class="text-2xl font-bold text-white mb-2">{{ fight.title }}</h3>
-        <div class="flex items-center gap-4 text-gray-300 text-sm">
+      <div class="absolute bottom-0 left-0 right-0 p-6 pb-8">
+        <h3 class="text-2xl font-bold text-white mb-3 drop-shadow-lg">{{ fight.title }}</h3>
+        <div class="flex items-center gap-4 text-gray-200 text-sm drop-shadow-md">
           <div class="flex items-center gap-2">
             <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
             <span>{{ formattedDate }}</span>
@@ -72,9 +72,21 @@
       </div>
 
       <!-- Описание -->
-      <p class="text-gray-700 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-        {{ fight.description }}
-      </p>
+      <div class="mb-4">
+        <p :class="[
+          'text-gray-700 dark:text-gray-300 text-sm',
+          !isDescriptionExpanded && 'line-clamp-2'
+        ]">
+          {{ fight.description }}
+        </p>
+        <button
+          v-if="fight.description && fight.description.length > 100"
+          @click="isDescriptionExpanded = !isDescriptionExpanded"
+          class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400 text-sm font-semibold mt-2 transition-colors duration-200 flex items-center gap-1">
+          <span>{{ isDescriptionExpanded ? 'Свернуть' : 'Читать далее' }}</span>
+          <UIcon :name="isDescriptionExpanded ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-4 h-4" />
+        </button>
+      </div>
 
       <!-- Локация и детали -->
       <div class="space-y-2 mb-4 text-sm">
@@ -143,6 +155,9 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const { formatFightDate, getStatusColor, getStatusText, isUpcoming, getTimeUntilFight } = useFights()
+
+// Состояние для раскрытия описания
+const isDescriptionExpanded = ref(false)
 
 // Форматированная дата
 const formattedDate = computed(() => formatFightDate(props.fight.date, 'full'))

@@ -165,6 +165,22 @@ export const useFights = () => {
   }
 
   /**
+   * Валидация и очистка URL
+   */
+  const cleanUrl = (url: string | undefined): string => {
+    if (!url) return ''
+
+    // Обрезаем URL, если он содержит повторяющиеся параметры
+    // Ищем первое появление "quality=" и берем все до второго появления
+    const qualityMatches = [...url.matchAll(/quality=/g)]
+    if (qualityMatches.length > 1 && qualityMatches[1]?.index) {
+      return url.substring(0, qualityMatches[1].index)
+    }
+
+    return url.trim()
+  }
+
+  /**
    * Преобразование данных из формата Google Sheets в формат Fight
    */
   const convertToFight = (data: any): Fight => {
@@ -194,14 +210,14 @@ export const useFights = () => {
           team: data.fighter2_club || '',
         },
       ],
-      poster: data.poster_url || '',
+      poster: cleanUrl(data.poster_url),
       vkPost: '',
       status: (data.status || 'upcoming') as FightStatus,
       category: data.fight_type || 'MMA',
       weightClass: data.weight_class,
       rounds: data.rounds ? Number(data.rounds) : data.round ? Number(data.round) : undefined,
-      ticketLink: data.tickets_url,
-      streamLink: data.stream_url,
+      ticketLink: cleanUrl(data.tickets_url),
+      streamLink: cleanUrl(data.stream_url),
       featured: data.title_fight === 'yes',
       results: data.result ? parseResults(data.result) : undefined,
       createdAt: new Date().toISOString(),
