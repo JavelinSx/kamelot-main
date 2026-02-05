@@ -48,7 +48,7 @@
                 <div class="flex items-center justify-center gap-2 text-green-500 mb-1">
                   <UIcon name="i-heroicons-user-group-solid" class="w-6 h-6" />
                   <span class="font-bold text-2xl text-gray-900 dark:text-white">{{ trainer?.stats.totalStudents
-                  }}</span>
+                    }}</span>
                 </div>
                 <p class="text-sm text-gray-500 dark:text-gray-400">Учеников</p>
               </div>
@@ -160,7 +160,7 @@ const contactTrainer = () => {
 
 // SEO
 useSeoMeta({
-  title: `${trainer.value?.firstName} ${trainer.value?.lastName} - Тренер | Kamelot Fight Club`,
-  description: trainer.value?.bio || 'Профессиональный тренер в Kamelot Fight Club'
+  title: `${trainer.value?.firstName} ${trainer.value?.lastName} - Тренер | Camelot Sport Academy`,
+  description: trainer.value?.bio || 'Профессиональный тренер в Camelot Sport Academy'
 })
 </script>

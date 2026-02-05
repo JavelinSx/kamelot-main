@@ -4,14 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <div class="lg:col-span-1">
           <div class="flex items-center gap-3 mb-6">
-            <img
-              :src="logo"
-              alt="Kamelot"
-              class="h-12 w-auto fill-white"
-              loading="lazy"
-              width="48"
-              height="48"
-            />
+            <img :src="logo" alt="Camelot" class="h-12 w-auto fill-white" loading="lazy" width="48" height="48" />
             <span class="text-2xl font-bold text-gray-900 dark:text-white">CAMELOT<br> Sport Academy</span>
           </div>
 

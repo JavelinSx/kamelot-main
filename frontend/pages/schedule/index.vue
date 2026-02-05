@@ -342,11 +342,11 @@ function bookSession(session: any) {
 
 // SEO
 useHead({
-  title: 'Расписание тренировок - Kamelot Fight Club',
+  title: 'Расписание тренировок - Camelot Sport Academy',
   meta: [
     {
       name: 'description',
-      content: 'Актуальное расписание тренировок по ММА, боксу, кикбоксингу, грэпплингу и другим единоборствам в клубе Kamelot'
+      content: 'Актуальное расписание тренировок по ММА, боксу, кикбоксингу, грэпплингу и другим единоборствам в спортивной академии Camelot'
     }
   ]
 })

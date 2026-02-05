@@ -48,7 +48,8 @@
     <section class="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900">
       <UContainer>
         <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-          <div class="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/20 rounded-2xl p-12 border border-red-500/50 shadow-lg">
+          <div
+            class="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/20 rounded-2xl p-12 border border-red-500/50 shadow-lg">
             <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">
               Не знаете, какой абонемент выбрать?
             </h2>
@@ -78,10 +79,10 @@
 <script setup lang="ts">
 // SEO
 useSeoMeta({
-  title: 'Цены и абонементы | Kamelot Fight Club СПб',
-  description: 'Цены на тренировки по ММА, БЖЖ, грэпплингу, кикбоксингу и боксу в Kamelot Fight Club на Парнасе. Пробное занятие бесплатно! Абонементы от 5000₽. Запись: +7 (952) 095-77-76',
+  title: 'Цены и абонементы | Camelot Sport Academy СПб',
+  description: 'Цены на тренировки по ММА, БЖЖ, грэпплингу, кикбоксингу и боксу в Camelot Sport Academy на Парнасе. Пробное занятие бесплатно! Абонементы от 5000₽. Запись: +7 (952) 095-77-76',
   keywords: 'цены боевые искусства СПб, абонемент ММА Парнас, стоимость тренировок БЖЖ, цены грэпплинг СПб, кикбоксинг цены Парнас, пробное занятие бесплатно',
-  ogTitle: 'Цены и абонементы | Kamelot Fight Club',
+  ogTitle: 'Цены и абонементы | Camelot Sport Academy',
   ogDescription: 'Пробное занятие - бесплатно! Абонементы на тренировки по ММА, БЖЖ, грэпплингу, кикбоксингу от 5000₽',
   ogImage: '/og-image.jpg'
 })
@@ -94,7 +95,7 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'PriceSpecification',
-        'name': 'Kamelot Fight Club - Абонементы',
+        'name': 'Camelot Sport Academy - Абонементы',
         'description': 'Цены на тренировки по боевым искусствам',
         'priceCurrency': 'RUB',
         'offers': [

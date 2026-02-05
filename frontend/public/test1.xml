@@ -7,7 +7,7 @@
         <offers>
             <offer id="1">
                 <name>Пробное</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>0</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -20,7 +20,7 @@
             </offer>
             <offer id="2">
                 <name>Разовое</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>900</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -33,7 +33,7 @@
             </offer>
             <offer id="3">
                 <name>8 тренировок</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>5000</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -46,7 +46,7 @@
             </offer>
             <offer id="4">
                 <name>12 тренировок</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>6000</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -59,7 +59,7 @@
             </offer>
             <offer id="5">
                 <name>Безлимит к тренеру</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>7000</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -72,7 +72,7 @@
             </offer>
             <offer id="6">
                 <name>Полный безлимит</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>8000</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>
@@ -85,7 +85,7 @@
             </offer>
             <offer id="7">
                 <name>Дети</name>
-                <vendor>Kamelot </vendor>
+                <vendor>Camelot </vendor>
                 <price>6000</price>
                 <currencyId>RUR</currencyId>
                 <categoryId>101</categoryId>

@@ -2,7 +2,6 @@
   <div class="-mt-20">
     <HeroVideo />
     <MartialArtsCards />
-    <TrainersCards />
     <FightersCards />
     <LocationMap />
     <YandexReviews />
@@ -19,7 +18,7 @@ useSeoMeta({
   title: 'Тренировки - ММА, БЖЖ, Грэпплинг, Кикбоксинг, Бокс | Camelot Sport Academy',
   description: 'Профессиональный клуб смешанных единоборств в Санкт-Петербурге на Парнасе (ул. Архитектора Белова 6к1). ММА, БЖЖ, грэпплинг, панкратион, кикбоксинг, бокс для взрослых и детей. Тренеры - мастера спорта, чемпионы России и Европы. Запись на пробную тренировку!',
   keywords: 'боевые искусства Парнас, ММА СПб, БЖЖ Санкт-Петербург, грэпплинг Парнас, кикбоксинг СПб, бокс для детей Парнас, смешанные единоборства Санкт-Петербург, панкратион СПб, секция единоборств для детей, клуб боевых искусств Парнас, Архитектора Белова 6к1, тренировки ММА СПб, школа боевых искусств Парнас',
-  ogTitle: 'Клуб боевых искусств Kamelot на Парнасе | ММА, БЖЖ, Кикбоксинг',
+  ogTitle: 'Клуб боевых искусств Camelot на Парнасе | ММА, БЖЖ, Кикбоксинг',
   ogDescription: 'Тренируйся с чемпионами России и Европы! ММА, БЖЖ, грэпплинг, панкратион, кикбоксинг, бокс. Группы для взрослых и детей. Парнас, ул. Архитектора Белова 6к1',
   ogImage: '/og-image.jpg',
   ogType: 'website',
@@ -37,14 +36,14 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'SportsActivityLocation',
-        '@id': 'https://kamelot-academy.ru',
+        '@id': 'https://Camelot-academy.ru',
         name: 'CAMELOT Sport Academy',
         alternateName: 'Камелот Спортивная Академия',
         description: 'Профессиональный клуб боевых искусств. Тренируйся с лучшими, становись чемпионом.',
-        url: 'https://kamelot-academy.ru',
+        url: 'https://Camelot-academy.ru',
         telephone: '+7 (952) 095-77-76',
         priceRange: '₽₽',
-        image: 'https://kamelot-academy.ru/og-image.jpg',
+        image: 'https://Camelot-academy.ru/og-image.jpg',
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'улица Архитектора Белова, 6к1',
