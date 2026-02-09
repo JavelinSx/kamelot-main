@@ -121,11 +121,105 @@ jobs:
 
       - name: Deploy to Yandex Object Storage
         run: |
+          echo "Deploying files with correct Content-Type headers..."
+
+          # Сначала загружаем HTML файлы с правильным Content-Type
+          echo "Uploading HTML files..."
           aws --endpoint-url=https://storage.yandexcloud.net \
             s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.html" \
+            --content-type "text/html; charset=utf-8" \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем CSS файлы
+          echo "Uploading CSS files..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.css" \
+            --content-type "text/css; charset=utf-8" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем JS файлы
+          echo "Uploading JS files..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.js" \
+            --include "*.mjs" \
+            --content-type "application/javascript; charset=utf-8" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем JSON файлы
+          echo "Uploading JSON files..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.json" \
+            --content-type "application/json; charset=utf-8" \
+            --cache-control "public, max-age=0, must-revalidate" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем изображения (включая favicon)
+          echo "Uploading images (including favicons)..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.png" \
+            --include "*.jpg" \
+            --include "*.jpeg" \
+            --include "*.gif" \
+            --include "*.svg" \
+            --include "*.webp" \
+            --include "*.ico" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем видео файлы
+          echo "Uploading video files..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*" \
+            --include "*.mp4" \
+            --include "*.webm" \
+            --cache-control "public, max-age=31536000, immutable" \
+            --metadata-directive REPLACE \
+            --acl public-read
+
+          # Загружаем остальные файлы (robots.txt, sitemap.xml, manifest.json, etc)
+          echo "Uploading remaining files..."
+          aws --endpoint-url=https://storage.yandexcloud.net \
+            s3 sync frontend/.output/public s3://${{ secrets.YC_BUCKET_NAME }} \
+            --exclude "*.html" \
+            --exclude "*.css" \
+            --exclude "*.js" \
+            --exclude "*.mjs" \
+            --exclude "*.json" \
+            --exclude "*.png" \
+            --exclude "*.jpg" \
+            --exclude "*.jpeg" \
+            --exclude "*.gif" \
+            --exclude "*.svg" \
+            --exclude "*.webp" \
+            --exclude "*.ico" \
+            --exclude "*.mp4" \
+            --exclude "*.webm" \
             --exclude ".git/*" \
             --exclude ".github/*" \
+            --cache-control "public, max-age=3600" \
+            --metadata-directive REPLACE \
             --acl public-read
+
+          echo "✅ All files uploaded with correct Content-Type headers"
         working-directory: .
 
       - name: Deployment complete
