@@ -81,9 +81,24 @@ const filters: Array<{ label: string; value: 'all' | 'upcoming' | 'completed' }>
 
 // Отфильтрованные бои
 const filteredFights = computed(() => {
+  const now = new Date()
+
   if (activeFilter.value === 'all') {
     return fights.value
   }
+
+  if (activeFilter.value === 'upcoming') {
+    return fights.value.filter(fight =>
+      fight.status === 'upcoming' && new Date(fight.date) > now
+    ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  }
+
+  if (activeFilter.value === 'completed') {
+    return fights.value.filter(fight =>
+      fight.status === 'completed' || (fight.status === 'upcoming' && new Date(fight.date) <= now)
+    ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  }
+
   return fights.value.filter(fight => fight.status === activeFilter.value)
 })
 

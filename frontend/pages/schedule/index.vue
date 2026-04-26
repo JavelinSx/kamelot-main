@@ -103,11 +103,11 @@
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">
                       {{ session.discipline }}
                     </h3>
-                    <p v-if="session.ageGroup" :class="[
-                      'text-sm font-semibold',
+                    <p :class="[
+                      'text-sm font-semibold min-h-[20px]',
                       getColorScheme(session.ageCategory).textClass
                     ]">
-                      {{ session.ageGroup }}
+                      {{ session.ageGroup || '\u00A0' }}
                     </p>
                   </div>
 

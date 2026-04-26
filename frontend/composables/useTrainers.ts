@@ -7,7 +7,8 @@ export interface TrainersData {
 
 export const useTrainers = () => {
   // Импортируем данные напрямую из JSON - они будут встроены в билд
-  const trainers = ref<Trainer[]>(trainersData.trainers as Trainer[])
+  // Фильтруем только активных тренеров
+  const trainers = ref<Trainer[]>((trainersData.trainers as Trainer[]).filter(trainer => trainer.isActive))
 
   const getTrainerById = (id: number) => {
     return trainers.value.find(trainer => trainer.id === id)

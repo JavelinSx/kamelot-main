@@ -202,7 +202,7 @@
       "email": "krylov@kamelot.com",
       "phone": "+7 (495) 123-45-04",
       "avatar": "/images/trainers/krilov.webp",
-      "isActive": true,
+      "isActive": false,
       "specializations": ["mma", "boxing"],
       "experience": 7,
       "rating": 4.8,
@@ -247,6 +247,58 @@
       },
       "createdAt": "2018-01-01T00:00:00Z",
       "updatedAt": "2025-11-06T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "firstName": "Дмитрий",
+      "lastName": "Баханович",
+      "email": "bakhanovich@kamelot.com",
+      "phone": "+7 (495) 123-45-05",
+      "avatar": "/images/trainers/bakhanovich.webp",
+      "isActive": true,
+      "specializations": ["mma", "boxing"],
+      "experience": 8,
+      "rating": 4.9,
+      "reviewsCount": 45,
+      "bio": "Боец на голых кулаках. Призер международного кубка губернатора г. Санкт-Петербург. Боец топовых лиг г. Санкт-Петербург, таких как: Strong spirit series (бокс), NWPA (бокс в мма перчатках). Боец Hardcore fighting championship. Участник проекта Trapgladiator. Vendetta fighting (бокс) 2.0. Профессиональный рекорд: 4.0.0",
+      "achievements": [
+        "Боец на голых кулаках",
+        "Призер международного кубка губернатора г. Санкт-Петербург",
+        "Боец топовых лиг г. Санкт-Петербург: Strong spirit series (бокс), NWPA (бокс в мма перчатках)",
+        "Боец Hardcore fighting championship",
+        "Участник проекта Trapgladiator",
+        "Vendetta fighting (бокс) 2.0",
+        "Профессиональный рекорд: 4.0.0"
+      ],
+      "certifications": [
+        "Сертифицированный тренер по боксу",
+        "Тренер по ММА",
+        "Специалист по кулачным боям"
+      ],
+      "schedule": {
+        "monday": [{ "start": "19:30", "end": "21:00", "type": "mma" }],
+        "tuesday": [],
+        "wednesday": [
+          { "start": "18:00", "end": "19:30", "type": "boxing" },
+          { "start": "19:30", "end": "21:00", "type": "mma" }
+        ],
+        "thursday": [],
+        "friday": [
+          { "start": "18:00", "end": "19:30", "type": "boxing" },
+          { "start": "19:30", "end": "21:00", "type": "mma" }
+        ],
+        "saturday": [],
+        "sunday": []
+      },
+      "price": 3500,
+      "stats": {
+        "totalStudents": 45,
+        "sessionsCompleted": 324,
+        "averageRating": 4.9,
+        "yearsExperience": 8
+      },
+      "createdAt": "2026-04-10T00:00:00Z",
+      "updatedAt": "2026-04-10T00:00:00Z"
     }
   ]
 }
