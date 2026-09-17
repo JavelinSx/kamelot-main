@@ -1,50 +1,45 @@
-// Yandex Cloud Function для обработки бронирований
+// Yandex Cloud Function для обработки бронирований — отправка в VK
+// (вместо Telegram — Telegram API нестабильно доступен с российских
+// серверов Yandex Cloud).
+
 const https = require('https');
 
-function escapeHtml(text) {
-  if (!text) return "";
-  return String(text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-function formatTelegramMessage(data) {
-  const privateText = data.isPrivate ? "✅ Да" : "❌ Нет";
-  const parentText = data.isParent ? "✅ Да (запись для ребёнка)" : "❌ Нет";
+function formatVkMessage(data) {
+  const privateText = data.isPrivate ? 'Да' : 'Нет';
+  const parentText = data.isParent ? 'Да (запись для ребёнка)' : 'Нет';
 
   const trainingTypes = {
-    boxing: "Бокс",
-    kickboxing: "Кикбоксинг",
-    grappling: "Грэпплинг",
-    bjj: "БЖЖ (Бразильское джиу-джитсу)",
-    mma: "ММА",
-    pankration: "Панкратион",
+    boxing: 'Бокс',
+    kickboxing: 'Кикбоксинг',
+    grappling: 'Грэпплинг',
+    bjj: 'БЖЖ (Бразильское джиу-джитсу)',
+    mma: 'ММА',
+    pankration: 'Панкратион',
   };
 
   const trainingLabel = trainingTypes[data.trainingType] || data.trainingType;
-  const contactIcon = data.contactMethod === "telegram" ? "💬" : "📱";
-  const contactLabel = data.contactMethod === "telegram" ? "Telegram" : "Телефон";
+  const contactIcon = data.contactMethod === 'telegram' ? '💬' : '📱';
+  const contactLabel = data.contactMethod === 'telegram' ? 'Telegram' : 'Телефон';
 
-  let message = `🥊 <b>НОВАЯ ЗАЯВКА НА ТРЕНИРОВКУ</b>\n`;
+  let message = `🥊 НОВАЯ ЗАЯВКА НА ТРЕНИРОВКУ\n`;
 
   // Если есть информация о выбранной сессии из расписания
   if (data.sessionInfo) {
     message += `
-📅 <b>Выбранная тренировка:</b>
-   🥋 Дисциплина: ${escapeHtml(data.sessionInfo.discipline)}
-   📆 День: ${escapeHtml(data.sessionInfo.day)}
-   🕐 Время: ${escapeHtml(data.sessionInfo.time)}
-   👨‍🏫 Тренер: ${escapeHtml(data.sessionInfo.trainer)}`;
+📅 Выбранная тренировка:
+   🥋 Дисциплина: ${data.sessionInfo.discipline}
+   📆 День: ${data.sessionInfo.day}
+   🕐 Время: ${data.sessionInfo.time}
+   👨‍🏫 Тренер: ${data.sessionInfo.trainer}`;
 
     if (data.sessionInfo.ageGroup) {
-      message += `\n   👥 Группа: ${escapeHtml(data.sessionInfo.ageGroup)}`;
+      message += `\n   👥 Группа: ${data.sessionInfo.ageGroup}`;
     }
     if (data.sessionInfo.level) {
-      message += `\n   🎓 Уровень: ${escapeHtml(data.sessionInfo.level)}`;
+      message += `\n   🎓 Уровень: ${data.sessionInfo.level}`;
     }
     if (data.sessionInfo.zone) {
-      message += `\n   📍 Зона: ${escapeHtml(data.sessionInfo.zone)}`;
+      message += `\n   📍 Зона: ${data.sessionInfo.zone}`;
     }
     message += `\n`;
   }
@@ -52,90 +47,102 @@ function formatTelegramMessage(data) {
   // Если есть информация о выбранном тарифе
   if (data.pricingPlanInfo) {
     message += `
-💰 <b>Выбранный тариф:</b>
-   📋 ${escapeHtml(data.pricingPlanInfo.name)} - ${escapeHtml(data.pricingPlanInfo.price)}₽`;
+💰 Выбранный тариф:
+   📋 ${data.pricingPlanInfo.name} - ${data.pricingPlanInfo.price}₽`;
 
     if (data.pricingPlanInfo.sessions_count > 0) {
-      message += `\n   🎟️ Количество тренировок: ${escapeHtml(data.pricingPlanInfo.sessions_count)}`;
+      message += `\n   🎟️ Количество тренировок: ${data.pricingPlanInfo.sessions_count}`;
     } else if (data.pricingPlanInfo.sessions_count === -1) {
       message += `\n   ♾️ Безлимитные тренировки`;
     }
 
     if (data.pricingPlanInfo.valid_days) {
-      message += `\n   📆 Срок действия: ${escapeHtml(data.pricingPlanInfo.valid_days)} дней`;
+      message += `\n   📆 Срок действия: ${data.pricingPlanInfo.valid_days} дней`;
     }
 
     if (data.pricingPlanInfo.description) {
-      message += `\n   ℹ️ ${escapeHtml(data.pricingPlanInfo.description)}`;
+      message += `\n   ℹ️ ${data.pricingPlanInfo.description}`;
     }
     message += `\n`;
   }
 
   message += `
-👤 <b>Контактные данные${data.isParent ? " (родитель)" : ""}:</b>
-   Имя: ${escapeHtml(data.firstName)} ${escapeHtml(data.lastName)}
-   ${contactIcon} ${contactLabel}: ${escapeHtml(data.contact)}
-   🎂 Возраст: ${escapeHtml(data.age)} лет
+👤 Контактные данные${data.isParent ? ' (родитель)' : ''}:
+   Имя: ${data.firstName} ${data.lastName}
+   ${contactIcon} ${contactLabel}: ${data.contact}
+   🎂 Возраст: ${data.age} лет
 
-🥋 <b>Направление:</b> ${trainingLabel}
-🎯 <b>Персональные тренировки:</b> ${privateText}
-👨‍👩‍👧‍👦 <b>Запись для ребёнка:</b> ${parentText}`;
+🥋 Направление: ${trainingLabel}
+🎯 Персональные тренировки: ${privateText}
+👨‍👩‍👧‍👦 Запись для ребёнка: ${parentText}`;
 
   if (data.isParent && data.childFirstName && data.childLastName) {
     message += `
 
-👶 <b>Данные ребёнка:</b>
-   Имя: ${escapeHtml(data.childFirstName)} ${escapeHtml(data.childLastName)}
-   🎂 Возраст: ${escapeHtml(data.childAge)} лет`;
+👶 Данные ребёнка:
+   Имя: ${data.childFirstName} ${data.childLastName}
+   🎂 Возраст: ${data.childAge} лет`;
   }
 
   if (data.additionalInfo) {
-    message += `\n\n💬 <b>Дополнительно:</b> ${escapeHtml(data.additionalInfo)}`;
+    message += `\n\n💬 Дополнительно: ${data.additionalInfo}`;
   }
 
-  const agreementStatus = data.agreeToTerms ? "✅ Да" : "❌ Нет";
-  message += `\n\n📋 <b>Согласие с условиями:</b> ${agreementStatus}`;
-  message += `\n\n<i>Дата заявки: ${new Date().toLocaleString("ru-RU")}</i>`;
+  const agreementStatus = data.agreeToTerms ? 'Да' : 'Нет';
+  message += `\n\n📋 Согласие с условиями: ${agreementStatus}`;
+  message += `\n\nДата заявки: ${new Date().toLocaleString('ru-RU')}`;
 
   return message;
 }
 
-function sendToTelegram(botToken, chatId, message) {
+function sendToVk(communityToken, userId, message) {
   return new Promise((resolve, reject) => {
-    const data = JSON.stringify({
-      chat_id: Number(chatId),
-      text: message,
-      parse_mode: 'HTML'
+    const params = new URLSearchParams({
+      user_id: String(userId),
+      message,
+      random_id: String(Date.now()),
+      access_token: communityToken,
+      v: '5.199',
     });
 
-    // ВАЖНО: для UTF-8 нужно считать байты, а не символы!
-    const dataBuffer = Buffer.from(data, 'utf8');
+    const payload = params.toString();
 
     const options = {
-      hostname: 'api.telegram.org',
+      hostname: 'api.vk.ru',
       port: 443,
-      path: `/bot${botToken}/sendMessage`,
+      path: '/method/messages.send',
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Content-Length': dataBuffer.length
-      }
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': Buffer.byteLength(payload),
+      },
+      timeout: 8000,
     };
 
     const req = https.request(options, (res) => {
       let body = '';
-      res.on('data', (chunk) => body += chunk);
+      res.on('data', (chunk) => (body += chunk));
       res.on('end', () => {
-        if (res.statusCode === 200) {
-          resolve(JSON.parse(body));
-        } else {
-          reject(new Error(`Telegram API error: ${res.statusCode} ${body}`));
+        try {
+          const data = JSON.parse(body);
+          if (data.error) {
+            reject(new Error(`VK API error: ${JSON.stringify(data.error)}`));
+          } else {
+            resolve(data);
+          }
+        } catch (e) {
+          reject(new Error(`Bad response from VK: ${body}`));
         }
       });
     });
 
+    req.on('timeout', () => {
+      req.destroy();
+      reject(new Error('VK request timed out'));
+    });
     req.on('error', reject);
-    req.write(dataBuffer);
+
+    req.write(payload);
     req.end();
   });
 }
@@ -147,7 +154,7 @@ module.exports.handler = async function (event, context) {
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, Accept',
     'Access-Control-Max-Age': '86400',
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   };
 
   // Handle preflight OPTIONS request
@@ -155,7 +162,7 @@ module.exports.handler = async function (event, context) {
     return {
       statusCode: 200,
       headers,
-      body: ''
+      body: '',
     };
   }
 
@@ -164,7 +171,7 @@ module.exports.handler = async function (event, context) {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
+      body: JSON.stringify({ error: 'Method not allowed' }),
     };
   }
 
@@ -173,46 +180,46 @@ module.exports.handler = async function (event, context) {
     const body = JSON.parse(event.body);
 
     // Get environment variables
-    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+    const VK_COMMUNITY_TOKEN = process.env.VK_COMMUNITY_TOKEN;
+    const VK_USER_ID = process.env.VK_USER_ID;
 
-    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    if (!VK_COMMUNITY_TOKEN || !VK_USER_ID) {
       return {
         statusCode: 500,
         headers,
         body: JSON.stringify({
           success: false,
-          error: 'Telegram configuration missing'
-        })
+          error: 'VK configuration missing',
+        }),
       };
     }
 
     // Format and send message
-    const message = formatTelegramMessage(body);
+    const message = formatVkMessage(body);
 
     if (!message || message.trim().length === 0) {
       throw new Error('Generated message is empty');
     }
 
-    await sendToTelegram(TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, message);
+    await sendToVk(VK_COMMUNITY_TOKEN, VK_USER_ID, message);
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         success: true,
-        message: 'Booking request sent successfully'
-      })
+        message: 'Booking request sent successfully',
+      }),
     };
-
   } catch (error) {
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({
         success: false,
-        error: error.message
-      })
+        error: error.message,
+      }),
     };
   }
 };

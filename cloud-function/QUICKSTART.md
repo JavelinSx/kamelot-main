@@ -22,8 +22,8 @@
 
 Добавьте в функции:
 ```
-TELEGRAM_BOT_TOKEN=<из GitHub Secrets>
-TELEGRAM_CHAT_ID=<из GitHub Secrets>
+VK_COMMUNITY_TOKEN=<токен сообщества с правом messages>
+VK_USER_ID=<ваш числовой VK ID>
 ```
 
 ## 4. Сделайте публичной
@@ -52,4 +52,4 @@ curl -X POST https://ваш-url \
   -d '{"userType":"adult","firstName":"Тест","lastName":"Тестов","contactMethod":"phone","contact":"+79991234567","age":25,"trainingType":"boxing","pricingPlan":"1","agreeToTerms":true,"isPrivate":false}'
 ```
 
-Должно прийти сообщение в Telegram!
+Должно прийти сообщение в VK!
