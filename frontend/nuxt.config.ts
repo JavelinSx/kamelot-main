@@ -128,12 +128,12 @@ export default defineNuxtConfig({
           content:
             "Профессиональные тренировки по ММА, боксу, БЖЖ в Санкт-Петербурге. Современный зал на Парнасе. Групповые и индивидуальные занятия.",
         },
-        { property: "og:url", content: "http://camelot-academy.ru" },
+        { property: "og:url", content: "https://camelot-academy.ru" },
         { property: "og:site_name", content: "Camelot Academy" },
         { property: "og:locale", content: "ru_RU" },
         {
           property: "og:image",
-          content: "http://camelot-academy.ru/web-app-manifest-512x512.png",
+          content: "https://camelot-academy.ru/web-app-manifest-512x512.png",
         },
         { property: "og:image:width", content: "512" },
         { property: "og:image:height", content: "512" },
@@ -169,7 +169,7 @@ export default defineNuxtConfig({
           href: "/apple-touch-icon.png",
         },
         { rel: "manifest", href: "/manifest.json" },
-        { rel: "canonical", href: "http://camelot-academy.ru" },
+        { rel: "canonical", href: "https://camelot-academy.ru" },
         // Preconnect для Google Fonts (критично для производительности)
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         {
