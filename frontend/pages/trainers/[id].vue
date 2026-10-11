@@ -1,116 +1,96 @@
 <template>
-  <div class="pt-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 min-h-screen">
-    <UContainer class="py-12">
-      <!-- Hero секция с фото и основной информацией -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-8">
-        <div class="md:flex">
-          <!-- Фото тренера -->
-          <div class="md:w-2/5 relative">
-            <img v-if="trainer" :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
-              class="w-full h-96 md:h-full object-cover" />
-            <div class="absolute top-4 right-4">
-              <UBadge v-if="trainer?.rating && trainer.rating >= 4.8" color="warning" variant="solid" size="lg">
-                ⭐ Топ тренер
-              </UBadge>
-            </div>
+  <div class="min-h-screen pt-20">
+    <section v-if="trainer" class="border-b border-cm-line">
+      <div class="cm-container flex flex-col gap-6 pb-12 pt-8 sm:pb-16">
+        <NuxtLink to="/trainers"
+          class="inline-flex items-center gap-2 self-start font-mono text-xs uppercase tracking-[0.14em] text-cm-muted hover:text-cm-red-ink">
+          <UIcon name="i-lucide-arrow-left" class="h-4 w-4" />
+          Все тренеры
+        </NuxtLink>
+
+        <div class="grid grid-cols-1 border border-cm-line bg-cm-surface md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+          <!-- Фото -->
+          <div class="relative h-[440px] overflow-hidden bg-cm-surface-2 md:h-auto md:min-h-[560px]">
+            <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
+              class="absolute inset-0 h-full w-full object-cover object-[50%_20%]" />
+            <span v-if="trainer.rating && trainer.rating >= 4.8"
+              class="cm-tag-cut absolute left-4 top-4 bg-cm-red py-[7px] pl-2.5 pr-3 font-mono text-[11px] font-bold tracking-[0.16em] text-white">
+              ТОП-ТРЕНЕР
+            </span>
           </div>
 
           <!-- Основная информация -->
-          <div class="md:w-3/5 p-8 space-y-6">
-            <div>
-              <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-                {{ trainer?.firstName }} {{ trainer?.lastName }}
+          <div class="flex flex-col gap-7 p-6 sm:p-10">
+            <div class="flex flex-col gap-3">
+              <span class="cm-kicker">{{ specializationLine }}</span>
+              <h1 class="cm-display m-0 text-[clamp(60px,7vw,112px)] leading-[0.84]">
+                {{ trainer.firstName }}<br><span class="text-cm-red-title">{{ trainer.lastName }}</span>
               </h1>
-              <p class="text-xl text-red-600 dark:text-red-400 font-semibold">
-                {{ getMainSpecialization(trainer?.specializations || []) }}
-              </p>
             </div>
 
-            <!-- Статистика -->
-            <div class="grid grid-cols-3 gap-4">
-              <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex items-center justify-center gap-2 text-yellow-500 mb-1">
-                  <UIcon name="i-heroicons-star-solid" class="w-6 h-6" />
-                  <span class="font-bold text-2xl text-gray-900 dark:text-white">{{ trainer?.rating }}</span>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Рейтинг</p>
+            <dl class="m-0 grid grid-cols-2 border border-cm-line sm:grid-cols-4">
+              <div v-for="(stat, index) in stats" :key="stat.label" class="flex flex-col-reverse gap-1 px-4 py-4"
+                :class="[index % 2 === 0 ? 'border-r border-cm-line' : 'sm:border-r sm:border-cm-line', index < 2 ? 'border-b border-cm-line sm:border-b-0' : '', index === 3 ? 'sm:border-r-0' : '']">
+                <dt class="cm-label">{{ stat.label }}</dt>
+                <dd class="cm-display m-0 text-[44px] leading-none">{{ stat.value }}</dd>
               </div>
+            </dl>
 
-              <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex items-center justify-center gap-2 text-blue-500 mb-1">
-                  <UIcon name="i-heroicons-trophy-solid" class="w-6 h-6" />
-                  <span class="font-bold text-2xl text-gray-900 dark:text-white">{{ trainer?.experience }}</span>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Лет опыта</p>
-              </div>
-
-              <div class="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div class="flex items-center justify-center gap-2 text-green-500 mb-1">
-                  <UIcon name="i-heroicons-user-group-solid" class="w-6 h-6" />
-                  <span class="font-bold text-2xl text-gray-900 dark:text-white">{{ trainer?.stats.totalStudents
-                    }}</span>
-                </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Учеников</p>
-              </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span v-for="specialty in trainer.specializations" :key="specialty" class="cm-chip">
+                {{ getSpecializationName(specialty) }}
+              </span>
             </div>
 
-            <!-- Специализации -->
-            <div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Специализации</h3>
-              <div class="flex flex-wrap gap-2">
-                <UBadge v-for="specialty in trainer?.specializations" :key="specialty" color="error" variant="soft"
-                  size="md">
-                  {{ getSpecializationName(specialty) }}
-                </UBadge>
-              </div>
-            </div>
+            <p v-if="trainer.bio" class="m-0 text-base leading-relaxed text-cm-soft sm:text-lg">{{ trainer.bio }}</p>
 
-            <!-- Цена и кнопка -->
-            <div class="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-              <UButton color="error" size="xl" @click="contactTrainer">
-                <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
+            <div class="mt-auto flex flex-wrap gap-3">
+              <button type="button" class="cm-btn cm-btn-red cm-cut-lg cm-btn-lg" @click="contactTrainer">
                 Записаться
-              </UButton>
+                <UIcon name="i-lucide-arrow-right" class="h-5 w-5" />
+              </button>
+              <NuxtLink to="/schedule" class="cm-btn cm-btn-outline cm-btn-lg">Расписание</NuxtLink>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Биография -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">О тренере</h2>
-        <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
-          {{ trainer?.bio }}
-        </p>
-      </div>
-
-      <!-- Достижения -->
-      <div v-if="trainer?.achievements?.length" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Достижения</h2>
-        <ul class="space-y-3">
-          <li v-for="achievement in trainer.achievements" :key="achievement"
-            class="flex items-start gap-3 text-gray-700 dark:text-gray-300">
-            <UIcon name="i-heroicons-trophy" class="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-            <span class="text-lg">{{ achievement }}</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Дополнительная статистика -->
-      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Статистика</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <span class="text-gray-600 dark:text-gray-300">Проведено тренировок</span>
-            <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ trainer?.stats.sessionsCompleted }}</span>
+    <section v-if="trainer?.achievements?.length || trainer?.certifications?.length" class="py-14 sm:py-20">
+      <div class="cm-container grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <div v-if="trainer.achievements?.length" class="flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            <span class="cm-kicker">// Достижения</span>
+            <h2 class="cm-display m-0 text-[clamp(44px,5vw,72px)]">Послужной список</h2>
           </div>
-          <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-            <span class="text-gray-600 dark:text-gray-300">Отзывов</span>
-            <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ trainer?.reviewsCount }}</span>
+          <ol class="m-0 flex list-none flex-col border-t border-cm-line p-0">
+            <li v-for="(achievement, index) in trainer.achievements" :key="achievement"
+              class="flex gap-5 border-b border-cm-line py-4">
+              <span class="w-8 shrink-0 pt-0.5 font-mono text-sm font-bold text-cm-red-ink">{{ String(index + 1).padStart(2, '0') }}</span>
+              <span class="text-base leading-normal text-cm-soft sm:text-[17px]">{{ achievement }}</span>
+            </li>
+          </ol>
+        </div>
+
+        <div v-if="trainer.certifications?.length" class="flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            <span class="cm-kicker">// Квалификация</span>
+            <h2 class="cm-display m-0 text-[clamp(44px,5vw,72px)]">Сертификаты</h2>
           </div>
+          <ul class="m-0 flex list-none flex-col gap-px border border-cm-line bg-cm-line p-0">
+            <li v-for="certification in trainer.certifications" :key="certification"
+              class="flex gap-3 bg-cm-surface px-5 py-4 text-[15px] leading-normal text-cm-soft">
+              <UIcon name="i-lucide-badge-check" class="mt-0.5 h-5 w-5 shrink-0 text-cm-red-ink" />
+              {{ certification }}
+            </li>
+          </ul>
         </div>
       </div>
-    </UContainer>
+    </section>
+
+    <CtaBand kicker="// Пробное занятие" :description="trainer ? `Приходи на бесплатную тренировку к тренеру ${trainer.firstName} ${trainer.lastName}.` : undefined">
+      Первая — <span class="text-white">бесплатно</span>
+    </CtaBand>
   </div>
 </template>
 
@@ -137,7 +117,7 @@ const specializationNames: Record<WorkoutType, string> = {
   grappling: 'Грэпплинг',
   kickboxing: 'Кикбоксинг',
   boxing: 'Бокс',
-  bjj: 'BJJ',
+  bjj: 'БЖЖ',
   ofp: 'ОФП',
   pankration: 'Панкратион'
 }
@@ -146,16 +126,23 @@ const getSpecializationName = (type: WorkoutType): string => {
   return specializationNames[type] || type
 }
 
-const getMainSpecialization = (specializations: readonly WorkoutType[]): string => {
-  if (specializations.length === 0) return 'Тренер'
-  const firstSpecialization = specializations[0]
-  if (!firstSpecialization) return 'Тренер'
-  return `Тренер по ${getSpecializationName(firstSpecialization)}`
-}
+const specializationLine = computed(() => {
+  const list = trainer.value?.specializations || []
+  return list.length ? `// Тренер · ${list.map(getSpecializationName).join(' · ')}` : '// Тренер'
+})
+
+const stats = computed(() => {
+  if (!trainer.value) return []
+  return [
+    { label: 'Лет опыта', value: trainer.value.experience },
+    { label: 'Учеников', value: trainer.value.stats.totalStudents },
+    { label: 'Тренировок', value: trainer.value.stats.sessionsCompleted },
+    { label: 'Рейтинг', value: trainer.value.rating }
+  ]
+})
 
 const contactTrainer = () => {
-  const event = new CustomEvent('openBookingModal')
-  window.dispatchEvent(event)
+  window.dispatchEvent(new CustomEvent('openBookingModal'))
 }
 
 // SEO

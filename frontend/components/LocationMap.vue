@@ -1,102 +1,80 @@
 <template>
-  <section class="location-map-section py-20 bg-gray-50 dark:bg-gray-900">
-    <div class="container mx-auto px-4">
-      <!-- Заголовок секции -->
-      <div class="text-center mb-12">
-        <h2
-          class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
-          Как нас найти
-        </h2>
-      </div>
+  <section class="location-map-section pb-16 sm:pb-[120px]">
+    <div class="cm-container flex flex-col gap-10 sm:gap-12">
+      <SectionHead kicker="[06] / Как нас найти">
+        Зал на <span class="text-cm-red-title">Парнасе</span>
+      </SectionHead>
 
-      <!-- Контейнер с картой -->
-      <div class="map-container max-w-6xl mx-auto">
-        <div class="relative rounded-2xl overflow-hidden shadow-2xl border border-gray-300 dark:border-gray-800">
-          <!-- Яндекс карта с ленивой загрузкой -->
+      <div class="flex flex-wrap gap-5">
+        <!-- Яндекс карта с ленивой загрузкой -->
+        <div class="map-container relative min-w-0 flex-[999_1_560px] overflow-hidden border border-cm-line bg-cm-surface">
           <ClientOnly>
-            <div v-if="!mapLoaded" class="w-full h-[516px] bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-              <button
-                @click="loadMap"
-                class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-lg hover:from-red-600 hover:to-orange-600 transition-all"
-              >
-                Загрузить карту
-              </button>
+            <div v-if="!mapLoaded" class="flex h-[380px] w-full items-center justify-center sm:h-[520px]">
+              <button type="button" class="cm-btn cm-btn-red cm-cut" @click="loadMap">Загрузить карту</button>
             </div>
-            <iframe
-              v-else
+            <iframe v-else
               src="https://yandex.ru/map-widget/v1/?um=constructor%3A7c2a5b4697e8df987cf3a9987f5a2f08ee4f7ede139c841afa913b7cc82023ee&amp;source=constructor"
-              width="100%"
-              height="516"
-              frameborder="0"
-              class="w-full"
-              loading="lazy"
-              title="Яндекс карта - местоположение Camelot Academy"
-            ></iframe>
+              width="100%" height="520" frameborder="0" class="block h-[380px] w-full sm:h-[520px]" loading="lazy"
+              title="Яндекс карта — местоположение Camelot Academy"></iframe>
+            <template #fallback>
+              <div class="h-[380px] w-full sm:h-[520px]" />
+            </template>
           </ClientOnly>
         </div>
 
-        <!-- Кнопка "Маршрут" -->
-        <div class="flex justify-center mt-6">
-          <a
-            href="https://yandex.ru/maps/-/CLvy7W9a"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
-            </svg>
-            Построить маршрут
-          </a>
-        </div>
-
-        <!-- Контактная информация под картой -->
-        <div class="grid md:grid-cols-3 gap-6 mt-8">
-          <!-- Адрес -->
-          <div
-            class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-300 dark:border-gray-700 hover:border-red-500/50 transition-all">
-            <div class="flex items-start gap-4">
-              <div class="text-red-500 text-2xl">
-                📍
-              </div>
+        <div class="flex min-w-0 flex-[1_1_380px] flex-col gap-5">
+          <div class="flex flex-col border border-cm-line bg-cm-surface">
+            <div class="flex gap-4 border-b border-cm-line px-6 py-5">
+              <UIcon name="i-lucide-map-pin" class="mt-0.5 h-[22px] w-[22px] shrink-0 text-cm-red-ink" />
               <div>
-                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Адрес</h3>
-                <p class="text-gray-600 dark:text-gray-400 text">
-                  Улица Архитектора Белова 6к1, Санкт-Петербург
-                </p>
+                <div class="cm-label">Адрес</div>
+                <div class="mt-1 text-base leading-normal">{{ contacts.academy.address }}</div>
               </div>
             </div>
-          </div>
-
-          <!-- Время работы -->
-          <div
-            class="bg-gray-800/50 backdrop-blur rounded-xl p-6 border border-gray-700 hover:border-red-500/50 transition-all">
-            <div class="flex items-start gap-4">
-              <div class="text-red-500 text-2xl">
-                🕐
-              </div>
+            <div class="flex gap-4 border-b border-cm-line px-6 py-5">
+              <UIcon name="i-lucide-clock-3" class="mt-0.5 h-[22px] w-[22px] shrink-0 text-cm-red-ink" />
               <div>
-                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Время работы</h3>
-                <p class="text-gray-600 dark:text-gray-400 text">
-                  Пн-ВС: 10:00 - 23:00
-                </p>
+                <div class="cm-label">Время работы</div>
+                <div class="mt-1 text-base leading-normal">
+                  {{ contacts.academy.workingHours.weekdays }}<br>{{ contacts.academy.workingHours.weekend }}
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Телефон -->
-          <div
-            class="bg-gray-200/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-300 dark:border-gray-700 hover:border-red-500/50 transition-all">
-            <div class="flex items-start gap-4">
-              <div class="text-red-500 text-2xl">
-                📞
-              </div>
+            <div class="flex gap-4 px-6 py-5">
+              <UIcon name="i-lucide-phone" class="mt-0.5 h-[22px] w-[22px] shrink-0 text-cm-red-ink" />
               <div>
-                <h3 class="text-gray-900 dark:text-white font-semibold mb-2">Телефон</h3>
-                <a href="tel:+79520957776" class="text-gray-600 dark:text-gray-400 text hover:text-red-500 transition-colors">
-                  +7 (952) 095-77-76
+                <div class="cm-label">Телефон</div>
+                <a :href="`tel:${phoneHref}`" class="mt-1 block text-base leading-normal text-cm-text hover:text-cm-red-ink">
+                  {{ contacts.academy.phone }}
                 </a>
               </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2.5">
+            <a href="https://yandex.ru/maps/-/CLvy7W9a" target="_blank" rel="noopener noreferrer"
+              class="cm-btn cm-btn-red cm-cut flex-[1_1_180px]">
+              Построить маршрут
+            </a>
+            <a :href="`tel:${phoneHref}`" class="cm-btn cm-btn-outline flex-[1_1_140px]">Позвонить</a>
+          </div>
+
+          <div class="flex flex-col gap-3.5 bg-cm-inv p-6 text-cm-on-inv">
+            <div class="flex items-center gap-1" role="img" aria-label="Отзывы на Яндекс.Картах">
+              <UIcon v-for="n in 5" :key="n" name="i-heroicons-star-solid" class="h-5 w-5 text-cm-red" />
+            </div>
+            <span class="cm-display text-[40px] leading-[0.9]">Отзывы на Яндекс.Картах</span>
+            <p class="m-0 text-sm leading-normal text-cm-on-inv-muted">
+              Тренировался у нас — расскажи, как прошло. Читай, что пишут другие.
+            </p>
+            <div class="flex flex-wrap gap-2.5">
+              <a :href="leaveReviewUrl" target="_blank" rel="noopener noreferrer"
+                class="cm-btn cm-btn-sm flex-1 bg-cm-on-inv text-cm-inv hover:bg-cm-red hover:text-white">
+                Оставить отзыв
+              </a>
+              <a href="#reviews" class="cm-btn cm-btn-sm flex-1 border-[1.5px] border-cm-on-inv text-cm-on-inv">
+                Читать
+              </a>
             </div>
           </div>
         </div>
@@ -106,6 +84,11 @@
 </template>
 
 <script setup lang="ts">
+const { contacts } = useContacts()
+const phoneHref = computed(() => contacts.value.academy.phone.replace(/[^\d+]/g, ''))
+
+const leaveReviewUrl = 'https://yandex.ru/maps/org/kamelot/159824127921/reviews/'
+
 const mapLoaded = ref(false)
 
 const loadMap = () => {
@@ -129,10 +112,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped>
-/* Анимация при наведении на карточки */
-.bg-gray-800\/50:hover {
-  transform: translateY(-2px);
-}
-</style>

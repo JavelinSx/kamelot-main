@@ -1,189 +1,124 @@
 <template>
-  <section id="trainers"
-    class="py-10 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 overflow-hidden">
-    <!-- Кастомный контейнер с детальными настройками -->
-    <UContainer :ui="{
-      base: 'w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'
-    }">
-      <!-- Заголовок секции -->
-      <div class="text-center mb-8">
-        <ClientOnly>
-          <h2 v-motion-slide-visible-once-left :duration="600"
-            class="lg:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-            Наши тренеры
-          </h2>
-          <p v-motion-slide-visible-once-bottom :duration="600" :delay="100"
-            class="lg:text-2xl md:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Опытные профессионалы с многолетним стажем и международными достижениями
-          </p>
-        </ClientOnly>
-      </div>
+  <section id="trainers" :class="compact ? 'py-16 sm:py-[120px]' : 'pb-24 pt-10'">
+    <div class="cm-container flex flex-col gap-10 sm:gap-12">
+      <SectionHead v-if="compact" kicker="[04] / Тренеры"
+        description="Мастера спорта, действующие бойцы и судьи международной категории. Ставят технику так, как ставили себе.">
+        Тренерский<br><span class="text-cm-red-title">штаб</span>
+      </SectionHead>
 
-      <!-- Сетка карточек тренеров -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-        <ClientOnly>
-          <div v-for="(trainer, index) in trainers" :key="trainer.id" v-motion-slide-visible-once-left :duration="600"
-            :delay="index * 100">
-            <div
-              class="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-2 group h-full min-h-[800px]">
-              <!-- Фоновое изображение на всю карточку -->
-              <div class="absolute inset-0">
-                <img
-                  :src="trainer.avatar"
-                  :alt="`${trainer.firstName} ${trainer.lastName}`"
-                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  width="600"
-                  height="800"
-                />
-                <!-- Затемнение -->
+      <div :class="compact
+        ? ['cm-no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0', trainers.length > 4 ? 'md:grid-cols-3 xl:grid-cols-5' : 'lg:grid-cols-4']
+        : 'grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3'">
+        <article v-for="trainer in trainers" :key="trainer.id"
+          class="group flex flex-col border border-cm-line bg-cm-surface"
+          :class="compact ? 'w-[240px] shrink-0 snap-start sm:w-auto' : ''">
+          <NuxtLink :to="`/trainers/${trainer.id}`"
+            class="relative block overflow-hidden bg-cm-surface-2 text-[#f3efe7]"
+            :class="compact ? 'h-[300px] sm:h-[340px]' : 'h-[440px]'"
+            :aria-label="`Профиль тренера: ${trainer.firstName} ${trainer.lastName}`">
+            <img :src="trainer.avatar" :alt="`${trainer.firstName} ${trainer.lastName}`"
+              class="h-full w-full object-cover object-[50%_22%] grayscale contrast-[1.15] transition duration-500 group-hover:scale-[1.03] group-hover:grayscale-0 group-hover:contrast-100"
+              loading="lazy" width="480" height="640" />
+            <span aria-hidden="true" class="absolute inset-0"
+              style="background: linear-gradient(180deg, rgba(10, 10, 11, 0) 45%, rgba(10, 10, 11, 0.95) 100%)" />
+            <span class="absolute inset-x-[18px] bottom-4 flex flex-col gap-1.5">
+              <span class="font-mono text-[11px] uppercase tracking-[0.14em] text-[#ff4436]">
+                {{ specializationLine(trainer.specializations) }}
+              </span>
+              <span class="cm-display block leading-[0.88]" :class="compact ? 'text-[36px] sm:text-[40px]' : 'text-[52px]'">
+                {{ trainer.firstName }}<br>{{ trainer.lastName }}
+              </span>
+            </span>
+          </NuxtLink>
 
-              </div>
-
-              <!-- Текстовая часть с эффектом стекла внизу -->
-              <div class="relative z-10 h-full flex flex-col justify-end">
-                <!-- Glassmorphism контейнер -->
-                <div class="backdrop-blur-xl bg-black/60 border-t border-white/20 p-5 space-y-3">
-                  <!-- Специализации -->
-                  <!-- <div class="flex flex-wrap gap-1.5 mb-3">
-                    <UBadge v-for="specialty in trainer.specializations" :key="specialty" color="error" variant="soft"
-                      size="sm" :ui="{
-                        base: 'backdrop-blur-sm rounded-lg'
-                      }">
-                      {{ getSpecializationName(specialty) }}
-                    </UBadge>
-                  </div> -->
-
-                  <!-- Имя и специализация -->
-                  <div class="space-y-1.5">
-                    <h3 class="text-xl font-bold text-red-400">
-                      Тренер
-                    </h3>
-                    <h3 class="text-xl font-bold text-white">
-                      {{ trainer.firstName }} {{ trainer.lastName }}
-                    </h3>
-                    <p class="text-red-400 font-semibold text-base">
-                      {{ getMainSpecialization(trainer.specializations) }}
-                    </p>
-                  </div>
-
-                  <!-- Биография -->
-                  <div v-if="trainer.bio">
-                    <p class="text-gray-200 leading-relaxed text-sm"
-                      :class="expandedBio[trainer.id] ? '' : 'line-clamp-2'">
-                      {{ trainer.bio }}
-                    </p>
-                    <button v-if="trainer.bio.length > 100" @click="toggleBio(trainer.id)"
-                      class="text-red-400 text-sm font-semibold mt-2 hover:text-red-300 transition-colors">
-                      {{ expandedBio[trainer.id] ? 'Скрыть' : 'Читать далее' }}
-                    </button>
-                  </div>
-
-                  <!-- Дополнительная информация -->
-                  <div class="flex items-center justify-around gap-3 text-sm border-t border-white/20 pt-2.5">
-                    <div class="text-center">
-                      <div class="font-bold text-white text-base">{{ trainer.stats.totalStudents }}</div>
-                      <div class="text-gray-300 text-xs">Учеников</div>
-                    </div>
-                    <div class="h-6 w-px bg-white/20"></div>
-                    <div class="text-center">
-                      <div class="font-bold text-white text-base">{{ trainer.stats.sessionsCompleted }}</div>
-                      <div class="text-gray-300 text-xs">Тренировок</div>
-                    </div>
-                    <div class="h-6 w-px bg-white/20"></div>
-                    <div class="text-center">
-                      <div class="font-bold text-white text-base">{{ trainer.experience }}</div>
-                      <div class="text-gray-300 text-xs">Лет опыта</div>
-                    </div>
-                  </div>
-
-                  <!-- Достижения (аккордеон) -->
-                  <details class="group/details">
-                    <summary
-                      class="cursor-pointer list-none flex items-center justify-between py-2 text-white hover:text-red-400 transition-colors">
-                      <span class="font-semibold">Достижения</span>
-                      <UIcon name="i-heroicons-chevron-down"
-                        class="w-4 h-4 transition-transform group-open/details:rotate-180" />
-                    </summary>
-                    <div class="mt-2 space-y-1">
-                      <ul class="text-sm text-gray-200 space-y-1">
-                        <li v-for="achievement in trainer.achievements?.slice(0, 3)" :key="achievement"
-                          class="flex items-start gap-2">
-                          <span class="text-red-400 mt-1">•</span>
-                          <span>{{ achievement }}</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </details>
-
-                  <!-- Кнопки действий -->
-                  <div class="pt-1.5 space-y-2.5">
-
-                    <UButton color="neutral" variant="outline" size="xl" block
-                      class="dark:text-white hover:cursor-pointer justify-center rounded-xl font-semibold border-white/30 text-gray-800 hover:bg-white/10 transition-all duration-300"
-                      @click="viewTrainerProfile(trainer)">
-                      <UIcon name="i-heroicons-user-circle" class="w-4 h-4 mr-2" />
-                      Посмотреть профиль
-                    </UButton>
-                  </div>
-                </div>
-              </div>
+          <dl class="m-0 grid grid-cols-3 border-b border-cm-line text-center font-mono">
+            <div class="flex flex-col-reverse border-r border-cm-line px-2 py-3">
+              <dt class="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-cm-dim">Учеников</dt>
+              <dd class="m-0 text-lg font-bold">{{ trainer.stats.totalStudents }}</dd>
             </div>
-          </div>
+            <div class="flex flex-col-reverse border-r border-cm-line px-2 py-3">
+              <dt class="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-cm-dim">Тренировок</dt>
+              <dd class="m-0 text-lg font-bold">{{ trainer.stats.sessionsCompleted }}</dd>
+            </div>
+            <div class="flex flex-col-reverse px-2 py-3">
+              <dt class="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-cm-dim">Лет опыта</dt>
+              <dd class="m-0 text-lg font-bold">{{ trainer.experience }}</dd>
+            </div>
+          </dl>
 
-        </ClientOnly>
+          <template v-if="!compact">
+            <div v-if="trainer.bio" class="px-5 pt-5">
+              <p class="m-0 text-sm leading-relaxed text-cm-muted" :class="expandedBio[trainer.id] ? '' : 'line-clamp-3'">
+                {{ trainer.bio }}
+              </p>
+              <button v-if="trainer.bio.length > 100" type="button"
+                class="mt-2 cursor-pointer font-mono text-xs uppercase tracking-[0.12em] text-cm-red-ink"
+                @click="toggleBio(trainer.id)">
+                {{ expandedBio[trainer.id] ? 'Скрыть' : 'Читать далее' }}
+              </button>
+            </div>
+
+            <details v-if="trainer.achievements?.length" class="group/details mx-5 mt-4 border-t border-cm-line">
+              <summary
+                class="flex cursor-pointer list-none items-center justify-between py-3 font-display text-xl font-extrabold uppercase tracking-[0.04em] hover:text-cm-red-ink">
+                Достижения
+                <UIcon name="i-lucide-chevron-down" class="h-4 w-4 transition-transform group-open/details:rotate-180" />
+              </summary>
+              <ul class="m-0 mb-2 flex list-none flex-col gap-2 p-0">
+                <li v-for="achievement in trainer.achievements.slice(0, 5)" :key="achievement"
+                  class="flex gap-3 text-sm leading-normal text-cm-soft">
+                  <span aria-hidden="true" class="mt-[7px] h-2 w-2 shrink-0 bg-cm-red" />
+                  {{ achievement }}
+                </li>
+              </ul>
+            </details>
+          </template>
+
+          <p v-else-if="trainer.bio" class="m-0 line-clamp-3 px-[18px] pt-4 text-[13px] leading-normal text-cm-muted">
+            {{ trainer.bio }}
+          </p>
+
+          <div class="mt-auto px-[18px] pb-[18px] pt-4">
+            <NuxtLink :to="`/trainers/${trainer.id}`"
+              class="flex h-11 items-center justify-between border border-cm-line-2 px-3.5 font-display text-[19px] font-black uppercase tracking-[0.06em] text-cm-text transition-colors hover:border-cm-red hover:text-cm-red-ink">
+              Профиль
+              <UIcon name="i-lucide-arrow-right" class="h-4 w-4" />
+            </NuxtLink>
+          </div>
+        </article>
       </div>
-    </UContainer>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
 import type { WorkoutType } from '~/types'
 
-// Используем composable - данные теперь доступны сразу, без асинхронной загрузки
+withDefaults(defineProps<{
+  compact?: boolean
+}>(), {
+  compact: false
+})
+
+// Данные встроены в билд — доступны сразу
 const { trainers } = useTrainers()
 const expandedBio = ref<Record<number, boolean>>({})
-
 
 const toggleBio = (trainerId: number) => {
   expandedBio.value[trainerId] = !expandedBio.value[trainerId]
 }
 
-// Словарь для перевода специализаций
 const specializationNames: Record<WorkoutType, string> = {
   mma: 'ММА',
   wrestling: 'Борьба',
   grappling: 'Грэпплинг',
   kickboxing: 'Кикбоксинг',
   boxing: 'Бокс',
-  bjj: 'BJJ',
-  ofp: 'ОФП(детское)',
+  bjj: 'БЖЖ',
+  ofp: 'ОФП (детское)',
   pankration: 'Панкратион'
 }
 
-const getSpecializationName = (type: WorkoutType): string => {
-  return specializationNames[type] || type
-}
-
-const getMainSpecialization = (specializations: readonly WorkoutType[]): string => {
-  if (specializations.length === 0) return 'Тренер'
-  const firstSpecialization = specializations[0]
-  const secondSpecialization = specializations[1]
-  if (!firstSpecialization || !secondSpecialization) return 'Тренер'
-  return `${getSpecializationName(firstSpecialization)}, ${getSpecializationName(secondSpecialization)}`
-}
-
-const viewTrainerProfile = (trainer: any) => {
-  navigateTo(`/trainers/${trainer.id}`)
-}
+const specializationLine = (specializations: readonly WorkoutType[]) =>
+  specializations.map(type => specializationNames[type] || type).join(' · ') || 'Тренер'
 </script>
-
-<style scoped>
-/* Дополнительные утилиты для обрезки текста */
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-</style>

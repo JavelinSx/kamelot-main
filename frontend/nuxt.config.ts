@@ -180,7 +180,7 @@ export default defineNuxtConfig({
         // Загрузка шрифтов с display=swap для мгновенного отображения текста
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:ital,wght@0,700;0,800;0,900;1,800;1,900&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap",
           media: "print",
           onload: "this.media='all'",
         },

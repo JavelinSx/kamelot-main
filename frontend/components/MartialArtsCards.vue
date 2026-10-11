@@ -1,144 +1,48 @@
 <template>
-  <section class="py-10 bg-white dark:bg-gray-900 overflow-hidden transition-colors duration-300">
-    <UContainer>
-      <div class="flex flex-col items-center mb-8 text-center">
-        <ClientOnly>
-          <h2 v-motion-slide-visible-once-left :duration="600"
-            class="inline-block lg:text-4xl font-bold text-gray-900 dark:text-white mb-4 ">
-            Направления единоборств
-          </h2>
-          <p v-motion-slide-visible-once-bottom :duration="600" :delay="100"
-            class="inline-block lg:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto ">
-            Выберите подходящее направление для развития своих навыков и достижения целей
-          </p>
-        </ClientOnly>
+  <section id="directions" class="px-0 pb-20 pt-16 sm:pb-[120px] sm:pt-[100px]">
+    <div class="cm-container flex flex-col gap-10 sm:gap-12">
+      <SectionHead kicker="[01] / Направления"
+        description="Шесть дисциплин под одной крышей. Выбери направление под свои цели — от первой тренировки до выхода в клетку.">
+        Выбери<br>своё <span class="text-cm-red-title">оружие</span>
+      </SectionHead>
+
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <button v-for="(art, index) in martialArts" :key="art.id" type="button"
+          class="group flex cursor-pointer flex-col border border-cm-line bg-cm-surface text-left text-cm-text transition-colors duration-200 hover:border-cm-red"
+          :aria-label="`Записаться: ${art.name}`" @click="selectMartialArt(art)">
+          <span class="relative block h-[230px] w-full overflow-hidden bg-[#e9e4da] sm:h-[270px]">
+            <img :src="art.image" :alt="art.name"
+              class="h-full w-full object-cover grayscale contrast-125 transition duration-500 group-hover:scale-[1.04] group-hover:grayscale-0 group-hover:contrast-100"
+              loading="lazy" width="420" height="270" />
+            <span
+              class="absolute left-0 top-0 bg-[#0a0a0b] px-3.5 py-2.5 font-mono text-sm font-bold tracking-[0.1em] text-[#f3efe7]">
+              0{{ index + 1 }}
+            </span>
+            <span
+              class="absolute right-3 top-3 bg-cm-red px-2.5 py-[7px] font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-white">
+              {{ art.difficulty }}
+            </span>
+          </span>
+          <span class="flex flex-1 flex-col gap-4 px-6 pb-6 pt-6">
+            <span class="cm-display block text-[48px] leading-[0.9] sm:text-[54px]">{{ art.short || art.name }}</span>
+            <span class="text-[15px] leading-relaxed text-cm-muted">{{ art.description }}</span>
+            <span class="flex flex-wrap gap-1.5">
+              <span v-for="benefit in art.benefits" :key="benefit" class="cm-chip">{{ benefit }}</span>
+            </span>
+            <span class="mt-auto flex items-center justify-between border-t border-cm-line pt-[18px]">
+              <span class="inline-flex items-center gap-2 font-mono text-[13px]">
+                <UIcon name="i-lucide-clock-3" class="h-4 w-4 text-cm-red-ink" />{{ art.duration }}
+              </span>
+              <span
+                class="inline-flex items-center gap-2 font-display text-[22px] font-black uppercase tracking-[0.06em] text-cm-red-ink">
+                Записаться
+                <UIcon name="i-lucide-arrow-right" class="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />
+              </span>
+            </span>
+          </span>
+        </button>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        <ClientOnly>
-          <div v-for="(art, index) in (martialArts || [])" :key="art?.id || 'default'" v-motion-pop-visible-once
-            :delay="index * 50" :duration="600" class="flex">
-            <UCard
-              class="hover:-translate-y-2 transition-all duration-300 transform shadow-lg hover:shadow-md bg-white dark:bg-slate-800 rounded-lg ring-1 ring-gray-200 dark:ring-gray-700 flex flex-col w-full"
-              :class="getShadowClass(art.id)" :ui="{
-                body: 'h-full'
-              }">
-              <template #header>
-                <div class="relative h-48 rounded-md overflow-hidden">
-                  <img
-                    :src="art.image"
-                    :alt="art.name"
-                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    loading="lazy"
-                    width="400"
-                    height="192"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div class="absolute bottom-4 left-4 ">
-                    <h3 class="text-2xl font-bold text-white">{{ art.name }}</h3>
-                  </div>
-                </div>
-              </template>
-
-              <div class="text-gray-800 dark:text-gray-100 flex flex-col flex-1 justify-between h-full">
-                <p class="mb-4 leading-relaxed">
-                  {{ art.description }}
-                </p>
-                <div>
-                  <div class="flex flex-wrap gap-2 mb-4">
-                    <UBadge v-for="benefit in (art?.benefits || [])" :key="benefit || 'benefit'" variant="soft"
-                      color="error" size="sm">
-                      {{ benefit }}
-                    </UBadge>
-                  </div>
-
-                  <div class="flex justify-between items-center text-sm mb-4 text-gray-700 dark:text-gray-300">
-                    <div class="flex items-center gap-1">
-                      <UIcon name="i-heroicons-clock" class="text-red-500" />
-                      <span>{{ art.duration }}</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                      <UIcon name="i-heroicons-user-group" class="text-red-500" />
-                      <span>{{ art.difficulty }}</span>
-                    </div>
-                  </div>
-
-                  <div class="text-center mt-auto">
-                    <UButton color="error" variant="outline" class="w-full hover:cursor-pointer"
-                      @click="selectMartialArt(art)">
-                      Записаться
-                    </UButton>
-                  </div>
-                </div>
-
-              </div>
-            </UCard>
-          </div>
-          <template #fallback>
-            <div v-for="(art, index) in (martialArts || [])" :key="art?.id || 'default'" class="flex">
-              <UCard
-                class="hover:-translate-y-2 transition-all duration-300 transform shadow-lg hover:shadow-md bg-white dark:bg-slate-800 rounded-lg ring-1 ring-gray-200 dark:ring-gray-700 flex flex-col w-full"
-                :class="getShadowClass(art.id)" :ui="{
-                  body: 'h-full'
-                }">
-                <template #header>
-                  <div class="relative h-48 rounded-md overflow-hidden">
-                    <NuxtImg
-                      :src="art.image"
-                      :alt="art.name"
-                      class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                      loading="lazy"
-                      sizes="sm:100vw md:50vw lg:33vw"
-                      :width="400"
-                      :height="192"
-                      format="webp"
-                      quality="80"
-                    />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <div class="absolute bottom-4 left-4 ">
-                      <h3 class="text-2xl font-bold text-white">{{ art.name }}</h3>
-                    </div>
-                  </div>
-                </template>
-
-                <div class="text-gray-800 dark:text-gray-100 flex flex-col flex-1 justify-between h-full">
-                  <p class="mb-4 leading-relaxed">
-                    {{ art.description }}
-                  </p>
-                  <div>
-                    <div class="flex flex-wrap gap-2 mb-4">
-                      <UBadge v-for="benefit in (art?.benefits || [])" :key="benefit || 'benefit'" variant="soft"
-                        color="error" size="sm">
-                        {{ benefit }}
-                      </UBadge>
-                    </div>
-
-                    <div class="flex justify-between items-center text-sm mb-4 text-gray-700 dark:text-gray-300">
-                      <div class="flex items-center gap-1">
-                        <UIcon name="i-heroicons-clock" class="text-red-500" />
-                        <span>{{ art.duration }}</span>
-                      </div>
-                      <div class="flex items-center gap-1">
-                        <UIcon name="i-heroicons-user-group" class="text-red-500" />
-                        <span>{{ art.difficulty }}</span>
-                      </div>
-                    </div>
-
-                    <div class="text-center mt-auto">
-                      <UButton color="error" variant="outline" class="w-full hover:cursor-pointer"
-                        @click="selectMartialArt(art)">
-                        Записаться
-                      </UButton>
-                    </div>
-                  </div>
-
-                </div>
-              </UCard>
-            </div>
-          </template>
-        </ClientOnly>
-      </div>
-    </UContainer>
+    </div>
   </section>
 </template>
 
@@ -146,6 +50,7 @@
 interface MartialArt {
   id: number
   name: string
+  short?: string
   description: string
   image: string
   benefits: string[]
@@ -153,19 +58,7 @@ interface MartialArt {
   difficulty: string
 }
 
-const getShadowClass = (id: number) => {
-  const shadows = {
-    1: 'shadow-sky-400/40',
-    2: 'shadow-green-400/40',
-    3: 'shadow-red-400/40',
-    4: 'shadow-cyan-400/40',
-    5: 'shadow-emerald-400/40',
-    6: 'shadow-yellow-400/40'
-  }
-  return shadows[id as keyof typeof shadows] || 'shadow-gray-700'
-}
-
-const martialArts = ref<MartialArt[]>([
+const martialArts: MartialArt[] = [
   {
     id: 1,
     name: 'Бокс',
@@ -205,7 +98,8 @@ const martialArts = ref<MartialArt[]>([
   {
     id: 5,
     name: 'Бразильское Джиу-джитсу',
-    description: 'Искусство борьбы на земле, основанное на технике и рычагах. Развивает стратегическое мышление и гибкость.',
+    short: 'Джиу-джитсу',
+    description: 'Бразильское джиу-джитсу: борьба на земле, основанная на технике и рычагах. Развивает стратегическое мышление и гибкость.',
     image: '/images/fight-category/BJJ.webp',
     benefits: ['Техника', 'Стратегия', 'Гибкость'],
     duration: '90 мин',
@@ -220,7 +114,7 @@ const martialArts = ref<MartialArt[]>([
     duration: '90 мин',
     difficulty: 'Продвинутый'
   }
-])
+]
 
 // Mapping названий к значениям из BookingForm
 const trainingTypeMap: Record<string, string> = {
@@ -240,9 +134,7 @@ const selectMartialArt = (art: MartialArt) => {
     setSelectedTrainingType(trainingType)
   }
 
-  // Скроллим к форме в Header
-  // Триггерим событие для открытия модального окна
-  const event = new CustomEvent('openBookingModal')
-  window.dispatchEvent(event)
+  // Открываем модальное окно записи
+  window.dispatchEvent(new CustomEvent('openBookingModal'))
 }
 </script>

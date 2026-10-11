@@ -1,217 +1,156 @@
 <template>
-  <div
-    class="bg-gradient-to-b from-orange-50 via-yellow-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
-    <!-- Hero секция -->
-    <section
-      class="relative py-24 md:py-32 bg-gradient-to-r from-orange-500 to-green-600 dark:from-orange-600 dark:to-green-700 text-white overflow-hidden">
-      <!-- Анимированный фон -->
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-10 left-10 w-32 h-32 bg-white rounded-full animate-bounce"></div>
-        <div class="absolute bottom-10 right-10 w-24 h-24 bg-white rounded-full animate-bounce"
-          style="animation-delay: 0.5s"></div>
-        <div class="absolute top-1/2 left-1/4 w-20 h-20 bg-white rounded-full animate-ping"></div>
-        <div class="absolute top-1/3 right-1/4 w-16 h-16 bg-white rounded-full animate-pulse"
-          style="animation-delay: 1s"></div>
-      </div>
-
-      <!-- Плавающие иконки боевых искусств -->
-      <div class="absolute inset-0 opacity-20 pointer-events-none">
-        <div class="absolute top-20 left-20 text-6xl animate-float">🥋</div>
-        <div class="absolute top-40 right-32 text-5xl animate-float-delayed">🥊</div>
-        <div class="absolute bottom-32 left-1/4 text-4xl animate-float" style="animation-delay: 1.5s">⚡</div>
-        <div class="absolute bottom-20 right-20 text-5xl animate-float-delayed" style="animation-delay: 2s">🏆</div>
-      </div>
-
-      <UContainer class="relative z-10 px-6">
-        <div class="text-center">
-          <h1 class="text-5xl md:text-6xl font-bold mb-6 drop-shadow-lg text-white">
-            Боевые искусства для детей
+  <div class="min-h-screen pt-20">
+    <!-- Hero -->
+    <section class="border-b border-cm-line">
+      <div class="cm-container flex flex-wrap items-center gap-10 py-12 sm:gap-12 sm:py-16">
+        <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-5 sm:gap-6">
+          <span class="cm-kicker">// Детям и подросткам 5–16 лет</span>
+          <h1 class="cm-display m-0 text-[clamp(60px,8.4vw,136px)] leading-[0.82]">
+            Боевые искусства <span class="text-cm-red-title">для детей</span>
           </h1>
-          <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto drop-shadow-md">
-            Развиваем силу, дисциплину и уверенность в себе с ранних лет
+          <p class="m-0 max-w-[520px] text-lg leading-relaxed text-cm-soft sm:text-[19px]">
+            Развиваем силу, дисциплину и уверенность в себе с ранних лет.
           </p>
-          <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl"
-            @click="openBooking">
-            <UIcon name="i-heroicons-rocket-launch" class="w-6 h-6 mr-2" />
-            Записаться на пробное занятие
-          </UButton>
-        </div>
-      </UContainer>
-    </section>
-
-    <!-- Почему боевые искусства для детей -->
-    <section class="py-20 bg-white dark:bg-gray-800">
-      <UContainer class="px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Почему это важно для вашего ребёнка?
-          </h2>
-          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Боевые искусства — это не только физическая подготовка, но и развитие личности
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="benefit in benefits" :key="benefit.title"
-            class="bg-gradient-to-br from-orange-50 to-red-50 dark:from-gray-700 dark:to-gray-600 rounded-2xl shadow-md p-8 hover:shadow-xl transition-all hover:-translate-y-1">
-            <div
-              class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-6 shadow-lg">
-              <UIcon :name="benefit.icon" class="w-8 h-8 text-white" />
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ benefit.title }}</h3>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ benefit.description }}</p>
+          <div class="mt-1 flex flex-col gap-3 sm:flex-row">
+            <button type="button" class="cm-btn cm-btn-red cm-cut-lg cm-btn-lg" @click="openBooking">
+              Пробное занятие — 0 ₽
+            </button>
+            <a href="#groups" class="cm-btn cm-btn-outline cm-btn-lg">Группы и время</a>
           </div>
         </div>
-      </UContainer>
-    </section>
 
-    <!-- Наши достижения (анимированные счетчики) -->
-    <section
-      class="py-20 bg-gradient-to-r from-blue-600 to-cyan-600 dark:from-blue-700 dark:to-cyan-700 text-white overflow-hidden relative">
-      <!-- Анимированные фоновые элементы -->
-      <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"
-          style="animation-delay: 1s"></div>
+        <div class="relative h-[380px] min-w-0 flex-[1_1_440px] overflow-hidden bg-[#f3efe7] sm:h-[500px]">
+          <div aria-hidden="true" class="cm-hatch absolute inset-0 opacity-50" />
+          <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-16 bg-cm-red" />
+          <span class="cm-display absolute left-5 top-5 text-[30px] leading-[0.9] text-[#0a0a0b] sm:text-[34px]">
+            Растём<br>по ступеням
+          </span>
+          <div class="absolute inset-x-0 bottom-10 top-24 flex items-end justify-center">
+            <img v-for="step in steps" :key="step.label" :src="step.image" :alt="step.alt"
+              class="w-[30%] object-cover object-bottom mix-blend-multiply" :style="{ height: step.height }"
+              loading="lazy" />
+          </div>
+          <div
+            class="absolute inset-x-0 bottom-[18px] flex justify-center font-mono text-[13px] font-bold tracking-[0.14em] text-white">
+            <span v-for="step in steps" :key="step.label" class="w-[30%] text-center">{{ step.label }}</span>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <UContainer class="px-6 relative z-10">
-        <div class="text-center mb-12">
-          <h2 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg animate-fade-in">
-            Наши достижения
-          </h2>
-          <p class="text-xl drop-shadow-md opacity-90">
-            Цифры, которые говорят сами за себя
-          </p>
+    <!-- Цифры -->
+    <section class="border-b border-cm-line" aria-label="Наши достижения">
+      <div ref="statsRef" class="mx-auto grid max-w-[1376px] grid-cols-2 lg:grid-cols-4">
+        <div v-for="(stat, index) in stats" :key="stat.label" class="flex flex-col gap-1.5 border-cm-line px-4 py-6 sm:px-8 sm:py-8"
+          :class="[index % 2 === 0 ? 'border-r' : '', index < 2 ? 'border-b lg:border-b-0' : '', index === 1 ? 'lg:border-r' : '']">
+          <span class="cm-display text-[60px] leading-[0.85] sm:text-[84px]">
+            {{ animatedValues[index] || 0 }}<span class="text-cm-red-title">{{ stat.suffix }}</span>
+          </span>
+          <span class="font-mono text-[10px] uppercase tracking-[0.16em] text-cm-muted sm:text-xs">{{ stat.label }}</span>
         </div>
+      </div>
+    </section>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div v-for="(stat, index) in stats" :key="stat.label"
-            class="text-center transform hover:scale-110 transition-all duration-300"
-            :style="{ animationDelay: `${index * 100}ms` }">
-            <div class="mb-3 animate-bounce" :style="{ animationDelay: `${index * 200}ms` }">
-              <UIcon :name="stat.icon" class="w-12 h-12 md:w-16 md:h-16 mx-auto drop-shadow-lg" />
+    <!-- Почему это важно -->
+    <section class="py-16 sm:py-[100px]">
+      <div class="cm-container flex flex-col gap-10 sm:gap-12">
+        <SectionHead kicker="[01] / Зачем"
+          description="Боевые искусства — это не только физическая подготовка, но и развитие личности.">
+          Почему это важно<br>для <span class="text-cm-red-title">вашего ребёнка</span>
+        </SectionHead>
+        <div class="grid grid-cols-1 gap-px border border-cm-line bg-cm-line md:grid-cols-2 lg:grid-cols-3">
+          <div v-for="(benefit, index) in benefits" :key="benefit.title" class="flex flex-col gap-3.5 bg-cm-bg p-7 sm:p-8">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex h-[52px] w-[52px] items-center justify-center bg-cm-red text-white">
+                <UIcon :name="benefit.icon" class="h-6 w-6" />
+              </span>
+              <span class="font-mono text-sm font-bold text-cm-dim">{{ String(index + 1).padStart(2, '0') }}</span>
             </div>
-            <div ref="counterRefs" class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">
-              {{ animatedValues[index] || 0 }}+
-            </div>
-            <div class="text-lg md:text-xl opacity-90 drop-shadow-md">
-              {{ stat.label }}
-            </div>
+            <h3 class="cm-display m-0 text-[36px] leading-[0.92] sm:text-[38px]">{{ benefit.title }}</h3>
+            <p class="m-0 text-[15px] leading-relaxed text-cm-muted">{{ benefit.description }}</p>
           </div>
         </div>
-      </UContainer>
+      </div>
     </section>
 
     <!-- Возрастные группы -->
-    <section class="py-20 bg-gradient-to-b from-orange-50 to-yellow-50 dark:from-gray-900 dark:to-gray-800">
-      <UContainer class="px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Возрастные группы
-          </h2>
-          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Программы адаптированы под каждый возраст
-          </p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div v-for="group in ageGroups" :key="group.age"
-            class="bg-white dark:bg-gray-700 rounded-2xl shadow-xl overflow-hidden hover:scale-105 transition-transform">
-            <div :class="`p-8 text-white shadow-inner ${group.color}`">
-              <h3 class="text-3xl font-bold mb-2 drop-shadow-md">{{ group.age }}</h3>
-              <p class="text-lg drop-shadow-sm">{{ group.name }}</p>
-            </div>
-            <div class="p-8 bg-white dark:bg-gray-700">
-              <ul class="space-y-3">
-                <li v-for="item in group.features" :key="item" class="flex items-start gap-3">
-                  <UIcon name="i-heroicons-check-circle"
-                    class="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                  <span class="text-gray-700 dark:text-gray-300">{{ item }}</span>
-                </li>
-              </ul>
-              <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Расписание</p>
-                <p class="font-semibold text-gray-900 dark:text-white">{{ group.schedule }}</p>
+    <section id="groups" class="scroll-mt-20 border-y border-cm-line bg-cm-section py-16 sm:py-[100px]">
+      <div class="cm-container flex flex-col gap-10 sm:gap-12">
+        <SectionHead kicker="[02] / Возрастные группы"
+          description="Программы адаптированы под каждый возраст — от игровой формы до соревновательной практики.">
+          Своя группа <span class="text-cm-red-title">на каждый возраст</span>
+        </SectionHead>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <article v-for="group in ageGroups" :key="group.age" class="flex flex-col border border-cm-line bg-cm-bg">
+            <div class="relative h-[230px] overflow-hidden bg-[#f3efe7]">
+              <img :src="group.image" alt="" class="absolute bottom-0 right-3 h-full w-[55%] object-cover object-[50%_30%] mix-blend-multiply"
+                loading="lazy" />
+              <div class="absolute left-[22px] top-5 flex flex-col gap-1.5 text-[#0a0a0b]">
+                <span class="cm-display text-[88px] leading-[0.8] sm:text-[96px]">{{ group.age }}</span>
+                <span class="font-mono text-xs font-bold tracking-[0.16em]">ЛЕТ</span>
               </div>
+              <span class="absolute bottom-0 left-0 bg-[#0a0a0b] px-3.5 py-2 font-display text-[22px] font-black uppercase text-[#f3efe7]">
+                {{ group.name }}
+              </span>
             </div>
-          </div>
-        </div>
-      </UContainer>
-    </section>
-
-    <!-- Что включено в занятия -->
-    <section class="py-20 bg-white dark:bg-gray-800">
-      <UContainer class="px-6">
-        <div class="text-center mb-16">
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Что включено в занятия
-          </h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div v-for="activity in activities" :key="activity.title"
-            class="flex items-start gap-4 p-6 bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-gray-700 dark:to-gray-600 rounded-xl shadow-md hover:shadow-xl transition-all hover:-translate-y-1">
-            <div
-              class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
-              <UIcon :name="activity.icon" class="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 class="text-xl font-bold text-gray-300 mb-2">{{ activity.title }}</h3>
-              <p class="text-gray-700 dark:text-gray-300">{{ activity.description }}</p>
-            </div>
-          </div>
-        </div>
-      </UContainer>
-    </section>
-
-    <!-- Безопасность -->
-    <section class="py-20 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-gray-900 dark:to-gray-800">
-      <UContainer class="px-6">
-        <div class="bg-white dark:bg-gray-700 rounded-3xl shadow-2xl p-8 md:p-12">
-          <div class="text-center mb-12">
-            <div class="inline-block p-4 bg-green-100 dark:bg-green-900 rounded-full mb-6">
-              <UIcon name="i-heroicons-shield-check" class="w-16 h-16 text-green-600 dark:text-green-400" />
-            </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Безопасность превыше всего
-            </h2>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div v-for="safety in safetyFeatures" :key="safety.title" class="flex items-start gap-4">
-              <UIcon name="i-heroicons-check-badge" class="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0" />
+            <ul class="m-0 flex flex-1 list-none flex-col gap-3 p-6">
+              <li v-for="item in group.features" :key="item" class="flex gap-3 text-[15px] text-cm-soft">
+                <UIcon name="i-lucide-check" class="mt-0.5 h-[18px] w-[18px] shrink-0 text-cm-red-ink" />{{ item }}
+              </li>
+            </ul>
+            <div class="flex items-center justify-between gap-3 border-t border-cm-line px-6 py-[18px]">
               <div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ safety.title }}</h3>
-                <p class="text-gray-700 dark:text-gray-300">{{ safety.description }}</p>
+                <div class="cm-label">Расписание</div>
+                <div class="mt-1 font-mono text-[15px] font-bold">{{ group.schedule }}</div>
               </div>
+              <button type="button" class="cm-btn cm-btn-red cm-btn-sm" @click="openBooking">Записать</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Что включено + безопасность -->
+    <section class="py-16 sm:py-[100px]">
+      <div class="cm-container flex flex-wrap gap-5">
+        <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-7">
+          <div class="flex flex-col gap-3.5">
+            <span class="cm-kicker">[03] / Занятие</span>
+            <h2 class="cm-display m-0 text-[clamp(48px,5.6vw,84px)]">Что включено</h2>
+          </div>
+          <ol class="m-0 flex list-none flex-col border-t border-cm-line p-0">
+            <li v-for="(activity, index) in activities" :key="activity.title" class="flex gap-5 border-b border-cm-line py-[18px]">
+              <span class="w-10 shrink-0 pt-1 font-mono text-sm font-bold text-cm-red-ink">{{ String(index + 1).padStart(2, '0') }}</span>
+              <span class="flex flex-col gap-1">
+                <span class="font-display text-[28px] font-black uppercase leading-none">{{ activity.title }}</span>
+                <span class="text-sm leading-normal text-cm-muted">{{ activity.description }}</span>
+              </span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="flex min-w-0 flex-[1_1_520px] flex-col gap-6 bg-cm-inv p-7 text-cm-on-inv sm:p-10">
+          <div class="flex items-center gap-4">
+            <span class="inline-flex h-16 w-16 shrink-0 items-center justify-center bg-cm-on-inv text-cm-inv">
+              <UIcon name="i-lucide-shield-check" class="h-[30px] w-[30px]" />
+            </span>
+            <h2 class="cm-display m-0 text-[44px] leading-[0.88] sm:text-[56px]">Безопасность<br>превыше всего</h2>
+          </div>
+          <div class="grid grid-cols-1 gap-x-7 gap-y-5 sm:grid-cols-2">
+            <div v-for="safety in safetyFeatures" :key="safety.title"
+              class="flex flex-col gap-1.5 border-t-2 border-cm-on-inv pt-3.5">
+              <span class="font-display text-2xl font-black uppercase leading-none">{{ safety.title }}</span>
+              <span class="text-sm leading-normal text-cm-on-inv-muted">{{ safety.description }}</span>
             </div>
           </div>
         </div>
-      </UContainer>
+      </div>
     </section>
 
-    <!-- CTA секция -->
-    <section
-      class="py-24 md:py-32 bg-gradient-to-r from-red-600 to-orange-600 dark:from-red-700 dark:to-orange-700 text-white">
-      <UContainer class="px-6">
-        <div class="text-center">
-          <h2 class="text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
-            Готовы начать?
-          </h2>
-          <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto drop-shadow-md">
-            Запишитесь на бесплатное пробное занятие прямо сейчас!
-          </p>
-          <UButton color="neutral" variant="solid" size="xl"
-            class="bg-white !text-red-600 font-bold text-lg hover:bg-gray-100 dark:hover:bg-gray-200 shadow-xl"
-            @click="openBooking">
-            <UIcon name="i-heroicons-phone" class="w-6 h-6 mr-2" />
-            Записаться на пробное занятие
-          </UButton>
-        </div>
-      </UContainer>
-    </section>
+    <CtaBand kicker="// Готовы начать?" button-text="Записать ребёнка"
+      description="Запишите ребёнка на бесплатное пробное занятие прямо сейчас.">
+      Первая — <span class="text-white">бесплатно</span>
+    </CtaBand>
   </div>
 </template>
 
@@ -220,31 +159,22 @@ import { onMounted, ref } from 'vue'
 
 // Данные для анимированных счетчиков
 const stats = [
-  {
-    icon: 'i-heroicons-users',
-    value: 200,
-    label: 'Учеников'
-  },
-  {
-    icon: 'i-heroicons-trophy',
-    value: 50,
-    label: 'Призеров'
-  },
-  {
-    icon: 'i-heroicons-calendar',
-    value: 8,
-    label: 'Лет опыта'
-  },
-  {
-    icon: 'i-heroicons-star',
-    value: 100,
-    label: '% Довольных родителей'
-  }
+  { value: 200, suffix: '+', label: 'Учеников' },
+  { value: 50, suffix: '+', label: 'Призёров' },
+  { value: 8, suffix: '+', label: 'Лет опыта' },
+  { value: 100, suffix: '%', label: 'Довольных родителей' }
+]
+
+// Ступени в хиро: иллюстрации растут вместе с возрастом
+const steps = [
+  { label: '5–7', image: '/images/fight-category/kid.webp', alt: 'Ребёнок 5–7 лет в экипировке', height: '62%' },
+  { label: '8–11', image: '/images/fight-category/kid.webp', alt: 'Ребёнок 8–11 лет в экипировке', height: '78%' },
+  { label: '12–16', image: '/images/fight-category/teen.webp', alt: 'Подросток 12–16 лет в экипировке', height: '96%' }
 ]
 
 // Реактивные значения для анимации
 const animatedValues = ref<number[]>(stats.map(() => 0))
-const counterRefs = ref<HTMLElement[]>([])
+const statsRef = ref<HTMLElement | null>(null)
 
 // Функция анимации счетчика
 const animateCounter = (index: number, targetValue: number, duration: number = 2000) => {
@@ -286,40 +216,40 @@ onMounted(() => {
     })
   }, { threshold: 0.3 })
 
-  // Наблюдаем за первым счетчиком
-  if (counterRefs.value[0]) {
-    observer.observe(counterRefs.value[0])
+  // Наблюдаем за блоком с цифрами
+  if (statsRef.value) {
+    observer.observe(statsRef.value)
   }
 })
 
 const benefits = [
   {
-    icon: 'i-heroicons-bolt',
+    icon: 'i-lucide-zap',
     title: 'Физическое развитие',
     description: 'Улучшение координации, силы, гибкости и выносливости. Здоровое физическое развитие с раннего возраста.'
   },
   {
-    icon: 'i-heroicons-academic-cap',
+    icon: 'i-lucide-graduation-cap',
     title: 'Дисциплина',
     description: 'Обучение самоконтролю, уважению к старшим и соблюдению правил. Формирование ответственности.'
   },
   {
-    icon: 'i-heroicons-star',
+    icon: 'i-lucide-star',
     title: 'Уверенность в себе',
     description: 'Преодоление страхов, достижение целей и развитие лидерских качеств.'
   },
   {
-    icon: 'i-heroicons-shield-check',
+    icon: 'i-lucide-shield-check',
     title: 'Самооборона',
     description: 'Навыки защиты себя в сложных ситуациях и умение избегать конфликтов.'
   },
   {
-    icon: 'i-heroicons-users',
+    icon: 'i-lucide-users',
     title: 'Социализация',
     description: 'Работа в команде, новые друзья и умение находить общий язык с разными людьми.'
   },
   {
-    icon: 'i-heroicons-heart',
+    icon: 'i-lucide-heart',
     title: 'Здоровый образ жизни',
     description: 'Формирование привычки к регулярным тренировкам и здоровому питанию.'
   }
@@ -327,40 +257,40 @@ const benefits = [
 
 const ageGroups = [
   {
-    age: '5-7 лет',
+    age: '5–7',
     name: 'Подготовительная группа',
-    color: 'bg-gradient-to-br from-blue-400 to-blue-600',
+    image: '/images/fight-category/kid.webp',
     features: [
       'Игровая форма обучения',
       'Развитие координации',
       'Базовые техники',
       'Социальные навыки'
     ],
-    schedule: 'Пн, Ср, Пт - 16:00-17:00'
+    schedule: 'Пн · Ср · Пт  16:00–17:00'
   },
   {
-    age: '8-11 лет',
+    age: '8–11',
     name: 'Младшая группа',
-    color: 'bg-gradient-to-br from-green-400 to-green-600',
+    image: '/images/fight-category/kid.webp',
     features: [
       'Изучение техник',
       'Спарринги в защите',
       'Развитие дисциплины',
       'Участие в соревнованиях'
     ],
-    schedule: 'Пн, Ср, Пт - 17:00-18:30'
+    schedule: 'Пн · Ср · Пт  17:00–18:30'
   },
   {
-    age: '12-16 лет',
+    age: '12–16',
     name: 'Подростковая группа',
-    color: 'bg-gradient-to-br from-orange-400 to-red-500',
+    image: '/images/fight-category/teen.webp',
     features: [
       'Продвинутые техники',
       'Полноценные спарринги',
       'Физическая подготовка',
       'Соревновательная практика'
     ],
-    schedule: 'Пн, Ср, Пт - 18:30-20:00'
+    schedule: 'Пн · Ср · Пт  18:30–20:00'
   }
 ]
 
@@ -432,58 +362,6 @@ const openBooking = () => {
 // SEO
 useSeoMeta({
   title: 'Боевые искусства для детей | Camelot Sport Academy',
-  description: 'Детские секции боевых искусств в Москве. Развиваем силу, дисциплину и уверенность в себе. Группы для детей от 5 до 16 лет. Бесплатное пробное занятие!'
+  description: 'Детские секции боевых искусств в Санкт-Петербурге на Парнасе. Развиваем силу, дисциплину и уверенность в себе. Группы для детей от 5 до 16 лет. Бесплатное пробное занятие!'
 })
 </script>
-
-<style scoped>
-/* Плавающая анимация */
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-20px) rotate(5deg);
-  }
-}
-
-@keyframes float-delayed {
-
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-30px) rotate(-5deg);
-  }
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float-delayed 4s ease-in-out infinite;
-}
-
-/* Fade-in анимация */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 1s ease-out;
-}
-</style>

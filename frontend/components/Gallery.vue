@@ -1,102 +1,89 @@
 <template>
-  <div
-    class="bg-gradient-to-b from-gray-100 to-white dark:from-black dark:to-gray-900 transition-colors duration-300 overflow-hidden">
+  <section class="pb-16 sm:pb-[120px]">
     <!-- Заголовок галереи -->
-    <div v-if="title || description" class="text-center pt-8 pb-8">
-      <h2 v-if="title" data-aos="fade-down" data-aos-duration="600"
-        class="text-5xl font-bold text-gray-900 dark:text-gray-300 mb-12">{{ title }}</h2>
-      <p v-if="description" data-aos="fade-up" data-aos-duration="600" data-aos-delay="100"
-        class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">{{ description }}</p>
+    <div class="cm-container mb-8 sm:mb-10">
+      <SectionHead kicker="[05] / Галерея">
+        Клетка <span class="text-cm-red-title">не врёт</span>
+        <template #aside>
+          <a :href="vkAlbumUrl" target="_blank" rel="noopener noreferrer" class="cm-btn cm-btn-outline">
+            Больше фото в ВК
+            <UIcon name="i-lucide-arrow-up-right" class="h-[18px] w-[18px]" />
+          </a>
+        </template>
+      </SectionHead>
     </div>
 
     <!-- Галерея -->
-    <div ref="galleryContainer" class="masonry-container" :style="{ columnCount: columnCount, columnGap: gap + 'px' }">
-      <div v-for="(image, index) in images" :key="index" data-aos="fade-up" :data-aos-delay="(index % 10) * 50"
-        data-aos-duration="500" class="masonry-item group cursor-pointer break-inside-avoid"
+    <div ref="galleryContainer" class="masonry-container px-1.5"
+      :style="{ columnCount: columnCount, columnGap: gap + 'px' }">
+      <div v-for="(image, index) in images" :key="index" class="masonry-item group cursor-pointer break-inside-avoid"
         :style="{ marginBottom: gap + 'px' }" @click="handleImageClick(image, index)">
-        <!-- Контейнер изображения -->
-        <div
-          class="relative overflow-hidden bg-gray-200 dark:bg-gray-900 transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-          <!-- Изображение -->
-          <img
-            :src="image"
-            :alt="`Gallery image ${index + 1}`"
-            class="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
-            @error="onImageError"
-          />
-
-          <!-- Простой overlay при hover -->
-          <div
-            class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div class="p-3 bg-black/50 text-white rounded-full">
-              <UIcon name="i-heroicons-magnifying-glass-plus" class="w-6 h-6" />
-            </div>
-          </div>
-        </div>
+        <button type="button" class="relative block w-full cursor-pointer overflow-hidden bg-cm-surface-2"
+          :aria-label="`Открыть фото ${index + 1}`">
+          <img :src="image" :alt="`Фото из зала Camelot ${index + 1}`"
+            class="h-auto w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy"
+            @error="onImageError" />
+          <span
+            class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <span class="cm-cut inline-flex h-12 w-12 items-center justify-center bg-cm-red text-white">
+              <UIcon name="i-lucide-zoom-in" class="h-6 w-6" />
+            </span>
+          </span>
+        </button>
       </div>
     </div>
 
     <!-- Кнопка "Показать еще" или ссылка на VK -->
-    <div class="text-center mt-8 pb-8">
-      <button v-if="canLoadMore" @click="$emit('loadMore')" :disabled="loadingMore"
-        class="px-6 py-3 bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-bold rounded-lg transition-colors disabled:opacity-50 shadow-lg">
-        <span v-if="!loadingMore">Показать еще</span>
-        <span v-else class="flex items-center justify-center space-x-2">
-          <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-          <span>Загрузка...</span>
+    <div class="mt-10 flex justify-center px-4">
+      <button v-if="canLoadMore" type="button" class="cm-btn cm-btn-red cm-cut" :disabled="loadingMore"
+        @click="$emit('loadMore')">
+        <span v-if="!loadingMore">Показать ещё</span>
+        <span v-else class="flex items-center gap-2.5">
+          <span class="h-4 w-4 animate-spin rounded-full border-2 border-white border-b-transparent" />
+          Загрузка
         </span>
       </button>
 
-      <!-- Ссылка на VK альбом когда все фото загружены -->
-      <a v-else
-        href="https://vk.com/albums-216306733"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 px-6 py-3 bg-[#0077FF] hover:bg-[#005FCC] text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.15 13.72c-.37.46-.98.7-1.82.7h-1.21c-.51 0-.78-.12-1.32-.61-.54-.49-1.04-1.34-1.54-1.34-.08 0-.16.01-.23.03-.42.11-.57.53-.57 1.48 0 .39-.22.62-.75.62-.98 0-2.08-.2-3.02-1.14-.94-.94-1.92-2.82-1.92-2.82s-.15-.36 0-.54c.14-.17.52-.18.52-.18h1.5c.28 0 .38.13.49.36.26.61.78 1.58 1.11 1.88.09.08.13.12.19.12.06 0 .12-.05.12-.29V11.1c-.03-.77-.47-.84-.47-1.11 0-.14.11-.28.29-.28h2.35c.24 0 .33.13.33.35v2.89c0 .24.11.33.18.33.14 0 .25-.09.5-.34.77-.87 1.32-2.21 1.32-2.21.07-.16.21-.31.45-.31h1.5c.34 0 .41.17.34.41-.13.43-.98 1.93-1.63 2.77-.11.14-.15.21 0 .37.11.13.48.47.73.75.46.52.81 1.05.9 1.39.1.35-.05.52-.4.52z"/>
-        </svg>
-        Смотреть больше фото VK
+      <a v-else :href="vkAlbumUrl" target="_blank" rel="noopener noreferrer" class="cm-btn cm-btn-red cm-cut">
+        <IconVk class="h-5 w-5" />
+        Смотреть все фото
       </a>
     </div>
 
-    <!-- Lightbox модалка -->
+    <!-- Lightbox -->
     <Teleport to="body">
-      <div v-if="lightboxImage" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md"
-        @click="closeLightbox" @keydown.esc="closeLightbox">
-        <!-- Закрыть -->
-        <button @click="closeLightbox"
-          class="fixed top-4 right-4 md:top-8 md:right-8 z-20 w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full transition-all shadow-2xl hover:scale-110">
-          <UIcon name="i-heroicons-x-mark" class="w-6 h-6 md:w-7 md:h-7" />
+      <div v-if="lightboxImage" role="dialog" aria-modal="true" aria-label="Просмотр фото"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md" @click="closeLightbox">
+        <button type="button" aria-label="Закрыть"
+          class="fixed right-4 top-4 z-20 flex h-12 w-12 cursor-pointer items-center justify-center bg-cm-red text-white transition-colors hover:bg-cm-red-hover md:right-8 md:top-8 md:h-14 md:w-14"
+          @click="closeLightbox">
+          <UIcon name="i-lucide-x" class="h-6 w-6 md:h-7 md:w-7" />
         </button>
 
-        <!-- Навигация слева -->
-        <button v-if="lightboxIndex > 0" @click.stop="navigateLightbox(-1)"
-          class="fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full transition-all shadow-2xl hover:scale-110">
-          <UIcon name="i-heroicons-chevron-left" class="w-6 h-6 md:w-8 md:h-8" />
+        <button v-if="lightboxIndex > 0" type="button" aria-label="Предыдущее фото"
+          class="fixed left-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center border border-white/30 bg-black/60 text-white transition-colors hover:border-cm-red hover:bg-cm-red md:left-8 md:h-16 md:w-16"
+          @click.stop="navigateLightbox(-1)">
+          <UIcon name="i-lucide-chevron-left" class="h-6 w-6 md:h-8 md:w-8" />
         </button>
 
-        <!-- Навигация справа -->
-        <button v-if="lightboxIndex < images.length - 1" @click.stop="navigateLightbox(1)"
-          class="fixed right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 w-12 h-12 md:w-16 md:h-16 flex items-center justify-center bg-red-600 hover:bg-red-700 text-white rounded-full transition-all shadow-2xl hover:scale-110">
-          <UIcon name="i-heroicons-chevron-right" class="w-6 h-6 md:w-8 md:h-8" />
+        <button v-if="lightboxIndex < images.length - 1" type="button" aria-label="Следующее фото"
+          class="fixed right-4 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center border border-white/30 bg-black/60 text-white transition-colors hover:border-cm-red hover:bg-cm-red md:right-8 md:h-16 md:w-16"
+          @click.stop="navigateLightbox(1)">
+          <UIcon name="i-lucide-chevron-right" class="h-6 w-6 md:h-8 md:w-8" />
         </button>
 
-        <!-- Изображение -->
-        <div class="relative w-full h-full flex items-center justify-center p-4 md:p-8" @click.stop>
-          <img :src="lightboxImage" :alt="`Gallery image ${lightboxIndex + 1}`"
-            class="max-w-full max-h-[calc(100vh-8rem)] md:max-h-[calc(100vh-12rem)] object-contain" />
+        <div class="relative flex h-full w-full items-center justify-center p-4 md:p-8" @click.stop>
+          <img :src="lightboxImage" :alt="`Фото из зала Camelot ${lightboxIndex + 1}`"
+            class="max-h-[calc(100vh-8rem)] max-w-full object-contain md:max-h-[calc(100vh-12rem)]" />
         </div>
 
-        <!-- Счетчик изображений -->
         <div
-          class="fixed bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 z-20 bg-black/80 backdrop-blur-md rounded-full px-6 py-3 shadow-2xl">
-          <span class="text-white font-semibold text-lg">{{ lightboxIndex + 1 }} / {{ images.length }}</span>
+          class="fixed bottom-4 left-1/2 z-20 -translate-x-1/2 border border-white/20 bg-black/80 px-5 py-2.5 font-mono text-sm font-bold tracking-[0.12em] text-white md:bottom-8">
+          {{ String(lightboxIndex + 1).padStart(2, '0') }} / {{ String(images.length).padStart(2, '0') }}
         </div>
       </div>
     </Teleport>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -114,7 +101,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   columns: 0, // 0 = автоматически
-  gap: 4,
+  gap: 6,
   canLoadMore: false,
   loadingMore: false
 })
@@ -127,6 +114,8 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>()
+
+const vkAlbumUrl = 'https://vk.com/albums-216306733'
 
 // Реактивные данные
 const galleryContainer = ref<HTMLElement>()

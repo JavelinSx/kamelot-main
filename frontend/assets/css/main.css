@@ -1,151 +1,376 @@
-/* Kamelot - Боевые искусства */
+/* Camelot — Fight Night: дизайн-система сайта */
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-:root {
-  --font-heading: "Cinzel", serif;
-  --font-subheading: "Oswald", sans-serif;
-  --font-body: "Inter", sans-serif;
+@theme {
+  --font-sans: "Onest", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --font-display: "Sofia Sans Extra Condensed", "Oswald", "Arial Narrow", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* Цвета из токенов: bg-cm-bg, text-cm-muted, border-cm-line и т.д. */
+@theme inline {
+  --color-cm-bg: var(--cm-bg);
+  --color-cm-section: var(--cm-section);
+  --color-cm-surface: var(--cm-surface);
+  --color-cm-surface-2: var(--cm-surface-2);
+  --color-cm-line: var(--cm-line);
+  --color-cm-line-2: var(--cm-line-2);
+  --color-cm-text: var(--cm-text);
+  --color-cm-soft: var(--cm-soft);
+  --color-cm-muted: var(--cm-muted);
+  --color-cm-dim: var(--cm-dim);
+  --color-cm-red: var(--cm-red);
+  --color-cm-red-hover: var(--cm-red-hover);
+  --color-cm-red-ink: var(--cm-red-ink);
+  --color-cm-red-title: var(--cm-red-title);
+  --color-cm-inv: var(--cm-inv);
+  --color-cm-on-inv: var(--cm-on-inv);
+  --color-cm-on-inv-muted: var(--cm-on-inv-muted);
+  --color-cm-header: var(--cm-header);
+}
+
+/* Тёмная тема — основная */
+:root,
+.dark {
+  --cm-bg: #0a0a0b;
+  --cm-section: #111113;
+  --cm-surface: #131315;
+  --cm-surface-2: #1c1c1f;
+  --cm-line: #2a2a2e;
+  --cm-line-2: #3a3a40;
+  --cm-text: #f3efe7;
+  --cm-soft: #d6d2ca;
+  --cm-muted: #a8a49c;
+  --cm-dim: #8d897f;
+  --cm-red: #d91a0f;
+  --cm-red-hover: #f0281c;
+  --cm-red-ink: #ff4436;
+  --cm-red-title: #e8231a;
+  --cm-inv: #f3efe7;
+  --cm-on-inv: #0a0a0b;
+  --cm-on-inv-muted: #3a3833;
+  --cm-header: rgba(10, 10, 11, 0.94);
+
+  --ui-radius: 0rem;
+  --ui-bg: var(--cm-bg);
+  --ui-bg-muted: var(--cm-surface);
+  --ui-bg-elevated: var(--cm-surface-2);
+  --ui-bg-accented: var(--cm-line);
+  --ui-bg-inverted: var(--cm-inv);
+  --ui-border: var(--cm-line);
+  --ui-border-muted: var(--cm-line);
+  --ui-border-accented: var(--cm-line-2);
+  --ui-border-inverted: var(--cm-inv);
+  --ui-text: var(--cm-soft);
+  --ui-text-toned: var(--cm-soft);
+  --ui-text-muted: var(--cm-muted);
+  --ui-text-dimmed: var(--cm-dim);
+  --ui-text-highlighted: var(--cm-text);
+  --ui-text-inverted: var(--cm-on-inv);
+
+  color-scheme: dark;
+}
+
+/* Светлая тема */
+.light {
+  --cm-bg: #f2eee6;
+  --cm-section: #ebe6dc;
+  --cm-surface: #faf8f3;
+  --cm-surface-2: #e4dfd4;
+  --cm-line: #d5cfc3;
+  --cm-line-2: #bfb8aa;
+  --cm-text: #111113;
+  --cm-soft: #2f2d29;
+  --cm-muted: #57534b;
+  --cm-dim: #6b675f;
+  --cm-red: #d91a0f;
+  --cm-red-hover: #b8150b;
+  --cm-red-ink: #b8150b;
+  --cm-red-title: #d91a0f;
+  --cm-inv: #111113;
+  --cm-on-inv: #f3efe7;
+  --cm-on-inv-muted: #b9b4aa;
+  --cm-header: rgba(242, 238, 230, 0.94);
+
+  color-scheme: light;
 }
 
 @layer base {
-  /* Основные стили */
   html {
-    font-family: "Exo 2", Courier, monospace;
-    @apply bg-white text-gray-900;
+    font-family: var(--font-sans);
+    background: var(--cm-bg);
+    color: var(--cm-text);
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* Заголовки */
+  body {
+    background: var(--cm-bg);
+    color: var(--cm-text);
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-family: "Oswald", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    @apply font-semibold text-gray-900;
+    font-family: var(--font-display);
+    font-weight: 800;
   }
 
-  h1:not(.custom-size) {
-    @apply text-4xl lg:text-5xl;
-  }
-  h2 {
-    @apply text-3xl lg:text-4xl;
-  }
-  h3 {
-    @apply text-2xl lg:text-3xl;
+  ::selection {
+    background: var(--cm-red);
+    color: #ffffff;
   }
 }
 
-@layer components {
-  /* Кнопки в стиле Kamelot */
-  .btn-kamelot {
-    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300;
-  }
+/* Классы дизайн-системы объявлены через @utility: так обычные утилиты (h-11, px-4…) могут их
+   переопределять, а порядок CSS-слоёв не зависит от стилей, которые иконки вставляют в <head>. */
+@utility cm-container {
+  width: 100%;
+  max-width: 1376px;
+  margin-inline: auto;
+  padding-inline: 16px;
 
-  .btn-primary {
-    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 bg-red-600 text-white hover:bg-red-700
-           active:bg-red-800 shadow-lg hover:shadow-xl;
-  }
-
-  .btn-secondary {
-    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 bg-gray-900 text-white hover:bg-gray-800
-           active:bg-gray-950 shadow-lg hover:shadow-xl;
-  }
-
-  .btn-outline {
-    @apply px-6 py-3 font-semibold rounded-lg transition-all duration-300 border-2 border-red-600 text-red-600
-           hover:bg-red-600 hover:text-white;
-  }
-
-  /* Карточки */
-  .card-kamelot {
-    @apply bg-white border border-gray-200 rounded-xl shadow-lg
-           hover:shadow-xl transition-shadow duration-300;
-  }
-
-  /* Навигация */
-  .nav-kamelot {
-    @apply bg-white/95 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50;
-  }
-
-  /* Боевые искусства - специфичные компоненты */
-  .martial-arts-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-           bg-red-100 text-red-700 border border-red-200;
-  }
-
-  .belt-rank {
-    @apply inline-block w-4 h-4 rounded-sm mr-2;
-  }
-
-  /* Градиенты для фонов */
-  .bg-kamelot-gradient {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  }
-
-  .bg-kamelot-dark-gradient {
-    background: linear-gradient(135deg, #171717 0%, #0a0a0a 100%);
+  @media (width >= 640px) {
+    padding-inline: 32px;
   }
 }
 
-@layer utilities {
-  /* Утилиты для текста */
-  .text-kamelot-primary {
-    @apply text-red-600;
+/* Типографика */
+@utility cm-display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.86;
+}
+
+@utility cm-h1 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.82;
+  font-size: clamp(56px, 9vw, 150px);
+}
+
+@utility cm-h2 {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  line-height: 0.86;
+  font-size: clamp(48px, 7vw, 112px);
+}
+
+@utility cm-kicker {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cm-red-ink);
+}
+
+@utility cm-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cm-dim);
+}
+
+@utility cm-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--cm-line-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cm-soft);
+}
+
+@utility cm-outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1.2px var(--cm-text);
+}
+
+@utility cm-ghost-text {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--cm-line);
+}
+
+/* Кнопки */
+@utility cm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 26px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+
+  &:active {
+    transform: translateY(1px);
   }
 
-  .text-kamelot-secondary {
-    @apply text-gray-900;
-  }
-
-  /* Анимации для боевых искусств */
-  .punch-animation {
-    @apply transform transition-transform duration-150 hover:scale-105 active:scale-95;
-  }
-
-  .fight-card {
-    @apply bg-white border border-gray-200 rounded-xl shadow-lg
-           hover:shadow-xl transition-shadow duration-300 p-6 hover:border-red-300 cursor-pointer
-           transform transition-all duration-300 hover:-translate-y-1;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 }
 
-/* Критичные стили для быстрого LCP */
-.hero-title-line1,
-.hero-title-line2 {
-  /* Используем системный шрифт по умолчанию для мгновенной отрисовки */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-weight: 700;
-  /* После загрузки Oswald он заменит системный шрифт */
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
+@utility cm-btn-sm {
+  height: 44px;
+  padding: 0 18px;
+  font-size: 19px;
 }
 
-.hero-title-line2 {
-  animation-delay: 0.2s;
+@utility cm-btn-lg {
+  height: 60px;
+  padding: 0 30px;
+  font-size: 25px;
 }
 
-@keyframes fadeInUp {
+@utility cm-btn-red {
+  background-color: var(--cm-red);
+  color: #ffffff;
+
+  &:hover {
+    background-color: var(--cm-red-hover);
+    color: #ffffff;
+  }
+}
+
+@utility cm-btn-outline {
+  border: 1.5px solid var(--cm-text);
+  color: var(--cm-text);
+  background-color: transparent;
+
+  &:hover {
+    background-color: var(--cm-text);
+    color: var(--cm-bg);
+  }
+}
+
+@utility cm-btn-inv {
+  background-color: var(--cm-inv);
+  color: var(--cm-on-inv);
+
+  &:hover {
+    background-color: var(--cm-red);
+    color: #ffffff;
+  }
+}
+
+/* Срезанные углы */
+@utility cm-cut {
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+@utility cm-cut-lg {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+@utility cm-tag-cut {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+/* Поверхности */
+@utility cm-card {
+  background-color: var(--cm-surface);
+  border: 1px solid var(--cm-line);
+}
+
+@utility cm-hatch {
+  background-image: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.09) 0px, rgba(0, 0, 0, 0.09) 2px, transparent 2px, transparent 16px);
+}
+
+@utility cm-scanlines {
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0px, rgba(0, 0, 0, 0.22) 1px, transparent 1px, transparent 3px);
+}
+
+@utility cm-no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Бегущая лента */
+@utility cm-marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: cm-marquee 40s linear infinite;
+}
+
+@utility cm-marquee-track-rev {
+  animation-direction: reverse;
+  animation-duration: 48s;
+}
+
+/* Логотип белый — в светлой теме инвертируем */
+.light .cm-logo {
+  filter: invert(1);
+}
+
+@keyframes cm-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes cm-rise {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Когда Oswald загрузится, применяем его */
-@supports (font-family: "Oswald") {
-  .hero-title-line1,
-  .hero-title-line2 {
-    font-family: "Oswald", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+.cm-rise {
+  animation: cm-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.cm-rise-2 {
+  animation-delay: 0.12s;
+}
+
+.cm-rise-3 {
+  animation-delay: 0.24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cm-marquee-track,
+  .cm-rise {
+    animation: none;
   }
 }
 
-/* Smooth scroll - ПОСЛЕ всех слоёв */
+/* Smooth scroll — после всех слоёв */
 html,
 body {
   scroll-behavior: smooth !important;

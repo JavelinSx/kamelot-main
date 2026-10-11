@@ -1,78 +1,41 @@
 <template>
-  <div class="min-h-screen bg-white dark:bg-gray-900">
-    <!-- Хедер страницы -->
-    <section class="relative pt-20 mb-10 bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900">
-      <UContainer>
-        <div class="text-center" data-aos="fade-down">
-          <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-orange-500 to-red-600">
-              Цены и абонементы
-            </span>
-          </h1>
-          <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-            Выберите подходящий тариф для тренировок по боевым искусствам.
-            Пробное занятие - бесплатно! Все абонементы включают доступ ко всем видам единоборств.
-          </p>
-        </div>
-      </UContainer>
-    </section>
+  <div class="min-h-screen pt-20">
+    <PageHead kicker="// Цены и абонементы" ghost="₽"
+      description="Пробное занятие — бесплатно. Абонементы на любые виды единоборств: от разового посещения до полного безлимита.">
+      Выбери <span class="text-cm-red-title">свой ритм</span>
+    </PageHead>
 
-    <!-- Секция с карточками цен -->
     <PricingSection />
 
-    <!-- FAQ секция -->
-    <section class="py-20 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-black">
-      <UContainer>
-        <div class="max-w-4xl mx-auto">
-          <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white text-center mb-12" data-aos="fade-up">
-            Часто задаваемые вопросы
-          </h2>
+    <!-- FAQ -->
+    <section class="border-t border-cm-line bg-cm-section py-16 sm:py-24">
+      <div class="cm-container flex flex-col gap-10 sm:gap-12">
+        <SectionHead kicker="// Вопросы">
+          Часто <span class="text-cm-red-title">спрашивают</span>
+        </SectionHead>
 
-          <div class="space-y-4">
-            <div v-for="(faq, index) in faqs" :key="index" data-aos="fade-up" :data-aos-delay="index * 100"
-              class="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-200 dark:border-gray-700/50 hover:border-red-500/50 transition-colors shadow-sm">
-              <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3 flex items-start gap-2">
-                <UIcon name="i-heroicons-question-mark-circle" class="w-6 h-6 text-red-500 flex-shrink-0 mt-1" />
-                {{ faq.question }}
-              </h3>
-              <p class="text-gray-700 dark:text-gray-300 leading-relaxed pl-8">
-                {{ faq.answer }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </UContainer>
-    </section>
-
-    <!-- CTA секция -->
-    <section class="py-20 bg-gradient-to-b from-gray-50 to-white dark:from-black dark:to-gray-900">
-      <UContainer>
-        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-          <div
-            class="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-900/30 dark:to-orange-900/20 rounded-2xl p-12 border border-red-500/50 shadow-lg">
-            <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-              Не знаете, какой абонемент выбрать?
-            </h2>
-            <p class="text-xl text-gray-700 dark:text-gray-300 mb-8">
-              Запишитесь на бесплатное пробное занятие! Попробуйте тренировку, познакомьтесь с тренером
-              и залом, а затем выберите подходящий тариф.
+        <div class="flex flex-col border-t border-cm-line">
+          <details v-for="(faq, index) in faqs" :key="index" class="group border-b border-cm-line">
+            <summary
+              class="flex cursor-pointer list-none items-start justify-between gap-6 py-5 transition-colors hover:text-cm-red-ink sm:py-6">
+              <span class="flex gap-5">
+                <span class="w-8 shrink-0 pt-1.5 font-mono text-sm font-bold text-cm-red-ink">{{ String(index + 1).padStart(2, '0') }}</span>
+                <span class="font-display text-[26px] font-extrabold uppercase leading-tight sm:text-[30px]">{{ faq.question }}</span>
+              </span>
+              <UIcon name="i-lucide-plus" class="mt-2 h-6 w-6 shrink-0 transition-transform group-open:rotate-45" />
+            </summary>
+            <p class="m-0 max-w-3xl pb-6 pl-[52px] text-base leading-relaxed text-cm-muted">
+              {{ faq.answer }}
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-              <UButton size="xl" color="error"
-                class="bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 font-semibold"
-                @click="openBooking">
-                <UIcon name="i-heroicons-gift" class="w-5 h-5 mr-2" />
-                Записаться на пробное занятие
-              </UButton>
-              <UButton size="xl" variant="outline" color="neutral" class="font-semibold" to="tel:+79520957776">
-                <UIcon name="i-heroicons-phone" class="w-5 h-5 mr-2" />
-                +7 (952) 095-77-76
-              </UButton>
-            </div>
-          </div>
+          </details>
         </div>
-      </UContainer>
+      </div>
     </section>
+
+    <CtaBand kicker="// Не знаешь, что выбрать?"
+      description="Приходи на бесплатное пробное занятие: попробуй тренировку, познакомься с тренером и залом — а потом выберешь тариф.">
+      Сначала <span class="text-white">попробуй</span>
+    </CtaBand>
   </div>
 </template>
 
@@ -176,10 +139,4 @@ const faqs = [
     answer: 'Групповая тренировка длится 1.5-2 часа в зависимости от вида единоборства и программы тренера. Точное расписание можно уточнить у администратора.'
   }
 ]
-
-// Открыть модалку записи
-const openBooking = () => {
-  const event = new CustomEvent('openBookingModal')
-  window.dispatchEvent(event)
-}
 </script>

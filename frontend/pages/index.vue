@@ -1,11 +1,18 @@
 <template>
-  <div class="-mt-20">
+  <div>
     <HeroVideo />
+    <HomeStats />
+    <MarqueeTape />
     <MartialArtsCards />
     <FightersCards />
+    <NextFight />
+    <TrainersCards compact />
+    <Gallery :images="photos" :can-load-more="hasMore" :loading-more="loading" @load-more="handleLoadMore" />
     <LocationMap />
     <YandexReviews />
-    <Gallery :images="photos" :can-load-more="hasMore" :loading-more="loading" @load-more="handleLoadMore" />
+    <CtaBand description="Хватит откладывать. Оставь заявку — мы свяжемся с тобой и подберём группу под твой уровень.">
+      Первая<br>тренировка — <span class="text-white">0 ₽</span>
+    </CtaBand>
   </div>
 </template>
 

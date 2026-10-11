@@ -1,56 +1,40 @@
 <template>
-  <div
-    class="min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 dark:from-black dark:via-gray-900 dark:to-black">
-    <!-- Hero секция -->
-    <div class="relative h-96 overflow-hidden">
-      <div class="absolute inset-0 bg-gradient-to-r from-red-900/50 to-orange-900/50"></div>
-      <div class="absolute inset-0 bg-white/60 dark:bg-black/60"></div>
+  <div class="min-h-screen pt-20">
+    <PageHead kicker="// Анонсы боёв" ghost="VS"
+      description="Следи за предстоящими боями и результатами турниров бойцов Camelot Sport Academy.">
+      Ночь <span class="text-cm-red-title">боя</span>
+    </PageHead>
 
-      <UContainer class="relative h-full flex flex-col justify-center items-center text-center z-10">
-        <h1 class="text-6xl lg:text-7xl font-black text-gray-900 dark:text-white mb-6" data-aos="fade-down"
-          data-aos-duration="800">
-          Анонсы Боёв
-        </h1>
-        <p class="text-xl lg:text-2xl text-gray-700 dark:text-gray-300 max-w-3xl" data-aos="fade-up"
-          data-aos-duration="800" data-aos-delay="200">
-          Следите за предстоящими боями и результатами турниров Camelot Sport Academy
-        </p>
-      </UContainer>
-    </div>
-
-    <UContainer class="py-16">
+    <section class="cm-container flex flex-col gap-6 pb-24 pt-10">
       <!-- Фильтры -->
-      <div class="flex flex-wrap gap-4 mb-12 justify-center" data-aos="fade-up" data-aos-duration="600">
-        <button v-for="filter in filters" :key="filter.value" @click="activeFilter = filter.value" :class="[
-          'px-6 py-3 rounded-lg font-bold transition-all duration-300',
-          activeFilter === filter.value
-            ? 'bg-red-600 text-white shadow-lg shadow-red-500/50 scale-105'
-            : 'bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-        ]">
+      <div role="tablist" aria-label="Фильтр боёв" class="flex flex-wrap gap-1.5">
+        <button v-for="filter in filters" :key="filter.value" type="button" role="tab"
+          :aria-selected="activeFilter === filter.value"
+          class="h-12 cursor-pointer border px-5 font-display text-[21px] font-black uppercase tracking-[0.06em] transition-colors"
+          :class="activeFilter === filter.value
+            ? 'border-cm-red bg-cm-red text-white'
+            : 'border-cm-line bg-cm-surface text-cm-text hover:border-cm-line-2'"
+          @click="activeFilter = filter.value">
           {{ filter.label }}
         </button>
       </div>
 
       <!-- Загрузка -->
-      <div v-if="loading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-red-600"></div>
+      <div v-if="loading" class="flex items-center justify-center py-20">
+        <span class="h-14 w-14 animate-spin rounded-full border-2 border-cm-red border-b-transparent" />
       </div>
 
       <!-- Список боёв -->
-      <div v-else-if="filteredFights.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <FightCard v-for="(fight, index) in filteredFights" :key="fight.id" :fight="fight"
-          :aos-delay="(index % 3) * 100" />
+      <div v-else-if="filteredFights.length > 0" class="flex flex-col gap-3">
+        <FightCard v-for="fight in filteredFights" :key="fight.id" :fight="fight" />
       </div>
 
       <!-- Пусто -->
-      <div v-else class="text-center py-20">
-        <UIcon name="i-heroicons-inbox" class="w-24 h-24 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-        <h3 class="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-2">Нет боёв</h3>
-        <p class="text-gray-500 dark:text-gray-500">
-          {{ emptyMessage }}
-        </p>
+      <div v-else class="flex flex-col items-start gap-2.5 border border-dashed border-cm-line-2 px-7 py-14 sm:px-8">
+        <span class="cm-display text-[44px] sm:text-[48px]">Нет боёв</span>
+        <span class="text-[15px] text-cm-muted">{{ emptyMessage }}</span>
       </div>
-    </UContainer>
+    </section>
   </div>
 </template>
 
@@ -76,7 +60,7 @@ const activeFilter = ref<'all' | 'upcoming' | 'completed'>('all')
 const filters: Array<{ label: string; value: 'all' | 'upcoming' | 'completed' }> = [
   { label: 'Все бои', value: 'all' },
   { label: 'Предстоящие', value: 'upcoming' },
-  { label: 'Завершенные', value: 'completed' },
+  { label: 'Завершённые', value: 'completed' },
 ]
 
 // Отфильтрованные бои
@@ -106,8 +90,8 @@ const filteredFights = computed(() => {
 const emptyMessage = computed(() => {
   const messages = {
     all: 'На данный момент нет анонсов боёв',
-    upcoming: 'Нет предстоящих боёв. Следите за обновлениями!',
-    completed: 'Нет завершенных боёв',
+    upcoming: 'Нет предстоящих боёв. Следи за обновлениями в ВК и Telegram!',
+    completed: 'Нет завершённых боёв',
   }
   return messages[activeFilter.value]
 })
@@ -123,7 +107,3 @@ onMounted(async () => {
   }
 })
 </script>
-
-<style scoped>
-/* Дополнительные стили при необходимости */
-</style>

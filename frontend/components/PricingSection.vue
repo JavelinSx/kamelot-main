@@ -1,143 +1,84 @@
 <template>
-  <section
-    class="pb-20 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 overflow-hidden">
-    <UContainer>
-      <!-- Заголовок секции -->
-      <div class="flex flex-col items-center mb-16 text-center" data-aos="fade-down">
-        <h2 class="pt-10 text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-orange-500">
-            Абонементы
+  <section class="cm-container pb-20 pt-12 sm:pb-24">
+    <!-- Лоадер -->
+    <div v-if="isLoading" class="flex items-center justify-center py-20">
+      <span class="h-14 w-14 animate-spin rounded-full border-2 border-cm-red border-b-transparent" />
+    </div>
+
+    <!-- Ошибка -->
+    <div v-else-if="error" class="border border-dashed border-cm-line-2 px-7 py-12 text-center text-cm-red-ink">
+      {{ error }}
+    </div>
+
+    <div v-else class="flex flex-col gap-4">
+      <!-- Пробное занятие — широкий баннер -->
+      <article v-for="plan in trialPlans" :key="plan.id"
+        class="relative flex flex-wrap items-center justify-between gap-x-12 gap-y-7 overflow-hidden bg-cm-inv px-6 py-8 text-cm-on-inv sm:px-10 sm:py-9">
+        <div aria-hidden="true" class="cm-hatch absolute inset-y-0 right-0 w-1/3 opacity-60" />
+        <div class="relative flex flex-col gap-2.5">
+          <span
+            class="self-start bg-cm-on-inv px-2.5 py-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-cm-inv">
+            Бесплатно · только 1 раз
           </span>
-        </h2>
-        <p class="text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
-          Выберите подходящий тариф и начните тренировки с профессионалами
-        </p>
-      </div>
-
-      <!-- Лоадер -->
-      <div v-if="isLoading" class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-red-500"></div>
-      </div>
-
-      <!-- Ошибка -->
-      <div v-else-if="error" class="text-center py-20">
-        <p class="text-red-600 dark:text-red-400">{{ error }}</p>
-      </div>
-
-      <!-- Сетка карточек -->
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="(plan, index) in pricingPlans" :key="plan.id" data-aos="fade-up" :data-aos-delay="index * 100"
-          class="relative group">
-          <!-- Карточка -->
-          <div :class="[
-            'relative h-full rounded-2xl p-8 transition-all duration-300',
-            'border-2 backdrop-blur-sm flex flex-col',
-            getCardClasses(plan),
-            'hover:-translate-y-2 hover:shadow-2xl'
-          ]">
-            <!-- Бейдж "Популярный" / "Бесплатно" -->
-            <div v-if="getBadge(plan)" class="absolute -top-4 left-1/2 -translate-x-1/2">
-              <span :class="[
-                'px-4 py-1 rounded-full text-sm font-bold',
-                getBadgeColor(plan)
-              ]">
-                {{ getBadge(plan) }}
-              </span>
-            </div>
-
-            <!-- Название -->
-            <div class="mb-6">
-              <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {{ plan.name }}
-              </h3>
-              <p class="text-gray-600 dark:text-gray-400 text-sm">
-                {{ plan.description }}
-              </p>
-            </div>
-
-            <!-- Цена -->
-            <div class="mb-6">
-              <div class="flex items-baseline gap-2">
-                <span class="text-5xl font-bold text-gray-900 dark:text-white">
-                  {{ formatPrice(plan.price) }}
-                </span>
-                <span class="text-gray-600 dark:text-gray-400 text-lg">₽</span>
-              </div>
-
-              <!-- Детали -->
-              <div class="mt-2 text-gray-700 dark:text-gray-300 text-sm">
-                <template v-if="plan.sessions_count > 0">
-                  {{ plan.sessions_count }} {{ pluralizeSessions(plan.sessions_count) }}
-                  <span v-if="plan.valid_days" class="text-gray-500 dark:text-gray-500">
-                    на {{ plan.valid_days }} дней
-                  </span>
-                </template>
-                <template v-else>
-                  Безлимитные тренировки
-                  <span v-if="plan.valid_days" class="text-gray-500 dark:text-gray-500">
-                    на {{ plan.valid_days }} дней
-                  </span>
-                </template>
-              </div>
-
-              <!-- Цена за тренировку -->
-              <div v-if="pricePerSession(plan)" class="mt-2">
-                <span class="text-green-600 dark:text-green-400 font-semibold">
-                  {{ pricePerSession(plan) }}₽ / тренировка
-                </span>
-              </div>
-
-              <!-- Экономия -->
-              <div v-if="savings(plan) > 0" class="mt-2">
-                <span class="text-orange-600 dark:text-orange-400 font-semibold flex items-center gap-1">
-                  <UIcon name="i-heroicons-arrow-trending-down" class="w-4 h-4" />
-                  Экономия {{ savings(plan) }}₽
-                </span>
-              </div>
-            </div>
-
-            <!-- Особенности -->
-            <div class="space-y-3 flex-grow">
-              <!-- Для безлимитов -->
-              <div v-if="plan.type.includes('unlimited')"
-                class="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                <UIcon name="i-heroicons-check-circle"
-                  class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0 mt-0.5" />
-                <span class="text-sm">
-                  {{ plan.trainer_limited ? trainerLimit[0] : trainerLimit[1] }}
-                </span>
-              </div>
-
-              <!-- Для пакетов -->
-              <div v-if="plan.type === 'package'" class="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                <UIcon name="i-heroicons-check-circle"
-                  class="w-5 h-5 text-green-600 dark:text-green-500 flex-shrink-0 mt-0.5" />
-                <span class="text-sm">Любое единоборство на выбор</span>
-              </div>
-
-              <!-- Пробное -->
-              <div v-if="plan.trial_allowed" class="flex items-start gap-2 text-gray-700 dark:text-gray-300">
-                <UIcon name="i-heroicons-gift"
-                  class="w-5 h-5 text-yellow-600 dark:text-yellow-500 flex-shrink-0 mt-0.5" />
-                <span class="text-sm">Бесплатное пробное занятие</span>
-              </div>
-            </div>
-
-            <!-- Кнопка -->
-            <UButton color="error" size="lg" block @click="selectPlan(plan)" class="font-semibold mt-8 text-white" :class="[
-              plan.type === 'trial' ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700' :
-                plan.name.includes('Дети') ? 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700' :
-                  plan.name.includes('12 тренировок') ? 'bg-gradient-to-r from-red-700 to-red-800 hover:from-red-800 hover:to-red-900 shadow-lg shadow-red-900/30' :
-                    plan.type.includes('unlimited') ? 'bg-gradient-to-r from-amber-600 to-yellow-600 hover:from-amber-700 hover:to-yellow-700 shadow-lg shadow-amber-900/40' :
-                      'bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 shadow-lg'
-            ]">
-              {{ plan.type === 'trial' ? 'Записаться бесплатно' : 'Выбрать тариф' }}
-            </UButton>
-          </div>
+          <h2 class="cm-display m-0 text-[52px] leading-[0.9] sm:text-[64px]">{{ plan.name }}</h2>
+          <span class="text-base text-cm-on-inv-muted">{{ plan.description }}</span>
         </div>
-      </div>
+        <div class="relative flex flex-wrap items-center gap-8">
+          <span class="cm-display text-[120px] leading-[0.78] sm:text-[150px]">
+            {{ formatPrice(plan.price) }}<span class="text-[56px] text-cm-red sm:text-[64px]"> ₽</span>
+          </span>
+          <button type="button" class="cm-btn cm-btn-red cm-cut-lg cm-btn-lg" @click="selectPlan(plan)">
+            Записаться бесплатно
+            <UIcon name="i-lucide-arrow-right" class="h-5 w-5" />
+          </button>
+        </div>
+      </article>
 
-    </UContainer>
+      <!-- Остальные тарифы -->
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <article v-for="plan in regularPlans" :key="plan.id" class="relative flex flex-col gap-5 p-7 sm:p-8"
+          :class="cardClass(plan)">
+          <span v-if="badge(plan)" class="absolute right-0 top-0 px-3.5 py-2 font-mono text-[11px] font-bold tracking-[0.18em]"
+            :class="variant(plan) === 'hit' ? 'bg-[#0a0a0b] text-[#f3efe7]' : 'bg-cm-inv text-cm-on-inv'">
+            {{ badge(plan) }}
+          </span>
+
+          <span class="font-mono text-[11px] uppercase tracking-[0.18em]"
+            :class="variant(plan) === 'hit' ? 'text-[#ffe1de]' : 'text-cm-muted'">
+            {{ planKicker(plan) }}
+          </span>
+          <h3 class="cm-display m-0 pr-16 text-[44px] leading-[0.9] sm:text-[48px]">{{ plan.name }}</h3>
+          <div class="cm-display text-[96px] leading-[0.8] sm:text-[112px]">
+            {{ formatPrice(plan.price) }}<span class="text-[44px]"
+              :class="variant(plan) === 'hit' ? 'text-[#0a0a0b]' : 'text-cm-red-title'"> ₽</span>
+          </div>
+
+          <div v-if="pricePerSession(plan) || savings(plan) > 0" class="flex flex-wrap gap-2 font-mono text-xs tracking-[0.06em]">
+            <span v-if="pricePerSession(plan)" class="border px-2.5 py-1.5"
+              :class="variant(plan) === 'hit' ? 'border-white' : 'border-cm-line-2'">
+              {{ pricePerSession(plan) }} ₽ / ТРЕНИРОВКА
+            </span>
+            <span v-if="savings(plan) > 0" class="px-2.5 py-1.5 font-bold"
+              :class="variant(plan) === 'hit' ? 'bg-[#0a0a0b] text-white' : 'bg-cm-inv text-cm-on-inv'">
+              ЭКОНОМИЯ {{ formatPrice(savings(plan)) }} ₽
+            </span>
+          </div>
+
+          <ul class="m-0 flex list-none flex-col gap-2.5 border-t p-0 pt-5 text-[15px]"
+            :class="variant(plan) === 'hit' ? 'border-white/30' : 'border-cm-line text-cm-soft'">
+            <li v-for="feature in features(plan)" :key="feature" class="flex gap-2.5">
+              <UIcon name="i-lucide-check" class="mt-0.5 h-[18px] w-[18px] shrink-0"
+                :class="variant(plan) === 'hit' ? 'text-white' : 'text-cm-red-ink'" />
+              {{ feature }}
+            </li>
+          </ul>
+
+          <button type="button" class="cm-btn mt-auto w-full" :class="buttonClass(plan)" @click="selectPlan(plan)">
+            Выбрать тариф
+          </button>
+        </article>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -145,12 +86,44 @@
 import type { PricingPlan } from '~/types'
 
 const { pricingPlans, isLoading, error, fetchPricingPlans, setSelectedPlan, calculatePricePerSession, calculateSavings } = usePricing()
-const { setSelectedTrainingType } = useBooking()
-const trainerLimit = ['Все виды единоборств у одного тренера', 'Все виды единоборств у всех тренеров']
+
 // Загрузить планы при монтировании
 onMounted(async () => {
   await fetchPricingPlans()
 })
+
+const trialPlans = computed(() => pricingPlans.value.filter(plan => plan.type === 'trial'))
+const regularPlans = computed(() => pricingPlans.value.filter(plan => plan.type !== 'trial'))
+
+type Variant = 'hit' | 'premium' | 'kids' | 'default'
+
+const variant = (plan: PricingPlan): Variant => {
+  if (plan.name.includes('Дети')) return 'kids'
+  if (plan.name.includes('12 тренировок')) return 'hit'
+  if (plan.type === 'unlimited_full') return 'premium'
+  return 'default'
+}
+
+const badge = (plan: PricingPlan) => ({
+  hit: 'ХИТ',
+  premium: 'ПРЕМИУМ',
+  kids: 'ДЛЯ ДЕТЕЙ',
+  default: null
+})[variant(plan)]
+
+const cardClass = (plan: PricingPlan) => ({
+  hit: 'bg-cm-red text-white',
+  premium: 'border-2 border-cm-text bg-cm-bg text-cm-text',
+  kids: 'border border-cm-line bg-cm-surface text-cm-text',
+  default: 'border border-cm-line bg-cm-surface text-cm-text'
+})[variant(plan)]
+
+const buttonClass = (plan: PricingPlan) => ({
+  hit: 'cm-cut bg-[#0a0a0b] text-white hover:bg-white hover:text-[#0a0a0b]',
+  premium: 'cm-btn-inv',
+  kids: 'cm-btn-outline',
+  default: 'cm-btn-outline'
+})[variant(plan)]
 
 // Форматирование цены
 const formatPrice = (price: number) => {
@@ -159,9 +132,45 @@ const formatPrice = (price: number) => {
 
 // Плюрализация "тренировка"
 const pluralizeSessions = (count: number) => {
-  if (count === 1) return 'тренировка'
-  if (count >= 2 && count <= 4) return 'тренировки'
+  const mod10 = count % 10
+  const mod100 = count % 100
+  if (mod10 === 1 && mod100 !== 11) return 'тренировка'
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'тренировки'
   return 'тренировок'
+}
+
+// Склонение «день»
+const daysWord = (days: number) => {
+  const mod10 = days % 10
+  const mod100 = days % 100
+  if (mod10 === 1 && mod100 !== 11) return 'день'
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'дня'
+  return 'дней'
+}
+
+const validity = (plan: PricingPlan) => plan.valid_days ? `${plan.valid_days} ${daysWord(plan.valid_days)}` : ''
+
+const planKicker = (plan: PricingPlan) => {
+  const days = plan.valid_days ? ` · ${validity(plan)}` : ''
+  if (plan.type === 'single') return 'Разовое посещение'
+  if (plan.type.includes('unlimited')) return `Безлимит${days}`
+  return `Абонемент${days}`
+}
+
+const features = (plan: PricingPlan) => {
+  const list: string[] = []
+  if (plan.sessions_count > 0) {
+    list.push(`${plan.sessions_count} ${pluralizeSessions(plan.sessions_count)}${plan.valid_days ? ` на ${validity(plan)}` : ''}`)
+  } else {
+    list.push(`Безлимитные тренировки${plan.valid_days ? ` на ${validity(plan)}` : ''}`)
+  }
+  if (plan.type.includes('unlimited')) {
+    list.push(plan.trainer_limited ? 'Все виды единоборств у одного тренера' : 'Все виды единоборств у всех тренеров')
+  }
+  if (plan.type === 'package') list.push('Любое единоборство на выбор')
+  if (plan.trial_allowed) list.push('Бесплатное пробное занятие')
+  if (plan.description && variant(plan) === 'kids') list.push(plan.description)
+  return list
 }
 
 // Цена за тренировку
@@ -175,68 +184,11 @@ const savings = (plan: PricingPlan) => {
   return calculateSavings(plan)
 }
 
-// Классы для карточки
-const getCardClasses = (plan: PricingPlan) => {
-  if (plan.type === 'trial') {
-    return 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/20 border-green-500/50 hover:border-green-400'
-  }
-  if (plan.name.includes('Дети')) {
-    return 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/40 dark:to-cyan-900/30 border-cyan-400/60 hover:border-cyan-300 ring-2 ring-cyan-400/30'
-  }
-  if (plan.name.includes('12 тренировок')) {
-    return 'bg-gradient-to-br from-slate-100 to-zinc-100 dark:from-slate-900/60 dark:to-zinc-950/70 border-red-600/70 dark:border-red-600/60 hover:border-red-500 ring-2 ring-red-600/20'
-  }
-  if (plan.type.includes('unlimited')) {
-    return 'bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/70 dark:to-yellow-950/80 border-amber-600/80 dark:border-amber-500/70 hover:border-amber-500 dark:hover:border-amber-400 ring-2 ring-amber-500/30 shadow-lg shadow-amber-900/20'
-  }
-  return 'bg-gradient-to-br from-gray-100 to-slate-100 dark:from-gray-900/50 dark:to-slate-950/60 border-gray-400/70 dark:border-gray-600/60 hover:border-gray-500 dark:hover:border-gray-500'
-}
-
-// Бейдж
-const getBadge = (plan: PricingPlan) => {
-  if (plan.type === 'trial') return '🎁 Бесплатно'
-  if (plan.name.includes('Дети')) return '🎈 Для детей'
-  if (plan.name.includes('12 тренировок')) return '⭐ Популярный'
-  if (plan.type === 'unlimited_full') return '👑 Премиум'
-  return null
-}
-
-// Цвет бейджа
-const getBadgeColor = (plan: PricingPlan) => {
-  if (plan.type === 'trial') return 'bg-green-500 text-white'
-  if (plan.name.includes('Дети')) return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
-  if (plan.name.includes('12 тренировок')) return 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50'
-  if (plan.type === 'unlimited_full') return 'bg-gradient-to-r from-amber-600 to-yellow-600 text-white shadow-lg shadow-amber-500/50'
-  if (plan.type.includes('unlimited')) return 'bg-gradient-to-r from-amber-600 to-yellow-600 text-white shadow-lg shadow-amber-500/50'
-  return 'bg-gray-700 text-white'
-}
-
 // Выбор плана
 const selectPlan = (plan: PricingPlan) => {
   setSelectedPlan(plan)
 
   // Открываем модалку записи
-  const event = new CustomEvent('openBookingModal')
-  window.dispatchEvent(event)
+  window.dispatchEvent(new CustomEvent('openBookingModal'))
 }
 </script>
-
-<style scoped>
-/* Анимация градиента для популярной карточки */
-@keyframes gradient-shift {
-
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-.group:hover .ring-2 {
-  animation: gradient-shift 3s ease infinite;
-  background-size: 200% 200%;
-}
-</style>

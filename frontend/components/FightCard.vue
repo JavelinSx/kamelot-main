@@ -1,160 +1,128 @@
 <template>
-  <div
-    class="fight-card group relative overflow-hidden bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-black border border-gray-300 dark:border-gray-800 hover:border-red-600 rounded-lg transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/20 hover:-translate-y-2"
-    data-aos="fade-up" :data-aos-delay="aosDelay">
+  <article
+    class="group relative grid grid-cols-1 overflow-hidden border border-cm-line bg-cm-surface transition-colors hover:border-cm-line-2 md:grid-cols-[300px_minmax(0,1fr)]">
+    <span aria-hidden="true" class="absolute inset-y-0 left-0 z-10 w-1.5 bg-cm-red" />
+
     <!-- Постер боя -->
-    <div class="relative h-[28rem] overflow-hidden">
+    <div class="relative h-[420px] overflow-hidden bg-cm-surface-2 md:h-auto md:min-h-[400px]">
       <img :src="fight.poster" :alt="fight.title"
-        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        @error="onImageError" />
+        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        loading="lazy" @error="onImageError" />
+      <div aria-hidden="true" class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+      <div class="absolute bottom-4 left-5 right-4 flex flex-col gap-1 text-[#f3efe7]">
+        <span class="cm-display text-[44px] leading-[0.9]">{{ fight.title }}</span>
+        <span class="font-mono text-xs uppercase tracking-[0.1em] text-[#d6d2ca]">{{ formattedDate }}</span>
+      </div>
+    </div>
 
-      <!-- Overlay градиент -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent"></div>
-
-      <!-- Статус бадж -->
-      <div class="absolute top-4 right-4">
-        <span :class="[
-          'px-4 py-2 rounded-full text-sm font-bold backdrop-blur-md',
-          statusClass
-        ]">
+    <div class="flex min-w-0 flex-col">
+      <!-- Верхняя полоса -->
+      <div
+        class="flex flex-wrap items-center gap-2.5 border-b border-cm-line py-4 pl-6 pr-5 font-mono text-[11px] uppercase tracking-[0.14em] sm:pl-7">
+        <span v-if="fight.category" class="cm-chip">{{ fight.category }}</span>
+        <span v-if="fight.weightClass" class="cm-chip">{{ fight.weightClass }}</span>
+        <span v-if="fight.rounds" class="cm-chip">{{ fight.rounds }} раундов</span>
+        <span class="ml-auto inline-flex items-center gap-2 px-2.5 py-1.5 font-bold" :class="statusClass">
+          <span class="h-[7px] w-[7px] rounded-full" :class="fight.status === 'live' ? 'animate-pulse bg-white' : 'bg-cm-red'" />
           {{ statusText }}
         </span>
       </div>
 
-      <!-- Категория -->
-      <div v-if="fight.category" class="absolute top-4 left-4">
-        <span
-          class="px-3 py-1 rounded-full text-xs font-semibold bg-black/60 backdrop-blur-md text-white border border-gray-300 dark:border-gray-700">
-          {{ fight.category }}
-        </span>
-      </div>
-
-      <!-- Информация внизу постера -->
-      <div class="absolute bottom-0 left-0 right-0 p-6 pb-8">
-        <h3 class="text-2xl font-bold text-white mb-3 drop-shadow-lg">{{ fight.title }}</h3>
-        <div class="flex items-center gap-4 text-gray-200 text-sm drop-shadow-md">
-          <div class="flex items-center gap-2">
-            <UIcon name="i-heroicons-calendar" class="w-4 h-4" />
-            <span>{{ formattedDate }}</span>
-          </div>
-          <div v-if="isUpcomingSoon" class="flex items-center gap-2 text-red-400 font-semibold animate-pulse">
-            <UIcon name="i-heroicons-clock" class="w-4 h-4" />
-            <span>{{ timeUntilFight }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Детали боя -->
-    <div class="p-6">
       <!-- Бойцы -->
-      <div class="flex items-center justify-between mb-4">
-        <!-- Первый боец -->
-        <div v-if="fight.fighters[0]" class="flex flex-col items-center text-center flex-1">
-
-          <p class="font-bold text-gray-900 dark:text-white text-sm">{{ fight.fighters[0].name }}</p>
-          <p class="text-gray-600 dark:text-gray-400 text-xs">{{ fight.fighters[0].record }}</p>
-          <p class="text-gray-500 dark:text-gray-500 text-xs">{{ fight.fighters[0].team }}</p>
+      <div
+        class="grid grid-cols-1 items-center gap-5 px-6 pb-6 pt-7 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-7 sm:pl-7 sm:pr-7">
+        <div v-if="fight.fighters[0]" class="flex min-w-0 flex-col gap-2.5">
+          <span class="self-start bg-cm-red px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-white">
+            {{ fight.fighters[0].team || 'Camelot' }}
+          </span>
+          <div class="cm-display break-words text-[44px] leading-[0.86] lg:text-[56px]">
+            <span v-for="part in nameParts(fight.fighters[0].name)" :key="part" class="block">{{ part }}</span>
+          </div>
+          <span v-if="fight.fighters[0].record" class="font-mono text-sm text-cm-muted">
+            Рекорд <b class="text-lg text-cm-text">{{ fight.fighters[0].record }}</b>
+          </span>
         </div>
 
-        <!-- VS разделитель -->
-        <div class="px-4 py-2 bg-red-600 text-white font-bold text-xl rounded-lg mx-4 flex-shrink-0">
+        <div
+          class="cm-cut cm-display flex h-16 w-16 items-center justify-center bg-cm-red text-[36px] text-white sm:h-[84px] sm:w-[84px] sm:text-[48px]">
           VS
         </div>
 
-        <!-- Второй боец -->
-        <div v-if="fight.fighters[1]" class="flex flex-col items-center text-center flex-1">
-
-          <p class="font-bold text-gray-900 dark:text-white text-sm">{{ fight.fighters[1].name }}</p>
-          <p class="text-gray-600 dark:text-gray-400 text-xs">{{ fight.fighters[1].record }}</p>
-          <p class="text-gray-500 dark:text-gray-500 text-xs">{{ fight.fighters[1].team }}</p>
+        <div v-if="fight.fighters[1]" class="flex min-w-0 flex-col gap-2.5 sm:items-end sm:text-right">
+          <span class="self-start border border-cm-line-2 px-2 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-cm-muted sm:self-end">
+            {{ fight.fighters[1].team || 'Соперник' }}
+          </span>
+          <div class="cm-display cm-outline-text break-words text-[44px] leading-[0.86] lg:text-[56px]">
+            <span v-for="part in nameParts(fight.fighters[1].name)" :key="part" class="block">{{ part }}</span>
+          </div>
+          <span v-if="fight.fighters[1].record" class="font-mono text-sm text-cm-muted">
+            Рекорд <b class="text-lg text-cm-text">{{ fight.fighters[1].record }}</b>
+          </span>
         </div>
       </div>
 
       <!-- Описание -->
-      <div class="mb-4">
-        <p :class="[
-          'text-gray-700 dark:text-gray-300 text-sm',
-          !isDescriptionExpanded && 'line-clamp-2'
-        ]">
+      <div v-if="fight.description" class="px-6 pb-5 sm:px-7">
+        <p class="m-0 text-[15px] leading-relaxed text-cm-muted" :class="!isDescriptionExpanded && 'line-clamp-2'">
           {{ fight.description }}
         </p>
-        <button
-          v-if="fight.description && fight.description.length > 100"
-          @click="isDescriptionExpanded = !isDescriptionExpanded"
-          class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400 text-sm font-semibold mt-2 transition-colors duration-200 flex items-center gap-1">
-          <span>{{ isDescriptionExpanded ? 'Свернуть' : 'Читать далее' }}</span>
-          <UIcon :name="isDescriptionExpanded ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="w-4 h-4" />
+        <button v-if="fight.description.length > 100" type="button"
+          class="mt-2 inline-flex cursor-pointer items-center gap-1 font-mono text-xs uppercase tracking-[0.12em] text-cm-red-ink"
+          @click="isDescriptionExpanded = !isDescriptionExpanded">
+          {{ isDescriptionExpanded ? 'Свернуть' : 'Читать далее' }}
+          <UIcon :name="isDescriptionExpanded ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="h-4 w-4" />
         </button>
       </div>
 
-      <!-- Локация и детали -->
-      <div class="space-y-2 mb-4 text-sm">
-        <div class="flex items-start gap-2 text-gray-600 dark:text-gray-400">
-          <UIcon name="i-heroicons-map-pin" class="w-4 h-4 mt-0.5" />
-          <div>
-            <p>{{ fight.location.venue }}</p>
-            <p class="text-xs text-gray-500">{{ fight.location.city }}</p>
-          </div>
-        </div>
-
-        <div v-if="fight.weightClass" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-          <UIcon name="i-heroicons-scale" class="w-4 h-4" />
-          <span>Весовая категория: {{ fight.weightClass }}</span>
-        </div>
-
-        <div v-if="fight.rounds" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-          <UIcon name="i-heroicons-clock" class="w-4 h-4" />
-          <span>{{ fight.rounds }} раундов</span>
-        </div>
-      </div>
-
-      <!-- Результаты (для завершенных боёв) -->
+      <!-- Результаты (для завершённых боёв) -->
       <div v-if="fight.status === 'completed' && fight.results"
-        class="bg-green-600/10 border border-green-600/30 rounded-lg p-4 mb-4">
-        <p class="text-green-400 font-bold mb-1">Победитель: {{ fight.results.winner }}</p>
-        <p class="text-gray-400 text-sm">
-          {{ fight.results.method }} • Раунд {{ fight.results.round }} • {{ fight.results.time }}
+        class="mx-6 mb-5 border-l-4 border-cm-red bg-cm-surface-2 px-4 py-3 sm:mx-7">
+        <p class="m-0 font-display text-2xl font-extrabold uppercase">Победа: {{ fight.results.winner }}</p>
+        <p class="m-0 mt-1 font-mono text-xs uppercase tracking-[0.08em] text-cm-muted">
+          {{ fight.results.method }} · Раунд {{ fight.results.round }} · {{ fight.results.time }}
         </p>
       </div>
 
-      <!-- Кнопки действий -->
-      <div class="flex gap-2">
-        <UButton v-if="fight.ticketLink" :to="fight.ticketLink" target="_blank" color="error"
-          class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold" size="md">
-          <UIcon name="i-heroicons-ticket" class="w-4 h-4 mr-2" />
-          Купить билет
-        </UButton>
-
-        <UButton v-if="fight.vkPost" :to="fight.vkPost" target="_blank" variant="outline" color="neutral"
-          class="flex-1 border-gray-300 dark:border-gray-700 hover:border-red-600 text-gray-900 dark:text-white" size="md">
-          <UIcon name="i-heroicons-arrow-top-right-on-square" class="w-4 h-4 mr-2" />
-          Подробнее
-        </UButton>
-
-        <UButton v-if="fight.streamLink" :to="fight.streamLink" target="_blank" color="primary" class="flex-1"
-          size="md">
-          <UIcon name="i-heroicons-video-camera" class="w-4 h-4 mr-2" />
-          Смотреть онлайн
-        </UButton>
+      <!-- Место и действия -->
+      <div
+        class="mt-auto flex flex-wrap items-center justify-between gap-4 border-t border-cm-line px-6 py-4 sm:px-7">
+        <div class="flex items-start gap-2.5">
+          <UIcon name="i-lucide-map-pin" class="mt-0.5 h-4 w-4 shrink-0 text-cm-red-ink" />
+          <div class="text-sm leading-snug">
+            <div>{{ fight.location.venue }}</div>
+            <div class="text-xs text-cm-dim">{{ fight.location.city }}</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <a v-if="fight.ticketLink" :href="fight.ticketLink" target="_blank" rel="noopener noreferrer"
+            class="cm-btn cm-btn-red cm-btn-sm cm-cut">
+            Купить билет
+          </a>
+          <a v-if="fight.streamLink" :href="fight.streamLink" target="_blank" rel="noopener noreferrer"
+            class="cm-btn cm-btn-inv cm-btn-sm">
+            Смотреть онлайн
+          </a>
+          <a v-if="fight.vkPost" :href="fight.vkPost" target="_blank" rel="noopener noreferrer"
+            class="cm-btn cm-btn-outline cm-btn-sm">
+            Подробнее
+            <UIcon name="i-lucide-arrow-up-right" class="h-4 w-4" />
+          </a>
+        </div>
       </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
-import type { Fight } from '~/composables/useFights';
+import type { Fight } from '~/composables/useFights'
 
 interface Props {
   fight: Fight
-  aosDelay?: number
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  aosDelay: 0,
-})
+const props = defineProps<Props>()
 
-const { formatFightDate, getStatusColor, getStatusText, isUpcoming, getTimeUntilFight } = useFights()
+const { formatFightDate, getStatusText, isUpcoming, getTimeUntilFight } = useFights()
 
 // Состояние для раскрытия описания
 const isDescriptionExpanded = ref(false)
@@ -162,64 +130,27 @@ const isDescriptionExpanded = ref(false)
 // Форматированная дата
 const formattedDate = computed(() => formatFightDate(props.fight.date, 'full'))
 
-// Статус боя
-const statusText = computed(() => getStatusText(props.fight.status))
-const statusClass = computed(() => {
-  const color = getStatusColor(props.fight.status)
-  const classes: Record<string, string> = {
-    blue: 'bg-blue-600/80 text-white',
-    red: 'bg-red-600/80 text-white animate-pulse',
-    green: 'bg-green-600/80 text-white',
-    gray: 'bg-gray-600/80 text-white',
-  }
-  return classes[color] || classes.gray
+// Статус боя: для ближайших показываем обратный отсчёт
+const statusText = computed(() => {
+  if (isUpcoming(props.fight)) return getTimeUntilFight(props.fight.date)
+  return getStatusText(props.fight.status)
 })
 
-// Проверка, является ли бой ближайшим
-const isUpcomingSoon = computed(() => isUpcoming(props.fight))
+const statusClass = computed(() => {
+  const classes: Record<string, string> = {
+    upcoming: 'bg-cm-inv text-cm-on-inv',
+    live: 'bg-cm-red text-white',
+    completed: 'border border-cm-line-2 text-cm-soft',
+    cancelled: 'border border-cm-line text-cm-dim line-through'
+  }
+  return classes[props.fight.status] || classes.completed
+})
 
-// Время до боя
-const timeUntilFight = computed(() => getTimeUntilFight(props.fight.date))
+const nameParts = (name: string) => name.trim().split(/\s+/).slice(0, 2)
 
 // Обработка ошибок загрузки изображений
 const onImageError = (event: Event) => {
   const img = event.target as HTMLImageElement
-  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='
-}
-
-const onFighterImageError = (event: Event) => {
-  const img = event.target as HTMLImageElement
-  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwMCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj4/PC90ZXh0Pjwvc3ZnPg=='
+  img.style.visibility = 'hidden'
 }
 </script>
-
-<style scoped>
-.fight-card {
-  /* Дополнительные стили при необходимости */
-}
-
-/* Анимация для пульсации */
-@keyframes pulse {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.7;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Ограничение текста */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-</style>

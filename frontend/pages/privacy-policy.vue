@@ -1,8 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-950 pt-32 pb-16">
+  <div class="min-h-screen bg-cm-bg pb-16 pt-32">
     <UContainer>
-      <div class="max-w-4xl mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 md:p-12">
-        <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+      <div class="mx-auto max-w-4xl border border-cm-line border-t-4 border-t-cm-red bg-cm-surface p-6 sm:p-8 md:p-12">
+        <h1 class="cm-display mb-8 text-5xl text-cm-text md:text-6xl">
           Политика конфиденциальности
         </h1>
 

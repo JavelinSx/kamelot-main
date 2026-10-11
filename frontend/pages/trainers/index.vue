@@ -1,5 +1,9 @@
 <template>
-  <div class="mt-20">
+  <div class="min-h-screen pt-20">
+    <PageHead kicker="// Тренеры"
+      description="Мастера спорта, действующие бойцы и судьи международной категории. Ставят технику так, как ставили себе.">
+      Тренерский <span class="text-cm-red-title">штаб</span>
+    </PageHead>
     <TrainersCards />
   </div>
 </template>

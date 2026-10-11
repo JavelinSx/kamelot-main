@@ -1,235 +1,192 @@
 <template>
-  <div class="p-4 lg:p-0">
-    <form @submit.prevent="onSubmit" class="space-y-6">
+  <div class="px-5 pb-6 pt-5 sm:px-7 sm:pb-7">
+    <form class="flex flex-col gap-6" @submit.prevent="onSubmit">
       <!-- Выбор типа пользователя -->
-      <div class="space-y-4 border-b border-gray-200 dark:border-gray-700 pb-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Выберите категорию</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div @click="state.userType = 'teenager'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-            state.userType === 'teenager'
-              ? 'border-red-500 bg-red-50 dark:bg-red-950'
-              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
-            <div class="text-center">
-              <div class="font-medium text-gray-900 dark:text-gray-100">Подросток</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">5-17 лет</div>
-            </div>
-          </div>
-
-          <div @click="state.userType = 'parent'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-            state.userType === 'parent'
-              ? 'border-red-500 bg-red-50 dark:bg-red-950'
-              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
-            <div class="text-center">
-              <div class="font-medium text-gray-900 dark:text-gray-100">Родитель</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">Запись для ребёнка</div>
-            </div>
-          </div>
-
-          <div @click="state.userType = 'adult'" :class="['cursor-pointer p-4 border-2 rounded-lg transition-all',
-            state.userType === 'adult'
-              ? 'border-red-500 bg-red-50 dark:bg-red-950'
-              : 'border-gray-300 dark:border-gray-700 hover:border-red-300']">
-            <div class="text-center">
-              <div class="font-medium text-gray-900 dark:text-gray-100">Взрослый</div>
-              <div class="text-sm text-gray-600 dark:text-gray-400">18+ лет</div>
-            </div>
-          </div>
+      <fieldset class="m-0 flex flex-col gap-3 border-0 p-0">
+        <legend class="cm-label mb-3 p-0 text-[11px] text-cm-muted">// Категория</legend>
+        <div class="grid grid-cols-3 gap-2">
+          <button v-for="option in userTypeOptions" :key="option.value" type="button"
+            :aria-pressed="state.userType === option.value"
+            class="relative flex min-h-[84px] cursor-pointer flex-col items-center justify-center gap-1 border-[1.5px] px-2 py-3 text-center transition-colors"
+            :class="state.userType === option.value
+              ? 'border-cm-red bg-cm-red/20 text-cm-text'
+              : 'border-cm-line bg-cm-bg text-cm-text hover:border-cm-line-2'"
+            @click="state.userType = option.value">
+            <span class="font-display text-[22px] font-black uppercase leading-none sm:text-2xl">{{ option.label }}</span>
+            <span class="font-mono text-[10px] tracking-[0.06em] text-cm-muted">{{ option.hint }}</span>
+            <span v-if="state.userType === option.value" aria-hidden="true"
+              class="absolute -right-px -top-px flex h-5 w-5 items-center justify-center bg-cm-red text-white">
+              <UIcon name="i-lucide-check" class="h-3 w-3" />
+            </span>
+          </button>
         </div>
-      </div>
+        <p v-if="!state.userType" class="m-0 text-sm text-cm-muted">Выбери категорию, чтобы продолжить.</p>
+      </fieldset>
 
       <!-- Основная информация -->
-      <div v-if="state.userType" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-            Имя <span class="text-red-500">*</span>
-          </label>
-          <UInput v-model="state.firstName" placeholder="Введите имя" size="lg" :error="!!errors.firstName"
-            class="dark:bg-gray-800 w-full" />
-          <span v-if="errors.firstName" class="text-red-500 text-sm">{{ errors.firstName }}</span>
-        </div>
+      <fieldset v-if="state.userType" class="m-0 flex flex-col gap-4 border-0 border-t border-cm-line p-0 pt-6">
+        <legend class="cm-label float-left mb-4 w-full p-0 text-[11px] text-cm-muted">// Контакты</legend>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-first-name" class="text-[13px] font-semibold">Имя <span class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-first-name" v-model="state.firstName" placeholder="Введите имя" size="lg"
+              :color="errors.firstName ? 'error' : 'neutral'" :highlight="!!errors.firstName" class="w-full" />
+            <span v-if="errors.firstName" class="text-sm text-cm-red-ink">{{ errors.firstName }}</span>
+          </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-            Фамилия <span class="text-red-500">*</span>
-          </label>
-          <UInput v-model="state.lastName" placeholder="Введите фамилию" size="lg" :error="!!errors.lastName"
-            class="dark:bg-gray-800 w-full" />
-          <span v-if="errors.lastName" class="text-red-500 text-sm">{{ errors.lastName }}</span>
-        </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-last-name" class="text-[13px] font-semibold">Фамилия <span class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-last-name" v-model="state.lastName" placeholder="Введите фамилию" size="lg"
+              :color="errors.lastName ? 'error' : 'neutral'" :highlight="!!errors.lastName" class="w-full" />
+            <span v-if="errors.lastName" class="text-sm text-cm-red-ink">{{ errors.lastName }}</span>
+          </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-            Способ связи <span class="text-red-500">*</span>
-          </label>
-          <USelect v-model="state.contactMethod" :items="contactOptions" value-key="value"
-            class="w-full relative z-[9999]" :popper="{
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-contact-method" class="text-[13px] font-semibold">Способ связи <span
+                class="text-cm-red-ink">*</span></label>
+            <USelect id="booking-contact-method" v-model="state.contactMethod" :items="contactOptions" value-key="value"
+              size="lg" class="relative z-[9999] w-full" :popper="{
+                strategy: 'fixed',
+                placement: 'bottom-start'
+              }" />
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-contact" class="text-[13px] font-semibold">
+              {{ state.contactMethod === 'telegram' ? 'Telegram username' : 'Телефон' }} <span class="text-cm-red-ink">*</span>
+            </label>
+            <UInput id="booking-contact" v-model="state.contact"
+              :placeholder="state.contactMethod === 'telegram' ? '@username или ссылка' : '+7 (999) 999-99-99'"
+              :type="state.contactMethod === 'telegram' ? 'text' : 'tel'" size="lg"
+              :color="errors.contact ? 'error' : 'neutral'" :highlight="!!errors.contact" class="w-full" />
+            <span v-if="errors.contact" class="text-sm text-cm-red-ink">{{ errors.contact }}</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-age" class="text-[13px] font-semibold">Возраст <span class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-age" v-model.number="state.age" placeholder="Возраст" type="number" min="5" max="99"
+              size="lg" :color="errors.age ? 'error' : 'neutral'" :highlight="!!errors.age" class="w-full" />
+            <span v-if="errors.age" class="text-sm text-cm-red-ink">{{ errors.age }}</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Поля для ребёнка (только для родителей) -->
+      <fieldset v-if="state.userType === 'parent'" class="m-0 flex flex-col gap-4 border-0 border-t border-cm-line p-0 pt-6">
+        <legend class="cm-label float-left mb-4 w-full p-0 text-[11px] text-cm-muted">Данные ребёнка</legend>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-child-first-name" class="text-[13px] font-semibold">Имя ребёнка <span
+                class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-child-first-name" v-model="state.childFirstName" placeholder="Введите имя ребёнка"
+              size="lg" :color="errors.childFirstName ? 'error' : 'neutral'" :highlight="!!errors.childFirstName"
+              class="w-full" />
+            <span v-if="errors.childFirstName" class="text-sm text-cm-red-ink">{{ errors.childFirstName }}</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-child-last-name" class="text-[13px] font-semibold">Фамилия ребёнка <span
+                class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-child-last-name" v-model="state.childLastName" placeholder="Введите фамилию ребёнка"
+              size="lg" :color="errors.childLastName ? 'error' : 'neutral'" :highlight="!!errors.childLastName"
+              class="w-full" />
+            <span v-if="errors.childLastName" class="text-sm text-cm-red-ink">{{ errors.childLastName }}</span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="booking-child-age" class="text-[13px] font-semibold">Возраст ребёнка <span
+                class="text-cm-red-ink">*</span></label>
+            <UInput id="booking-child-age" v-model.number="state.childAge" placeholder="Возраст ребёнка" type="number"
+              min="3" max="17" size="lg" :color="errors.childAge ? 'error' : 'neutral'" :highlight="!!errors.childAge"
+              class="w-full" />
+            <span v-if="errors.childAge" class="text-sm text-cm-red-ink">{{ errors.childAge }}</span>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Тренировки -->
+      <fieldset class="m-0 flex flex-col gap-4 border-0 border-t border-cm-line p-0 pt-6">
+        <legend class="cm-label float-left mb-4 w-full p-0 text-[11px] text-cm-muted">// Тренировки</legend>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="booking-training" class="text-[13px] font-semibold">Направление <span class="text-cm-red-ink">*</span></label>
+          <USelect id="booking-training" v-model="state.trainingType" :items="trainingOptions" value-key="value"
+            placeholder="Выбери направление" size="lg" class="relative z-[9999] w-full" :popper="{
               strategy: 'fixed',
               placement: 'bottom-start'
             }" />
+          <span v-if="errors.trainingType" class="text-sm text-cm-red-ink">{{ errors.trainingType }}</span>
         </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-            {{ state.contactMethod === 'telegram' ? 'Telegram username' : 'Телефон' }} <span
-              class="text-red-500">*</span>
-          </label>
-          <UInput v-model="state.contact"
-            :placeholder="state.contactMethod === 'telegram' ? '@username или ссылка' : '+7 (999) 999-99-99'"
-            :type="state.contactMethod === 'telegram' ? 'text' : 'tel'" size="lg" :error="!!errors.contact"
-            class="dark:bg-gray-800 w-full" />
-          <span v-if="errors.contact" class="text-red-500 text-sm">{{ errors.contact }}</span>
+        <div class="flex flex-col gap-1.5">
+          <label for="booking-plan" class="text-[13px] font-semibold">Тариф <span class="text-cm-red-ink">*</span></label>
+          <USelect id="booking-plan" v-model="state.pricingPlan" :items="pricingOptions" value-key="value"
+            placeholder="Выбери тариф" size="lg" class="relative z-[9999] w-full" :popper="{
+              strategy: 'fixed',
+              placement: 'bottom-start'
+            }" :loading="isLoadingPricing" />
+          <span v-if="errors.pricingPlan" class="text-sm text-cm-red-ink">{{ errors.pricingPlan }}</span>
+
+          <!-- Информация о выбранном тарифе -->
+          <div v-if="selectedPlanInfo" class="mt-2 border-l-4 border-cm-red bg-cm-bg px-4 py-3">
+            <p class="m-0 font-display text-xl font-extrabold uppercase">{{ selectedPlanInfo.name }} — {{
+              selectedPlanInfo.price.toLocaleString('ru-RU') }} ₽</p>
+            <p class="m-0 mt-1 text-sm text-cm-muted">{{ selectedPlanInfo.description }}</p>
+          </div>
         </div>
 
-        <div class="space-y-2">
-          <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-            Возраст <span class="text-red-500">*</span>
-          </label>
-          <UInput v-model.number="state.age" placeholder="Возраст" type="number" min="5" max="99" size="lg"
-            :error="!!errors.age" class="dark:bg-gray-800 w-full" />
-          <span v-if="errors.age" class="text-red-500 text-sm">{{ errors.age }}</span>
-        </div>
-      </div>
-
-      <!-- Чекбоксы -->
-      <div v-if="state.userType" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Дополнительные опции</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <UCheckbox v-model="state.isPrivate" color="error" size="lg" label="Персональные тренировки"
+        <div v-if="state.userType" class="border border-cm-line bg-cm-bg px-4 py-3.5">
+          <UCheckbox v-model="state.isPrivate" color="primary" size="lg" label="Персональные тренировки"
             description="Индивидуальные занятия с тренером" />
         </div>
-      </div>
 
-      <!-- Поля для ребёнка (только для родителей) -->
-      <div v-if="state.userType === 'parent'" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Данные ребёнка</h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-              Имя ребёнка <span class="text-red-500">*</span>
-            </label>
-            <UInput v-model="state.childFirstName" placeholder="Введите имя ребёнка" size="lg"
-              :error="!!errors.childFirstName" class="dark:bg-gray-800" />
-            <span v-if="errors.childFirstName" class="text-red-500 text-sm">{{ errors.childFirstName }}</span>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-              Фамилия ребёнка <span class="text-red-500">*</span>
-            </label>
-            <UInput v-model="state.childLastName" placeholder="Введите фамилию ребёнка" size="lg"
-              :error="!!errors.childLastName" class="dark:bg-gray-800" />
-            <span v-if="errors.childLastName" class="text-red-500 text-sm">{{ errors.childLastName }}</span>
-          </div>
-
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-              Возраст ребёнка <span class="text-red-500">*</span>
-            </label>
-            <UInput v-model.number="state.childAge" placeholder="Возраст ребёнка" type="number" min="3" max="17"
-              size="lg" :error="!!errors.childAge" class="dark:bg-gray-800" />
-            <span v-if="errors.childAge" class="text-red-500 text-sm">{{ errors.childAge }}</span>
-          </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="booking-info" class="text-[13px] font-semibold">Дополнительная информация</label>
+          <UTextarea id="booking-info" v-model="state.additionalInfo"
+            placeholder="Цели, уровень подготовки, пожелания" :rows="3" size="lg" class="w-full" />
         </div>
-      </div>
+      </fieldset>
 
-      <!-- Направление тренировок -->
-      <div class="space-y-2 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-          Направление тренировок <span class="text-red-500">*</span>
-        </label>
-        <USelect v-model="state.trainingType" :items="trainingOptions" value-key="value"
-          class="w-full relative z-[9999]" :popper="{
-            strategy: 'fixed',
-            placement: 'bottom-start'
-          }" />
-        <span v-if="errors.trainingType" class="text-red-500 text-sm">{{ errors.trainingType }}</span>
-      </div>
-
-      <!-- Выбор тарифа -->
-      <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-          Тариф <span class="text-red-500">*</span>
-        </label>
-        <USelect v-model="state.pricingPlan" :items="pricingOptions" value-key="value" class="w-full relative z-[9999]"
-          :popper="{
-            strategy: 'fixed',
-            placement: 'bottom-start'
-          }" :loading="isLoadingPricing" />
-        <span v-if="errors.pricingPlan" class="text-red-500 text-sm">{{ errors.pricingPlan }}</span>
-
-        <!-- Показываем информацию о выбранном тарифе -->
-        <div v-if="selectedPlanInfo"
-          class="mt-3 p-3 bg-gradient-to-r from-red-50 to-green-50 dark:from-green-950 dark:to-green-950 border border-red-200 dark:border-green-800 rounded-lg">
-          <div class="flex items-start gap-2">
-            <UIcon name="i-heroicons-information-circle"
-              class="text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
-            <div class="text-sm text-green-900 dark:text-red-100">
-              <p class="font-semibold">{{ selectedPlanInfo.name }} - {{ selectedPlanInfo.price }}₽</p>
-              <p class="text-green-700 dark:text-green-300 mt-1">{{ selectedPlanInfo.description }}</p>
-            </div>
-          </div>
+      <!-- Согласие и важная информация -->
+      <div v-if="state.userType" class="flex flex-col gap-4 border-t border-cm-line pt-6">
+        <div class="flex flex-col gap-2 border border-[#3a2a1e] bg-[#17120f] px-4 py-4 text-[#d6d2ca]">
+          <span class="flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.16em] text-[#ffb65c]">
+            <UIcon name="i-lucide-triangle-alert" class="h-4 w-4" />
+            Важно
+          </span>
+          <ul class="m-0 list-disc space-y-1 pl-5 text-[13px] leading-normal">
+            <li>Перед началом занятий необходима медицинская справка</li>
+            <li>Клуб не несёт ответственности за травмы при несоблюдении техники безопасности</li>
+            <li>Вы подтверждаете отсутствие медицинских противопоказаний к занятиям</li>
+          </ul>
         </div>
-      </div>
 
-      <!-- Дополнительная информация -->
-      <div class="space-y-2">
-        <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">
-          Дополнительная информация
-        </label>
-        <UTextarea v-model="state.additionalInfo" placeholder="Опишите цели, уровень подготовки или особые пожелания"
-          :rows="4" size="lg" class="dark:bg-gray-800 w-full" />
-      </div>
-
-      <!-- Согласие с условиями -->
-      <div v-if="state.userType" class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <div class="space-y-3">
-          <UCheckbox v-model="state.agreeToTerms" color="error" size="lg" :error="!!errors.agreeToTerms">
+        <div class="flex flex-col gap-1">
+          <UCheckbox v-model="state.agreeToTerms" color="primary" size="lg">
             <template #label>
-              <span class="text-sm text-gray-700 dark:text-gray-300">
+              <span class="text-[13px] leading-normal text-cm-soft">
                 Я согласен с
-                <ULink to="/privacy-policy" target="_blank"
-                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
-                  политикой конфиденциальности
-                </ULink>
+                <NuxtLink to="/privacy-policy" target="_blank" class="text-cm-red-ink underline">политикой
+                  конфиденциальности</NuxtLink>
                 и
-                <ULink to="/terms-of-service" target="_blank"
-                  class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 underline">
-                  пользовательским соглашением
-                </ULink>
-                <span class="text-red-500">*</span>
+                <NuxtLink to="/terms-of-service" target="_blank" class="text-cm-red-ink underline">пользовательским
+                  соглашением</NuxtLink>
+                <span class="text-cm-red-ink">*</span>
               </span>
             </template>
           </UCheckbox>
-          <span v-if="errors.agreeToTerms" class="text-red-500 text-sm block -mt-2">{{ errors.agreeToTerms }}</span>
-        </div>
-
-        <div class="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <div class="flex items-start gap-3">
-            <UIcon name="i-heroicons-information-circle"
-              class="text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
-            <div class="text-sm text-blue-800 dark:text-blue-300">
-              <p class="font-medium mb-1">Важная информация:</p>
-              <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-400">
-                <li>Перед началом занятий необходима медицинская справка</li>
-                <li>Клуб не несёт ответственности за травмы при несоблюдении техники безопасности</li>
-                <li>Вы подтверждаете отсутствие медицинских противопоказаний к занятиям</li>
-              </ul>
-            </div>
-          </div>
+          <span v-if="errors.agreeToTerms" class="text-sm text-cm-red-ink">{{ errors.agreeToTerms }}</span>
         </div>
       </div>
 
       <!-- Кнопка отправки -->
-      <div class="flex justify-center pt-6">
-        <UButton type="submit" color="success" size="lg" :loading="isSubmitting"
-          :disabled="isSubmitting || !state.agreeToTerms" class="px-8 py-3 text-black">
-          {{ isSubmitting ? 'Отправка...' : 'Записаться на тренировку' }}
-        </UButton>
-      </div>
+      <button type="submit" class="cm-btn cm-btn-red cm-cut-lg h-[62px] w-full text-[26px]"
+        :disabled="isSubmitting || !state.agreeToTerms">
+        <span v-if="isSubmitting" class="h-5 w-5 animate-spin rounded-full border-2 border-white border-b-transparent" />
+        {{ isSubmitting ? 'Отправка' : 'Записаться на тренировку' }}
+        <UIcon v-if="!isSubmitting" name="i-lucide-arrow-right" class="h-5 w-5" />
+      </button>
     </form>
-
   </div>
 </template>
 
@@ -270,7 +227,7 @@ const state = reactive({
   userType: '', // 'teenager', 'parent', 'adult'
   firstName: '',
   lastName: '',
-  contactMethod: 'Телефон',
+  contactMethod: 'phone',
   contact: '',
   age: 0,
   trainingType: '',
@@ -283,6 +240,13 @@ const state = reactive({
   childAge: 0,
   additionalInfo: ''
 })
+
+// Категории пользователя
+const userTypeOptions = [
+  { value: 'teenager', label: 'Подросток', hint: '5–17 лет' },
+  { value: 'parent', label: 'Родитель', hint: 'за ребёнка' },
+  { value: 'adult', label: 'Взрослый', hint: '18+ лет' }
+]
 
 // Загружаем тарифы
 const isLoadingPricing = ref(false)

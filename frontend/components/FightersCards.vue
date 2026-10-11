@@ -1,138 +1,109 @@
 <template>
-  <section class="py-10 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
-    <UContainer>
-      <div class="text-center mb-8">
-        <ClientOnly>
-          <h2 v-motion-slide-visible-once-top :duration="600"
-            class="text-4xl text-gray-900 dark:text-white font-bold mb-4">
-            Наши чемпионы
-          </h2>
-          <p v-motion-slide-visible-once-bottom :duration="600" :delay="100"
-            class="text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-            Бойцы, прошедшие подготовку в нашем клубе и добившиеся выдающихся результатов
-          </p>
-        </ClientOnly>
-      </div>
+  <section id="champions" class="border-y border-cm-line bg-cm-section py-16 sm:py-[110px]">
+    <div class="cm-container flex flex-col gap-10 sm:gap-12">
+      <SectionHead kicker="[02] / Наши чемпионы"
+        description="Бойцы, прошедшие подготовку в нашем клубе и добившиеся выдающихся результатов в России и за её пределами.">
+        Сделано<br>в <span class="text-cm-red-title">Камелоте</span>
+      </SectionHead>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <ClientOnly>
-          <div v-for="(fighter, index) in fighters" :key="fighter.id" v-motion-pop-visible-once :duration="300"
-            class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ring-1 ring-gray-200 dark:ring-gray-700">
-            <div class="relative overflow-hidden">
-              <img
-                :src="fighter.photo"
-                :alt="fighter.name"
-                class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                loading="lazy"
-                width="400"
-                height="256"
-              />
+      <div
+        class="cm-no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-3">
+        <article v-for="fighter in fighters" :key="fighter.id"
+          class="group flex w-[316px] shrink-0 snap-start flex-col border border-cm-line bg-cm-bg sm:w-auto">
+          <div class="relative h-[380px] overflow-hidden bg-cm-surface-2 sm:h-[400px]">
+            <img :src="fighter.photo" :alt="fighter.name"
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              :style="{ objectPosition: photoPosition(fighter.photo) }" loading="lazy" width="420" height="400" />
+            <div aria-hidden="true" class="absolute inset-0"
+              style="background: linear-gradient(180deg, rgba(10, 10, 11, 0) 38%, rgba(10, 10, 11, 0.96) 100%)" />
 
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            <span v-if="fighter.isCurrentChampion"
+              class="cm-tag-cut absolute left-3.5 top-3.5 bg-cm-red py-[7px] pl-2.5 pr-3 font-mono text-[11px] font-bold tracking-[0.16em] text-white">
+              ЧЕМПИОН
+            </span>
 
-              <div class="absolute top-4 left-4">
-                <UBadge :color="getBadgeColor(fighter.record.wins, fighter.record.losses)" variant="solid"
-                  class="text-xs font-semibold">
-                  {{ fighter.record.wins }}W-{{ fighter.record.losses }}L
-                </UBadge>
+            <div class="absolute right-3.5 top-3.5 flex border border-[#3a3a40] bg-[#0a0a0b]/90 font-mono text-[#f3efe7]"
+              :aria-label="`Рекорд: ${fighter.record.wins} побед, ${fighter.record.losses} поражений`" role="img">
+              <div class="flex flex-col items-center border-r border-[#3a3a40] px-3 py-2">
+                <span class="text-[26px] font-bold leading-none">{{ fighter.record.wins }}</span>
+                <span class="mt-1 text-[10px] tracking-[0.16em] text-[#4ade80]">WIN</span>
               </div>
-
-              <div class="absolute top-4 right-4">
-                <UBadge v-if="fighter.isCurrentChampion" color="neutral" variant="solid" class="text-xs font-semibold">
-                  Чемпион
-                </UBadge>
-              </div>
-
-              <div class="absolute bottom-4 left-4 right-4">
-                <h3 class="text-2xl text-gray-100 font-bold mb-1">{{ fighter.name }}</h3>
-                <p class="text-red-400 font-semibold">{{ fighter.nickname }}</p>
+              <div class="flex flex-col items-center px-3 py-2">
+                <span class="text-[26px] font-bold leading-none">{{ fighter.record.losses }}</span>
+                <span class="mt-1 text-[10px] tracking-[0.16em] text-[#ff4436]">LOSS</span>
               </div>
             </div>
 
-            <div class="p-6">
-              <div class="mb-4">
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-gray-500 dark:text-gray-400 text-sm">Дисциплина</span>
-                  <span class="text-gray-900 dark:text-white font-semibold">{{ fighter.discipline }}</span>
-                </div>
-
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-gray-500 dark:text-gray-400 text-sm">Весовая категория</span>
-                  <span class="text-gray-900 dark:text-white font-semibold">{{ fighter.weightClass }}</span>
-                </div>
-
-                <div class="flex justify-between items-center mb-2">
-                  <span class="text-gray-500 dark:text-gray-400 text-sm">Возраст</span>
-                  <span class="text-gray-900 dark:text-white font-semibold">{{ fighter.age }} лет</span>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-500 dark:text-gray-400 text-sm">Опыт</span>
-                  <span class="text-gray-900 dark:text-white font-semibold">{{ fighter.experience }}</span>
-                </div>
-              </div>
-
-              <div class="mb-6">
-                <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Достижения:</h4>
-                <ul class="space-y-1">
-                  <li v-for="achievement in fighter.achievements.slice(0, 3)" :key="achievement"
-                    class="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                    <UIcon name="i-heroicons-trophy" class="text-yellow-500 mt-0.5 flex-shrink-0" />
-                    <span>{{ achievement }}</span>
-                  </li>
-                </ul>
-              </div>
+            <div class="absolute inset-x-5 bottom-5 flex flex-col gap-2 text-[#f3efe7]">
+              <span class="font-mono text-xs uppercase tracking-[0.14em] text-[#ff4436]">{{ fighter.nickname }}</span>
+              <h3 class="cm-display m-0 text-[44px] leading-[0.88] sm:text-[50px]">
+                <span class="block">{{ firstName(fighter.name) }}</span>
+                <span class="block">{{ lastName(fighter.name) }}</span>
+              </h3>
             </div>
           </div>
-          <template #fallback>
-            <div v-for="(fighter, index) in fighters" :key="fighter.id"
-              class="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ring-1 ring-gray-200 dark:ring-gray-700">
-              <div class="relative overflow-hidden">
-                <NuxtImg
-                  :src="fighter.photo"
-                  :alt="fighter.name"
-                  class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  sizes="sm:100vw md:50vw lg:33vw"
-                  :width="400"
-                  :height="256"
-                  format="webp"
-                  quality="80"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div class="absolute bottom-4 left-4 right-4">
-                  <h3 class="text-2xl font-bold mb-1 text-white">{{ fighter.name }}</h3>
-                  <p class="text-red-400 font-semibold">{{ fighter.nickname }}</p>
-                </div>
-              </div>
+
+          <dl class="m-0 grid grid-cols-2 border-b border-cm-line">
+            <div class="border-b border-r border-cm-line px-5 py-4">
+              <dt class="cm-label">Дисциплина</dt>
+              <dd class="m-0 mt-1 font-display text-[22px] font-extrabold uppercase leading-tight">{{ fighter.discipline }}</dd>
             </div>
-          </template>
-        </ClientOnly>
+            <div class="border-b border-cm-line px-5 py-4">
+              <dt class="cm-label">Вес</dt>
+              <dd class="m-0 mt-1 font-display text-[22px] font-extrabold uppercase leading-tight">{{ shortWeight(fighter.weightClass) }}</dd>
+            </div>
+            <div class="border-r border-cm-line px-5 py-4">
+              <dt class="cm-label">Возраст</dt>
+              <dd class="m-0 mt-1 font-display text-[22px] font-extrabold uppercase leading-tight">{{ fighter.age }} {{ yearsWord(fighter.age) }}</dd>
+            </div>
+            <div class="px-5 py-4">
+              <dt class="cm-label">Опыт</dt>
+              <dd class="m-0 mt-1 font-display text-[22px] font-extrabold uppercase leading-tight">{{ fighter.experience }}</dd>
+            </div>
+          </dl>
+
+          <ul class="m-0 flex list-none flex-col gap-2.5 px-5 pb-6 pt-5">
+            <li v-for="achievement in fighter.achievements.slice(0, 3)" :key="achievement"
+              class="flex gap-3 text-sm leading-normal text-cm-soft">
+              <span aria-hidden="true" class="mt-[7px] h-2 w-2 shrink-0 bg-cm-red" />
+              {{ achievement }}
+            </li>
+          </ul>
+        </article>
       </div>
-    </UContainer>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-// Используем composable - данные теперь доступны сразу, без асинхронной загрузки
-const { fighters, getWinPercentage } = useFighters()
+// Данные встроены в билд — доступны сразу
+const { fighters } = useFighters()
 
-const getBadgeColor = (wins: number, losses: number) => {
-  const percentage = (wins / (wins + losses)) * 100
-  if (percentage >= 80) return 'primary'
-  if (percentage >= 60) return 'secondary'
-  return 'error'
+// Фокус кадра для фото разной ориентации
+const photoPositions: Record<string, string> = {
+  '/images/students/ynusov.webp': '50% 30%',
+  '/images/students/zagid.webp': '50% 22%',
+  '/images/students/scripnik.webp': '50% 20%',
+  '/images/students/rasul.webp': '45% 25%'
 }
 
-const viewFighterStats = (fighter: any) => {
-  // View fighter stats
-}
+const photoPosition = (photo: string) => photoPositions[photo] || '50% 30%'
 
-const viewFighterProfile = (fighter: any) => {
-  // View fighter profile
-}
+const firstName = (name: string) => name.split(' ')[0] || name
+const lastName = (name: string) => name.split(' ').slice(1).join(' ')
 
-const viewAllFighters = () => {
-  // View all fighters
+// «Легчайший вес (61.2 кг)» → «Легчайший 61,2»
+const shortWeight = (weight: string) => weight
+  .replace(/\s*вес\s*/i, ' ')
+  .replace(/\((\d+)\.(\d+)\s*кг\)/, '$1,$2')
+  .replace(/\s+/g, ' ')
+  .trim()
+
+const yearsWord = (age: number) => {
+  const mod10 = age % 10
+  const mod100 = age % 100
+  if (mod10 === 1 && mod100 !== 11) return 'год'
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'года'
+  return 'лет'
 }
 </script>
